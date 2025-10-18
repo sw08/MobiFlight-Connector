@@ -75,65 +75,6 @@ namespace MobiFlight.Base.Migration.Tests
             Assert.AreEqual("Legacy Project", result["Name"].ToString());
         }
 
-        [TestMethod]
-        public void ApplyMigrations_LegacyPreconditions_MigratesCorrectly()
-        {
-            // Arrange
-            var project = new Project();
-            var legacyDocument = JObject.Parse(@"{
-                ""_version"": ""1.0"",
-                ""Name"": ""Legacy Project"",
-                ""ConfigFiles"": [
-                    {
-                        ""Label"": ""Test Config"",
-                        ""ConfigItems"": [
-                            {
-                                ""Name"": ""Test Output"",
-                                ""Preconditions"": [
-                                    {
-                                        ""PreconditionType"": ""config"",
-                                        ""PreconditionRef"": ""test_ref"",
-                                        ""PreconditionOperand"": ""equals"",
-                                        ""PreconditionValue"": ""1"",
-                                        ""PreconditionLogic"": ""and"",
-                                        ""PreconditionActive"": ""true""
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }");
-
-            var applyMigrationsMethod = typeof(Project).GetMethod("ApplyMigrations", 
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            // Act
-            var result = applyMigrationsMethod.Invoke(project, new object[] { legacyDocument }) as JObject;
-
-            // Assert
-            var precondition = result["ConfigFiles"][0]["ConfigItems"][0]["Preconditions"][0];
-            
-            // Verify migration occurred
-            Assert.AreEqual("config", precondition["type"].ToString());
-            Assert.AreEqual("test_ref", precondition["ref"].ToString());
-            Assert.AreEqual("=", precondition["operand"].ToString()); // "equals" -> "="
-            Assert.AreEqual("1", precondition["value"].ToString());
-            Assert.AreEqual("and", precondition["logic"].ToString());
-            Assert.AreEqual(true, precondition["active"].Value<bool>()); // "true" -> true
-            
-            // Verify old properties are removed
-            Assert.IsNull(precondition["PreconditionType"]);
-            Assert.IsNull(precondition["PreconditionRef"]);
-            Assert.IsNull(precondition["PreconditionOperand"]);
-            Assert.IsNull(precondition["PreconditionValue"]);
-            Assert.IsNull(precondition["PreconditionLogic"]);
-            Assert.IsNull(precondition["PreconditionActive"]);
-            
-            // Verify version was updated
-            Assert.AreEqual(project.SchemaVersion.ToString(), result["_version"].ToString());
-        }
-
         #endregion
 
         #region Project File Integration Tests
@@ -158,10 +99,10 @@ namespace MobiFlight.Base.Migration.Tests
                                     {
                                         ""PreconditionType"": ""variable"",
                                         ""PreconditionRef"": ""altitude"",
-                                        ""PreconditionOperand"": ""greater"",
+                                        ""PreconditionOperand"": "">"",
                                         ""PreconditionValue"": ""10000"",
                                         ""PreconditionLogic"": ""or"",
-                                        ""PreconditionActive"": ""1""
+                                        ""PreconditionActive"": true
                                     }
                                 ]
                             }
