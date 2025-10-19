@@ -32,11 +32,11 @@ namespace MobiFlight.Base.Migration.Tests
         #region Project.ApplyMigrations Tests
 
         [TestMethod]
-        public void ApplyMigrations_CurrentVersion_NoMigrationNeeded()
+        public void ApplyMigrations_CurrentSchemaVersion_NoMigrationNeeded()
         {
             // Arrange
             var project = new Project();
-            var currentVersionDocument = JObject.Parse($@"{{
+            var currentSchemaVersionDocument = JObject.Parse($@"{{
                 ""_version"": ""{project.SchemaVersion}"",
                 ""Name"": ""Test Project"",
                 ""ConfigFiles"": []
@@ -47,7 +47,7 @@ namespace MobiFlight.Base.Migration.Tests
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
             // Act
-            var result = applyMigrationsMethod.Invoke(project, new object[] { currentVersionDocument }) as JObject;
+            var result = applyMigrationsMethod.Invoke(project, new object[] { currentSchemaVersionDocument }) as JObject;
 
             // Assert
             Assert.AreEqual(project.SchemaVersion.ToString(), result["_version"].ToString());
@@ -55,7 +55,7 @@ namespace MobiFlight.Base.Migration.Tests
         }
 
         [TestMethod]
-        public void ApplyMigrations_NoVersionField_DefaultsToV1_0()
+        public void ApplyMigrations_NoVersionField_DefaultsToCurrentSchemaVersion()
         {
             // Arrange
             var project = new Project();
@@ -137,7 +137,7 @@ namespace MobiFlight.Base.Migration.Tests
         }
 
         [TestMethod]
-        public void SaveFile_AddsCurrentVersion()
+        public void SaveFile_AddsCurrentSchemaVersion()
         {
             // Arrange
             var project = new Project();
@@ -219,6 +219,167 @@ namespace MobiFlight.Base.Migration.Tests
 
         #endregion
 
+        #region OriginalVersion Tests
+
+        [TestMethod]
+        public void OpenFile_NoMigrationNeeded_OriginalVersionMatchesSchemaVersion()
+        {
+            // Arrange
+            var project = new Project();
+            var modernProjectJson = JsonConvert.SerializeObject(new
+            {
+                _version = project.SchemaVersion.ToString(),
+                Name = "Modern Project",
+                ConfigFiles = new object[0]
+            }, Formatting.Indented);
+
+            var testProjectFile = Path.Combine(_testDirectory, "modern_project.mfproj");
+            File.WriteAllText(testProjectFile, modernProjectJson);
+
+            // Act
+            project.FilePath = testProjectFile;
+            project.OpenFile();
+
+            // Assert
+            Assert.AreEqual(project.SchemaVersion, project.OriginalSchemaVersion);
+        }
+
+        [TestMethod]
+        public void OpenFile_MigrationPerformed_OriginalVersionDiffersFromSchemaVersion()
+        {
+            // Arrange
+            var originalVersion = new Version(0, 1);
+            var legacyProjectJson = JsonConvert.SerializeObject(new
+            {
+                _version = originalVersion.ToString(),
+                Name = "Legacy Project",
+                ConfigFiles = new[]
+                {
+                    new
+                    {
+                        Label = "Legacy Config",
+                        EmbedContent = true,
+                        ConfigItems = new[]
+                        {
+                            new
+                            {
+                                Name = "Legacy Output",
+                                Type = "OutputConfigItem",
+                                GUID = "legacy-guid-123",
+                                Preconditions = new[]
+                                {
+                                    new
+                                    {
+                                        PreconditionType = "config",
+                                        PreconditionRef = "altitude",
+                                        PreconditionOperand = ">",
+                                        PreconditionValue = "10000"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }, Formatting.Indented);
+
+            var testProjectFile = Path.Combine(_testDirectory, "legacy_project.mfproj");
+            File.WriteAllText(testProjectFile, legacyProjectJson);
+
+            var project = new Project();
+
+            // Act
+            project.FilePath = testProjectFile;
+            project.OpenFile();
+
+            // Assert
+            Assert.AreEqual(originalVersion, project.OriginalSchemaVersion);
+            Assert.AreNotEqual(project.SchemaVersion, project.OriginalSchemaVersion);
+        }
+
+        [TestMethod]
+        public void OpenFile_NoVersionInDocument_OriginalVersionDefaultsToV0_1()
+        {
+            // Arrange
+            var projectWithoutVersionJson = JsonConvert.SerializeObject(new
+            {
+                Name = "Project Without Version",
+                ConfigFiles = new object[0]
+            }, Formatting.Indented);
+
+            var testProjectFile = Path.Combine(_testDirectory, "no_version_project.mfproj");
+            File.WriteAllText(testProjectFile, projectWithoutVersionJson);
+
+            var project = new Project();
+
+            // Act
+            project.FilePath = testProjectFile;
+            project.OpenFile();
+
+            // Assert
+            Assert.AreEqual(new Version(0, 1), project.OriginalSchemaVersion);
+        }
+
+        [TestMethod]
+        public void OpenFile_InvalidVersionInDocument_OriginalVersionDefaultsToV0_1()
+        {
+            // Arrange
+            var projectWithInvalidVersionJson = JsonConvert.SerializeObject(new
+            {
+                _version = "invalid.version.format",
+                Name = "Project With Invalid Version",
+                ConfigFiles = new object[0]
+            }, Formatting.Indented);
+
+            var testProjectFile = Path.Combine(_testDirectory, "invalid_version_project.mfproj");
+            File.WriteAllText(testProjectFile, projectWithInvalidVersionJson);
+
+            var project = new Project();
+
+            // Act
+            project.FilePath = testProjectFile;
+            project.OpenFile();
+
+            // Assert
+            Assert.AreEqual(new Version(0, 1), project.OriginalSchemaVersion);
+        }
+
+        [TestMethod]
+        public void OpenFile_FutureVersion_OriginalVersionPreserved()
+        {
+            // Arrange
+            var futureVersion = new Version(2, 0);
+            var futureProjectJson = JsonConvert.SerializeObject(new
+            {
+                _version = futureVersion.ToString(),
+                Name = "Future Project",
+                ConfigFiles = new object[0]
+            }, Formatting.Indented);
+
+            var testProjectFile = Path.Combine(_testDirectory, "future_project.mfproj");
+            File.WriteAllText(testProjectFile, futureProjectJson);
+
+            var project = new Project();
+
+            // Act
+            project.FilePath = testProjectFile;
+            project.OpenFile();
+
+            // Assert
+            Assert.AreEqual(futureVersion, project.OriginalSchemaVersion);
+        }
+
+        [TestMethod]
+        public void CreateNewProject_OriginalVersionIsNull()
+        {
+            // Arrange & Act
+            var project = new Project();
+
+            // Assert
+            Assert.IsNull(project.OriginalSchemaVersion);
+        }
+
+        #endregion
+
         #region Error Handling Tests
 
         [TestMethod]
@@ -227,7 +388,7 @@ namespace MobiFlight.Base.Migration.Tests
             // Arrange
             var project = new Project();
             var corruptedDocument = JObject.Parse(@"{
-                ""_version"": ""1.0"",
+                ""_version"": ""0.8"",
                 ""ConfigFiles"": [
                     {
                         ""ConfigItems"": [
@@ -255,7 +416,7 @@ namespace MobiFlight.Base.Migration.Tests
         }
 
         [TestMethod]
-        public void ApplyMigrations_InvalidVersionString_DefaultsToV1_0()
+        public void ApplyMigrations_InvalidVersionString_DefaultsToCurrentSchemaVersion()
         {
             // Arrange
             var project = new Project();
@@ -277,7 +438,7 @@ namespace MobiFlight.Base.Migration.Tests
         }
 
         [TestMethod]
-        public void ApplyMigrations_EmptyVersionString_DefaultsToV1_0()
+        public void ApplyMigrations_EmptyVersionString_DefaultsToCurrentSchemaVersion()
         {
             // Arrange
             var project = new Project();
@@ -299,7 +460,7 @@ namespace MobiFlight.Base.Migration.Tests
         }
 
         [TestMethod]
-        public void ApplyMigrations_NullVersionField_DefaultsToV1_0()
+        public void ApplyMigrations_NullVersionField_DefaultsToCurrentSchemaVersion()
         {
             // Arrange
             var project = new Project();
@@ -321,7 +482,7 @@ namespace MobiFlight.Base.Migration.Tests
         }
 
         [TestMethod]
-        public void GetDocumentVersion_ValidVersionString_ParsesCorrectly()
+        public void GetDocumentSchemaVersion_ValidVersionString_ParsesCorrectly()
         {
             // Arrange
             var project = new Project();
@@ -331,7 +492,7 @@ namespace MobiFlight.Base.Migration.Tests
             }");
 
             // Use reflection to access private method
-            var getVersionMethod = typeof(Project).GetMethod("GetDocumentVersion", 
+            var getVersionMethod = typeof(Project).GetMethod("GetDocumentSchemaVersion", 
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
             // Act
@@ -342,7 +503,7 @@ namespace MobiFlight.Base.Migration.Tests
         }
 
         [TestMethod]
-        public void GetDocumentVersion_ComplexVersionString_ParsesCorrectly()
+        public void GetDocumentSchemaVersion_ComplexVersionString_ParsesCorrectly()
         {
             // Arrange
             var project = new Project();
@@ -351,7 +512,7 @@ namespace MobiFlight.Base.Migration.Tests
                 ""Name"": ""Complex Version Project""
             }");
 
-            var getVersionMethod = typeof(Project).GetMethod("GetDocumentVersion", 
+            var getVersionMethod = typeof(Project).GetMethod("GetDocumentSchemaVersion", 
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
             // Act
@@ -359,6 +520,20 @@ namespace MobiFlight.Base.Migration.Tests
 
             // Assert
             Assert.AreEqual(new Version(2, 1, 3, 4), result);
+        }
+
+        [TestMethod]
+        public void OpenFile_UnsupportedFileFormat_ThrowsInvalidDataException()
+        {
+            // Arrange
+            var testProjectFile = Path.Combine(_testDirectory, "unsupported_project.txt");
+            File.WriteAllText(testProjectFile, "This is not a valid project file format");
+
+            var project = new Project();
+            project.FilePath = testProjectFile;
+
+            // Act & Assert
+            Assert.ThrowsExactly<InvalidDataException>(() => project.OpenFile());
         }
 
         #endregion

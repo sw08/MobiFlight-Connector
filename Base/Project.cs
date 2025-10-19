@@ -19,6 +19,8 @@ namespace MobiFlight.Base
 
         [JsonIgnore]
         public readonly Version SchemaVersion = new Version(0,9);
+        [JsonIgnore]
+        public Version OriginalSchemaVersion { get; private set; } = null;
 
         private string _name;
         /// <summary>
@@ -135,11 +137,17 @@ namespace MobiFlight.Base
                 
                 // Parse and migrate JSON document
                 var document = JObject.Parse(json);
+                OriginalSchemaVersion = GetDocumentSchemaVersion(document);
                 var migratedDocument = ApplyMigrations(document);
                 
                 // Deserialize the clean, migrated JSON
                 var project = migratedDocument.ToObject<Project>();
-                
+                if (project == null)
+                {
+                    Log.Instance.log("Project could not be loaded", LogSeverity.Error);
+                    throw new InvalidDataException("Failed to deserialize project file.");
+                }
+
                 Name = project.Name;
                 ConfigFiles = project.ConfigFiles;
 
@@ -188,22 +196,30 @@ namespace MobiFlight.Base
         private JObject ApplyMigrations(JObject document)
         {
             // Determine current document version with safe parsing
-            var currentVersion = GetDocumentVersion(document);
-            
-            if (currentVersion >= SchemaVersion)
+            var currentVersion = GetDocumentSchemaVersion(document);
+            OriginalSchemaVersion = currentVersion;
+
+            if (currentVersion > SchemaVersion)
+            {
+                Log.Instance.log($"Document version {currentVersion} too new. Update MobiFlight to latest version.", LogSeverity.Info);
+                return document;
+            }
+
+            if (currentVersion == SchemaVersion)
             {
                 // No migration needed
                 return document;
             }
-            
+
+
             Log.Instance.log($"Migrating document from version {currentVersion} to {SchemaVersion}", LogSeverity.Info);
             
             var migratedDocument = document;
             
             // Apply migrations step by step
-            if (currentVersion < new Version(1, 1))
+            if (currentVersion < new Version(0,9))
             {
-                Log.Instance.log("Applying V1 → V1.1 migrations", LogSeverity.Debug);
+                Log.Instance.log("Applying V0.9 migrations", LogSeverity.Debug);
                 migratedDocument = Precondition_V_0_9_Migration.Apply(migratedDocument);
             }
 
@@ -218,20 +234,20 @@ namespace MobiFlight.Base
         /// <summary>
         /// Safely parse the document version, defaulting to 1.0 if not present or invalid
         /// </summary>
-        private Version GetDocumentVersion(JObject document)
+        private Version GetDocumentSchemaVersion(JObject document)
         {
             try
             {
                 var versionToken = document["_version"];
                 if (versionToken == null)
                 {
-                    return new Version(1, 0); // Default for documents without version
+                    return new Version(0, 1); // Default for documents without version
                 }
 
                 var versionString = versionToken.ToString();
                 if (string.IsNullOrEmpty(versionString))
                 {
-                    return new Version(1, 0);
+                    return new Version(0, 1);
                 }
 
                 // Try to parse as Version object
@@ -241,13 +257,13 @@ namespace MobiFlight.Base
                 }
 
                 // If parsing fails, default to 1.0
-                Log.Instance.log($"Could not parse version '{versionString}', defaulting to 1.0", LogSeverity.Warn);
-                return new Version(1, 0);
+                Log.Instance.log($"Could not parse version '{versionString}', defaulting to 0.1", LogSeverity.Warn);
+                return new Version(0, 1);
             }
             catch (Exception ex)
             {
-                Log.Instance.log($"Error parsing document version: {ex.Message}, defaulting to 1.0", LogSeverity.Warn);
-                return new Version(1, 0);
+                Log.Instance.log($"Error parsing document version: {ex.Message}, defaulting to 0.1", LogSeverity.Warn);
+                return new Version(0, 1);
             }
         }
 
