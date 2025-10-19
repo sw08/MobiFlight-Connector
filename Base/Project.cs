@@ -18,7 +18,7 @@ namespace MobiFlight.Base
         public event EventHandler ProjectChanged;
 
         [JsonIgnore]
-        public readonly Version SchemaVersion = new Version(1, 1);
+        public readonly Version SchemaVersion = new Version(0,9);
 
         private string _name;
         /// <summary>
@@ -204,7 +204,7 @@ namespace MobiFlight.Base
             if (currentVersion < new Version(1, 1))
             {
                 Log.Instance.log("Applying V1 → V1.1 migrations", LogSeverity.Debug);
-                migratedDocument = Precondition_V1_1_Migration.Apply(migratedDocument);
+                migratedDocument = Precondition_V_0_9_Migration.Apply(migratedDocument);
             }
 
             // Update version in migrated document

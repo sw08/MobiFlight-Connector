@@ -7,7 +7,7 @@ namespace MobiFlight.Base.Migration
     /// <summary>
     /// Migrates Precondition properties from V1 (long names) to V1.1 (short names)
     /// </summary>
-    public static class Precondition_V1_1_Migration
+    public static class Precondition_V_0_9_Migration
     {
         public static JObject Apply(JObject document)
         {
