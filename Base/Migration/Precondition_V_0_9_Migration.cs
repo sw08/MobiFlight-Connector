@@ -5,7 +5,7 @@ using System.Linq;
 namespace MobiFlight.Base.Migration
 {
     /// <summary>
-    /// Migrates Precondition properties from V1 (long names) to V1.1 (short names)
+    /// Migrates Precondition properties from initial version (long names) to V0.9 (short names)
     /// </summary>
     public static class Precondition_V_0_9_Migration
     {
@@ -78,7 +78,7 @@ namespace MobiFlight.Base.Migration
 
             if (preconditions.Count > 0)
             {
-                Log.Instance.log($"Migrated {preconditions.Count} preconditions from V1 to V1.1 format", LogSeverity.Debug);
+                Log.Instance.log($"Migrated {preconditions.Count} preconditions to V0.9 format", LogSeverity.Debug);
             }
         }
 
@@ -120,7 +120,7 @@ namespace MobiFlight.Base.Migration
 
             if (totalRemoved > 0)
             {
-                Log.Instance.log($"Removed {totalRemoved} empty preconditions (type='none') during migration", LogSeverity.Debug);
+                Log.Instance.log($"Removed {totalRemoved} empty preconditions (type='none') during v0.9 migration", LogSeverity.Debug);
             }
         }
     }
