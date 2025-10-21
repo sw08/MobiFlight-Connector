@@ -15,6 +15,7 @@ export type AppMessageKey =
   | "MidiControllerDefinitions"
   | "ProjectStatus"
   | "OverlayState"
+  | "Notification"
 
 export type AppMessagePayload =
   | StatusBarUpdate
@@ -27,6 +28,7 @@ export type AppMessagePayload =
   | MidiControllerDefinitions
   | ProjectStatus
   | OverlayState
+  | Notification
   
 // AppMessage is the message format
 // when receiving messages from the backend
@@ -87,6 +89,12 @@ export interface ProjectStatus {
 
 export interface OverlayState {
   Visible: boolean
+}
+
+export interface Notification {
+  Event: string
+  Guid?: string
+  Context: Record<string, string> | null
 }
 
 // Not sure what this is for
