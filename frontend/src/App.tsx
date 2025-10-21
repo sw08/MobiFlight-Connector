@@ -10,16 +10,27 @@ import { useProjectStore } from "./stores/projectStore"
 import { MainMenu } from "./components/MainMenu"
 import { useSettingsStore } from "./stores/settingsStore"
 import { useControllerDefinitionsStore } from "./stores/definitionStore"
-import { JoystickDefinitions, MidiControllerDefinitions, OverlayState } from "./types/messages"
-import { useKeyAccelerators, GlobalKeyAccelerators } from "./lib/hooks/useKeyAccelerators"
+import {
+  JoystickDefinitions,
+  MidiControllerDefinitions,
+  OverlayState,
+} from "./types/messages"
+import {
+  useKeyAccelerators,
+  GlobalKeyAccelerators,
+} from "./lib/hooks/useKeyAccelerators"
 import LoaderOverlay from "./components/tables/config-item-table/LoaderOverlay"
+import { Toaster } from "./components/ui/sonner"
+import { useTheme } from "@/lib/hooks/useTheme"
+import { ToastNotificationHandler } from "./components/notifications/ToastNotificationHandler"
 
 function App() {
   const [queryParameters] = useSearchParams()
   const navigate = useNavigate()
   const { setProject, setHasChanged } = useProjectStore()
   const { setSettings } = useSettingsStore()
-  const { setJoystickDefinitions, setMidiControllerDefinitions } = useControllerDefinitionsStore()
+  const { setJoystickDefinitions, setMidiControllerDefinitions } =
+    useControllerDefinitionsStore()
 
   const [startupProgress, setStartupProgress] = useState<StatusBarUpdate>({
     Value: 0,
@@ -48,13 +59,19 @@ function App() {
 
   useAppMessage("JoystickDefinitions", (message) => {
     const joystickDefinitions = message.payload as JoystickDefinitions
-    console.log("JoystickDefinitions message received", joystickDefinitions.Definitions)
+    console.log(
+      "JoystickDefinitions message received",
+      joystickDefinitions.Definitions,
+    )
     setJoystickDefinitions(joystickDefinitions.Definitions)
   })
 
   useAppMessage("MidiControllerDefinitions", (message) => {
     const definitions = message.payload as MidiControllerDefinitions
-    console.log("MidiControllerDefinitions message received", definitions.Definitions)
+    console.log(
+      "MidiControllerDefinitions message received",
+      definitions.Definitions,
+    )
     setMidiControllerDefinitions(definitions.Definitions)
   })
 
@@ -98,11 +115,15 @@ function App() {
 
   const [overlayVisible, setOverlayVisible] = useState(false)
 
+  const { theme } = useTheme()
+
   return (
     <>
-      {overlayVisible && <LoaderOverlay open={overlayVisible} onOpenChange={setOverlayVisible} />}
+      {overlayVisible && (
+        <LoaderOverlay open={overlayVisible} onOpenChange={setOverlayVisible} />
+      )}
       {outlet ? (
-        <div className="flex h-svh select-none flex-row p-0">
+        <div className="flex h-svh flex-row p-0 select-none">
           {/* <Sidebar /> */}
           <div className="flex grow flex-col">
             <MainMenu />
@@ -113,19 +134,15 @@ function App() {
               <Outlet />
             </div>
             <div className="flex flex-row justify-end gap-2 px-5">
-              <div className="text-xs text-muted-foreground">
+              <div className="text-muted-foreground text-xs">
                 {windowSize.x}x{windowSize.y}
               </div>
-              <div className="text-xs text-muted-foreground">
+              <div className="text-muted-foreground text-xs">
                 MobiFlight 2025
               </div>
-              <div className="text-xs text-muted-foreground">Version 1.0.0</div>
+              <div className="text-muted-foreground text-xs">Version 1.0.0</div>
             </div>
           </div>
-          {/* <Toaster
-          position="bottom-right"
-          offset={48}
-        /> */}
         </div>
       ) : (
         <StartupProgress
@@ -133,6 +150,12 @@ function App() {
           text={startupProgress.Text}
         />
       )}
+      <ToastNotificationHandler />
+      <Toaster
+        position="bottom-right"
+        theme={theme}
+        className="flex w-full justify-center ![--width:540px] xl:![--width:800px]"
+      />
     </>
   )
 }

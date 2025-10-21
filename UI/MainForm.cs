@@ -417,13 +417,6 @@ namespace MobiFlight.UI
             Update();
             Refresh();
 
-            // test subscription
-            BrowserMessages.MessageExchange.Instance.Subscribe<Test>((message) =>
-            {
-                var msg = message;
-                MessageBox.Show(msg.Message);
-            });
-
             PublishSettings();
         }
 
@@ -839,16 +832,10 @@ namespace MobiFlight.UI
             if (!Properties.Settings.Default.HubHopAutoCheck) return;
             // we haven't updated hubhop events in more than 7 days.
 
-            TimeoutMessageDialog tmd = new TimeoutMessageDialog();
-            tmd.StartPosition = FormStartPosition.CenterParent;
-            tmd.DefaultDialogResult = DialogResult.Cancel;
-            tmd.Message = i18n._tr("uiMessageHubHopAutoUpdate");
-            tmd.Text = i18n._tr("uiTitleHubhopAutoUpdate");
-
-            if (tmd.ShowDialog() == DialogResult.OK)
+            MessageExchange.Instance.Publish(new Notification()
             {
-                DownloadHubHopPresets();
-            }
+                Event = "HubHopAutoUpdateCheck"
+            });
         }
 
         private void CheckForWasmModuleUpdate()

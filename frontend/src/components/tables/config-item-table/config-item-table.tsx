@@ -27,8 +27,6 @@ import ConfigItemTableHeader from "./items/ConfigItemTableHeader"
 import ConfigItemTableBody from "./items/ConfigItemTableBody"
 import ToolTip from "@/components/ToolTip"
 import { IconX } from "@tabler/icons-react"
-import { Toaster } from "@/components/ui/sonner"
-import { useTheme } from "@/lib/hooks/useTheme"
 import { toast } from "@/components/ui/ToastWrapper"
 import { useConfigItemDragContext } from "@/lib/hooks/useConfigItemDragContext"
 import ConfigItemNoResultsDroppable from "./items/ConfigItemNoResultsDroppable"
@@ -266,8 +264,6 @@ export function ConfigItemTable<TValue>({
     })
   }, [table, publish])
 
-  const { theme } = useTheme()
-
   const showTable = useMemo(() => {
     if (!(dragState?.ui.isDragging ?? false)) {
       return data.length > 0
@@ -298,11 +294,6 @@ export function ConfigItemTable<TValue>({
             onClearSelected={() => table.setRowSelection({})}
           />
         </div>
-        <Toaster
-          position="bottom-right"
-          theme={theme}
-          className="flex w-full justify-center ![--width:540px] xl:![--width:800px]"
-        />
         {showTable ? (
           table.getRowModel().rows?.length ? (
             <div className="border-primary flex flex-col overflow-y-auto rounded-lg border">
