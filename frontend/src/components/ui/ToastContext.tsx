@@ -1,11 +1,4 @@
-import React, { createContext, useContext } from "react"
-
-interface ToastContextType {
-  toastId: string | number
-  dismiss: () => void
-}
-
-const ToastContext = createContext<ToastContextType | null>(null)
+import { ToastContext } from "@/lib/hooks/useToastContext"
 
 export const ToastProvider = ({ 
   children, 
@@ -21,12 +14,4 @@ export const ToastProvider = ({
       {children}
     </ToastContext.Provider>
   )
-}
-
-export const useToastContext = () => {
-  const context = useContext(ToastContext)
-  if (!context) {
-    throw new Error('useToastContext must be used within a ToastProvider')
-  }
-  return context
 }
