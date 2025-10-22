@@ -6,19 +6,23 @@ export const toast = (props: ToastProps) => {
 
   return sonnerToast.custom(
     (id) => {
-      const extendedButton = {
-        ...button!,
-        onClick: () => {
-          button!.onClick()
-          sonnerToast.dismiss(id)
-        },
+      const extendedButton = button
+        ? {
+            button: {
+              ...button,
+              onClick: () => {
+                button.onClick()
+                sonnerToast.dismiss(id)
+              },
+              onCancel: () => {
+                button.onCancel?.()
+                sonnerToast.dismiss(id)
+              },
+            },
+          }
+        : {}
 
-        onCancel: () => {
-          button!.onCancel?.()
-          sonnerToast.dismiss(id)
-        },
-      }
-      return <Toast {...props} button={extendedButton} />
+      return <Toast {...props} {...extendedButton} />
     },
     { ...options },
   )

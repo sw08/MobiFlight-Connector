@@ -2,6 +2,7 @@ import { publishOnMessageExchange, useAppMessage } from "@/lib/hooks/appMessage"
 import { Notification } from "@/types/messages"
 import { toast } from "@/components/ui/ToastWrapper"
 import { CommandMainMenu } from "@/types/commands"
+import HubHopUpdateToast from "./HubHopUpdateToast"
 
 export const ToastNotificationHandler = () => {
   const { publish } = publishOnMessageExchange()
@@ -11,21 +12,7 @@ export const ToastNotificationHandler = () => {
     const controllerType = notification.Context?.Type ?? "Board"
 
     switch (notification.Event) {
-      case "HubHopAutoUpdateCheck":
-        toast({
-          id: "hubhop-auto-update",
-          title: "HubHop Update",
-          description: "Your HubHop database is older than 7 days. Would you like to update it now?",
-          button: {
-            label: "Update Now",
-            onClick: () => {
-              publish({ key: "CommandMainMenu", payload: { action: "extras.hubhop.download" } } as CommandMainMenu)
-            }
-          }
-        })
-        break
       case "MissingControllerDetected":
-
         toast({
           id: "missing-controllers-detected",
           title: "Missing Controllers Detected",
@@ -33,13 +20,50 @@ export const ToastNotificationHandler = () => {
           button: {
             label: `Reassign ${controllerType}`,
             onClick: () => {
-              publish({ key: "CommandMainMenu", payload: { action: "extras.serials" } } as CommandMainMenu)
-            }
-          }
+              publish({
+                key: "CommandMainMenu",
+                payload: { action: "extras.serials" },
+              } as CommandMainMenu)
+            },
+          },
         })
         break
     }
   })
+
+  useAppMessage("HubHopState", (message) => {
+    const status = message.payload
+    console.log("HubHopState message received", status)
+    if (status.ShouldUpdate && status.Result === "Pending") {
+      toast({
+        id: "hubhop-auto-update",
+        title: "HubHop Update",
+        description:
+          "Your HubHop database is older than 7 days. Would you like to update it now?",
+        button: {
+          label: "Update Now",
+          onClick: () => {
+            publish({
+              key: "CommandMainMenu",
+              payload: { action: "extras.hubhop.download" },
+            } as CommandMainMenu)
+          },
+        },
+      })
+    }
+
+    if (status.ShouldUpdate && status.Result === "InProgress" && status.UpdateProgress === 0) {
+      toast({
+        id: "hubhop-auto-update",
+        title: "Downloading HubHop Update...",
+        description: <HubHopUpdateToast id="hubhop-auto-update" timeout={2000} />,
+        options: {
+          duration: Infinity, // Keep it open until completed
+        }
+      })
+    }
+  })
+
   // This component doesn't render anything visible
   return null
 }

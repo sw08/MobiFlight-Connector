@@ -277,6 +277,7 @@
     <Compile Include="Base\LruCache.cs" />
     <Compile Include="Base\Migration\Output_V_0_9_Migration.cs" />
     <Compile Include="Base\Migration\Precondition_V_0_9_Migration.cs" />
+    <Compile Include="Base\ObservableObject.cs" />
     <Compile Include="Base\Project.cs" />
     <Compile Include="Base\Serialization\Json\DeviceConfigConverter.cs" />
     <Compile Include="Base\Serialization\Json\ConfigValueOnlyItemConverter.cs" />
@@ -291,6 +292,7 @@
     <Compile Include="Base\AppTelemetry.cs" />
     <Compile Include="Base\Source.cs" />
     <Compile Include="Base\WriteCacheInterface.cs" />
+    <Compile Include="HubHop\HubHopState.cs" />
     <Compile Include="HubHop\HubHopType.cs" />
     <Compile Include="HubHop\Msfs2020EventIdPresetList.cs" />
     <Compile Include="MobiFlight\Board.cs" />

@@ -93,6 +93,21 @@ namespace MobiFlight.UI
             }
         }
 
+        private HubHopState hubHopState = new HubHopState();
+        public HubHopState HubHopState
+        {
+            get { return hubHopState; }
+            private set
+            {
+                if (value.AreEqual(hubHopState)) return;
+                hubHopState = value;
+                PropertyChanged?.Invoke(
+                    this,
+                    new PropertyChangedEventArgs(nameof(HubHopState))
+                );
+            }
+        }
+
         private void InitializeLogging()
         {
             LogAppenderLogPanel logAppenderTextBox = new LogAppenderLogPanel(logPanel1);
@@ -357,6 +372,18 @@ namespace MobiFlight.UI
                     MessageExchange.Instance
                                    .Publish(new ProjectStatus { HasChanged = ProjectHasUnsavedChanges });
                 }
+
+                if (e.PropertyName == nameof(HubHopState))
+                {
+                    // This will trigger when we are replacing the entire HubHopState object
+                    MessageExchange.Instance.Publish(HubHopState);
+                }
+            };
+
+            // This will trigger when we are modifying individual properties of HubHopState
+            HubHopState.PropertyChanged += (s, e) =>
+            {
+                MessageExchange.Instance.Publish(HubHopState);
             };
 
             RestoreWindowsPositionAndZoomLevel();
@@ -817,7 +844,6 @@ namespace MobiFlight.UI
 
         private void CheckForHubhopUpdate()
         {
-
             if (!WasmModuleUpdater.HubHopPresetsPresent())
             {
                 DownloadHubHopPresets();
@@ -827,15 +853,16 @@ namespace MobiFlight.UI
             var lastModification = WasmModuleUpdater.HubHopPresetTimestamp();
             UpdateHubHopTimestampInStatusBar(lastModification);
 
-            if (lastModification > DateTime.UtcNow.AddDays(-7)) return;
-            // we could provide a warning icon or so.
-            if (!Properties.Settings.Default.HubHopAutoCheck) return;
-            // we haven't updated hubhop events in more than 7 days.
+            HubHopState.LastUpdate = lastModification;
 
-            MessageExchange.Instance.Publish(new Notification()
-            {
-                Event = "HubHopAutoUpdateCheck"
-            });
+            if (lastModification > DateTime.UtcNow.AddDays(-0))
+                return;
+
+            if (!Properties.Settings.Default.HubHopAutoCheck)
+                return;
+
+            HubHopState.ShouldUpdate = true;
+            HubHopState.Result = "Pending";
         }
 
         private void CheckForWasmModuleUpdate()
@@ -2566,11 +2593,16 @@ namespace MobiFlight.UI
         private void DownloadHubHopPresets()
         {
             WasmModuleUpdater updater = new WasmModuleUpdater();
-            ProgressForm progressForm = new ProgressForm();
-            Control MainForm = this;
 
-            progressForm.Text = i18n._tr("uiTitleHubhopAutoUpdate");
-            updater.DownloadAndInstallProgress += progressForm.OnProgressUpdated;
+            // Reset the update progress
+            // also required for the UI to show a new notification.
+            HubHopState.UpdateProgress = 0;
+
+            updater.DownloadAndInstallProgress += (s, e) =>
+            {
+                HubHopState.Result = "InProgress";
+                HubHopState.UpdateProgress = e.Current;
+            };
 
             Task.Run(async () =>
             {
@@ -2578,34 +2610,14 @@ namespace MobiFlight.UI
                 {
                     Msfs2020HubhopPresetListSingleton.Instance.Clear();
                     XplaneHubhopPresetListSingleton.Instance.Clear();
-                    progressForm.DialogResult = DialogResult.OK;
+                    HubHopState.Result = "Success";
                 }
                 else
                 {
-                    progressForm.DialogResult = DialogResult.No;
                     Log.Instance.log(i18n._tr("uiMessageHubHopUpdateError"), LogSeverity.Error);
+                    HubHopState.Result = "Error";
                 }
             });
-
-            if (progressForm.ShowDialog() == DialogResult.OK)
-            {
-                TimeoutMessageDialog.Show(
-                   i18n._tr("uiMessageHubHopUpdateSuccessful"),
-                   i18n._tr("uiMessageWasmUpdater"),
-                   MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                var lastModification = WasmModuleUpdater.HubHopPresetTimestamp();
-                UpdateHubHopTimestampInStatusBar(lastModification);
-            }
-            else
-            {
-                TimeoutMessageDialog.Show(
-                    i18n._tr("uiMessageWasmEventsInstallationError"),
-                    i18n._tr("uiMessageWasmUpdater"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            progressForm.Dispose();
         }
 
         public void downloadHubHopPresetsToolStripMenuItem_Click(object sender, EventArgs e)

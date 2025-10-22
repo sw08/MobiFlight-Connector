@@ -11,6 +11,7 @@ import { MainMenu } from "./components/MainMenu"
 import { useSettingsStore } from "./stores/settingsStore"
 import { useControllerDefinitionsStore } from "./stores/definitionStore"
 import {
+  HubHopState,
   JoystickDefinitions,
   MidiControllerDefinitions,
   OverlayState,
@@ -23,6 +24,7 @@ import LoaderOverlay from "./components/tables/config-item-table/LoaderOverlay"
 import { Toaster } from "./components/ui/sonner"
 import { useTheme } from "@/lib/hooks/useTheme"
 import { ToastNotificationHandler } from "./components/notifications/ToastNotificationHandler"
+import { useHubHopStateActions } from "./stores/stateStore"
 
 function App() {
   const [queryParameters] = useSearchParams()
@@ -31,6 +33,8 @@ function App() {
   const { setSettings } = useSettingsStore()
   const { setJoystickDefinitions, setMidiControllerDefinitions } =
     useControllerDefinitionsStore()
+
+  const setHubHopState = useHubHopStateActions()
 
   const [startupProgress, setStartupProgress] = useState<StatusBarUpdate>({
     Value: 0,
@@ -85,6 +89,11 @@ function App() {
     const overlayState = message.payload as OverlayState
     console.log("OverlayState message received", overlayState)
     setOverlayVisible(overlayState.Visible)
+  })
+
+  useAppMessage("HubHopState", (message) => {
+    const state = message.payload as HubHopState
+    setHubHopState(state)
   })
 
   // this allows to get beyond the startup screen
@@ -157,7 +166,7 @@ function App() {
         toastOptions={{ duration: 10000 }}
         position="bottom-right"
         theme={theme}
-        className="flex w-full justify-center ![--width:540px] xl:![--width:800px]"
+        className="flex w-full justify-center ![--width:540px]"
       />
     </>
   )
