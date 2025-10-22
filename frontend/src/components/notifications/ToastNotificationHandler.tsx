@@ -3,9 +3,11 @@ import { Notification } from "@/types/messages"
 import { toast } from "@/components/ui/ToastWrapper"
 import { CommandMainMenu } from "@/types/commands"
 import HubHopUpdateToast from "./HubHopUpdateToast"
+import { useTranslation } from "react-i18next"
 
 export const ToastNotificationHandler = () => {
   const { publish } = publishOnMessageExchange()
+  const { t } = useTranslation()
 
   useAppMessage("Notification", (message) => {
     const notification = message.payload as Notification
@@ -37,9 +39,9 @@ export const ToastNotificationHandler = () => {
     if (status.ShouldUpdate && status.Result === "Pending") {
       toast({
         id: "hubhop-auto-update",
-        title: "HubHop Update",
+        title: t("General.HubHopUpdate.Title"),
         description:
-          "Your HubHop database is older than 7 days. Would you like to update it now?",
+          t("General.HubHopUpdate.Description", { days: 7 }),
         button: {
           label: "Update Now",
           onClick: () => {
@@ -55,7 +57,7 @@ export const ToastNotificationHandler = () => {
     if (status.ShouldUpdate && status.Result === "InProgress" && status.UpdateProgress === 0) {
       toast({
         id: "hubhop-auto-update",
-        title: "Downloading HubHop Update...",
+        title: t("General.HubHopUpdate.Title.Downloading"),
         description: <HubHopUpdateToast id="hubhop-auto-update" timeout={2000} />,
         options: {
           duration: Infinity, // Keep it open until completed

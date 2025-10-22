@@ -3,15 +3,17 @@ import { Progress } from "../ui/progress"
 import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react"
 import { useEffect } from "react"
 import { toast } from "sonner"
+import { useTranslation } from "node_modules/react-i18next"
 
 export type HubHopUpdateToastProps = {
-  id: string,
-  timeout?: number,
+  id: string
+  timeout?: number
 }
 
 const HubHopUpdateToast = ({ id, timeout = 2000 }: HubHopUpdateToastProps) => {
   const HubHopState = useHubHopState()
-  
+  const { t } = useTranslation()
+
   useEffect(() => {
     if (HubHopState?.Result === "Success" || HubHopState?.Result === "Error") {
       // Auto-dismiss the toast after completion
@@ -23,16 +25,16 @@ const HubHopUpdateToast = ({ id, timeout = 2000 }: HubHopUpdateToastProps) => {
   }, [HubHopState, id, timeout])
 
   return HubHopState?.Result === "InProgress" ? (
-    <Progress value={HubHopState?.UpdateProgress} className="w-full h-6" />
+    <Progress value={HubHopState?.UpdateProgress} className="h-6 w-full" />
   ) : HubHopState?.Result === "Success" ? (
     <div className="flex flex-row items-center gap-2">
-      <IconCircleCheckFilled className="fill-green-700" /> HubHop update
-      completed successfully!
+      <IconCircleCheckFilled className="fill-green-700" />
+      { t("General.HubHopUpdate.Success") }
     </div>
   ) : (
     <div className="flex flex-row items-center gap-2">
       <IconCircleXFilled className="fill-red-700" /> HubHop update
-      <div>HubHop update failed. Please try again later.</div>
+      <div>{ t("General.HubHopUpdate.Error") }</div>
     </div>
   )
 }
