@@ -3,7 +3,7 @@ import { Progress } from "../ui/progress"
 import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react"
 import { useEffect } from "react"
 import { toast } from "sonner"
-import { useTranslation } from "node_modules/react-i18next"
+import { useTranslation } from "react-i18next"
 
 export type HubHopUpdateToastProps = {
   id: string

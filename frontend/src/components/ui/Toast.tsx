@@ -15,9 +15,10 @@ export interface ToastProps {
   options?: ExternalToast
 }
 
-export const Toast = ({ description, title, button }: ToastProps) => {
+export const Toast = ({ description, title, button, id }: ToastProps) => {
   return (
     <Alert
+      data-testid={`toast-${id}`}
       className="border-primary flex flex-col gap-1 border-2 p-4 pt-3 shadow-xl w-[540px]"
       onClick={button?.onCancel}
     >
