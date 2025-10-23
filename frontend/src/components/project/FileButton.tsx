@@ -31,16 +31,18 @@ const FileButton = ({
 }: FileButtonProps) => {
   const { t } = useTranslation()
   const { publish } = publishOnMessageExchange()
-  const [label, setLabel] = useState(file.Label ?? file.FileName)
   const inlineEditRef = useRef<InlineEditLabelRef>(null)
-
-  useEffect(() => {
-    setLabel(file.Label ?? file.FileName)
-  }, [file.Label, file.FileName])
+  const label = file.Label ?? file.FileName
+  const [ optimisticLabel, setOptimisticLabel ] = useState(label)
 
   const isActiveTab = variant === "tabActive"
 
+  useEffect(() => {
+    setOptimisticLabel(label)
+  }, [label])
+
   const onSave = (newLabel: string) => {
+    setOptimisticLabel(newLabel)
     publish({
       key: "CommandFileContextMenu",
       payload: {
@@ -53,6 +55,7 @@ const FileButton = ({
       },
     } as CommandFileContextMenu)
   }
+  
   const groupHoverStyle =
     variant === "tabActive"
       ? "group-hover:bg-primary group-hover:text-primary-foreground"
@@ -75,7 +78,7 @@ const FileButton = ({
     >
       <Button
         variant={variant}
-        value={file.FileName || ""}
+        value={optimisticLabel}
         className={cn(
           groupHoverStyle,
           "rounded-r-none rounded-b-none border-r-0 border-b-0",
@@ -84,7 +87,7 @@ const FileButton = ({
       >
         <InlineEditLabel
           ref={inlineEditRef}
-          value={label}
+          value={optimisticLabel}
           onSave={onSave}
           disabled={!isActiveTab}
         />

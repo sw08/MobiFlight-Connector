@@ -52,6 +52,7 @@ export function ConfigItemTable<TValue>({
     ConfigType: false,
   })
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,

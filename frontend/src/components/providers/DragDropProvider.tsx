@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import {
   DndContext,
   DragStartEvent,
@@ -17,7 +17,7 @@ import { IConfigItem } from "@/types"
 import { Table } from "@tanstack/react-table"
 import { ConfigItemDragOverlay } from "@/components/dnd/ConfigItemDragOverlay"
 import { ConfigItemDragContext } from "./ConfigItemContext"
-import { useProjectStore, useProjectStoreActions } from "@/stores/projectStore"
+import { useProjectStoreActions } from "@/stores/projectStore"
 import { restrictToBottomOfParentElement } from "../dnd/modifiers/restrictToBottomOfParentElement"
 import {
   calculateInsertionIndex,
@@ -106,11 +106,6 @@ export function ConfigItemDragProvider({
   const { moveItemsBetweenConfigs, restoreItemsToOriginalPositions } =
     useProjectStoreActions()
 
-  // Subscribe to the actual active config index from store
-  const activeConfigFileIndex = useProjectStore(
-    (state) => state.activeConfigFileIndex,
-  )
-
   /**
    * Called when user starts dragging an item
    * Captures what items are being dragged and from which config
@@ -183,6 +178,31 @@ export function ConfigItemDragProvider({
     },
     [table, initialConfigIndex],
   )
+
+  const moveItemsToHoveredTab = useCallback((hoveredTabIndex: number) => {
+    if (!dragState) return;
+    moveItemsBetweenConfigs(
+      dragState.items.draggedItems,
+      dragState.configs.current,
+      hoveredTabIndex,
+      0
+    );
+    setDragState((prev) =>
+      prev
+        ? {
+            ...prev,
+            configs: {
+              ...prev.configs,
+              current: hoveredTabIndex,
+            },
+            ui: {
+              ...prev.ui,
+              hoveredTabIndex,
+            },
+          }
+        : null
+    );
+  }, [dragState, moveItemsBetweenConfigs]);
 
   /**
    * Simplified drag cancellation - restore items to initial config
@@ -266,43 +286,6 @@ export function ConfigItemDragProvider({
     [dragState, getConfigItems, handleDragCancel, moveItemsBetweenConfigs],
   )
 
-  // Simplified useEffect - just move items, don't update dragState
-  useEffect(() => {
-    if (!dragState || dragState.ui.hoveredTabIndex === -1) return
-
-    // Only move items when tabIndex changes and it's different from current config
-    const shouldMoveItems = activeConfigFileIndex !== dragState.configs.current
-
-    if (!shouldMoveItems) return
-
-    console.log("🔄 Effect triggered - moving items:", {
-      from: dragState.configs.current,
-      to: activeConfigFileIndex,
-      items: dragState.items.draggedItems.map((i) => i.GUID),
-    })
-
-    // Execute the store operation - that's it!
-    moveItemsBetweenConfigs(
-      dragState.items.draggedItems,
-      dragState.configs.current,
-      activeConfigFileIndex,
-      0,
-    )
-
-    // Update drag state to reflect the new location
-    setDragState((prev) =>
-      prev
-        ? {
-            ...prev,
-            configs: {
-              ...prev.configs,
-              current: activeConfigFileIndex,
-            },
-          }
-        : null,
-    )
-  }, [activeConfigFileIndex, dragState, moveItemsBetweenConfigs])
-
   const handleDragMove = useCallback(
     (event: DragMoveEvent) => {
       if (!dragState || !tableContainerRef) return
@@ -311,6 +294,17 @@ export function ConfigItemDragProvider({
       const stateUpdates: Partial<DragState> = {}
 
       const hoveringOverTab = event.over?.data?.current?.type === "tab"
+      const hoveredTabIndex = event.over?.data?.current?.index
+
+      // Move items if hovering over a different tab
+      if (
+        hoveringOverTab &&
+        hoveredTabIndex !== undefined &&
+        hoveredTabIndex !== dragState.configs.current
+      ) {
+        moveItemsToHoveredTab(hoveredTabIndex)
+        return
+      }
 
       const defaultType =
         event.over?.data?.current?.type ??
@@ -367,7 +361,7 @@ export function ConfigItemDragProvider({
         )
       }
     },
-    [dragState, tableContainerRef],
+    [dragState, tableContainerRef, moveItemsToHoveredTab],
   )
 
   // Context value that child components can access

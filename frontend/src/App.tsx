@@ -35,14 +35,35 @@ function App() {
     useControllerDefinitionsStore()
 
   const setHubHopState = useHubHopStateActions()
+  useKeyAccelerators(GlobalKeyAccelerators, true)
+  const outlet = useOutlet()
+  const [overlayVisible, setOverlayVisible] = useState(false)
+  const { theme } = useTheme()
+  const windowSize = { x: window.innerWidth, y: window.innerHeight }
 
-  const [startupProgress, setStartupProgress] = useState<StatusBarUpdate>({
-    Value: 0,
-    Text: "Starting...",
-  })
+  // State for startup progress from app messages
+  const [appStartupProgress, setAppStartupProgress] = useState<StatusBarUpdate>(
+    {
+      Value: 0,
+      Text: "Starting...",
+    },
+  )
+
+  const queryProgressValue = Number.parseInt(
+    queryParameters.get("progress")?.toString() ?? "0",
+  )
+
+  const startupProgress =
+    queryProgressValue > 0
+      ? {
+          Value: queryProgressValue,
+          Text:
+            queryProgressValue === 100 ? "Loading complete..." : "Loading...",
+        }
+      : appStartupProgress
 
   useAppMessage("StatusBarUpdate", (message) => {
-    setStartupProgress(message.payload as StatusBarUpdate)
+    setAppStartupProgress(message.payload as StatusBarUpdate)
   })
 
   useAppMessage("Project", (message) => {
@@ -96,35 +117,12 @@ function App() {
     setHubHopState(state)
   })
 
-  // this allows to get beyond the startup screen
-  // by setting the progress to 100 via url parameter
-  useEffect(() => {
-    // convert string to number
-    const value = Number.parseInt(
-      queryParameters.get("progress")?.toString() ?? "0",
-    )
-    if (value == 100) {
-      console.log("Finished loading, navigating to config page")
-      navigate("/config")
-    } else setStartupProgress({ Value: value, Text: "Loading..." })
-  }, [navigate, queryParameters])
-
   useEffect(() => {
     if (startupProgress.Value == 100) {
       console.log("Finished loading, navigating to config page")
       navigate("/config")
     }
   }, [startupProgress.Value, navigate])
-
-  useKeyAccelerators(GlobalKeyAccelerators, true)
-
-  const outlet = useOutlet()
-
-  const windowSize = { x: window.innerWidth, y: window.innerHeight }
-
-  const [overlayVisible, setOverlayVisible] = useState(false)
-
-  const { theme } = useTheme()
 
   return (
     <>
