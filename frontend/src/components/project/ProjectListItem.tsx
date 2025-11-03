@@ -2,7 +2,11 @@ import { ProjectSummary } from "@/types/project"
 import { HtmlHTMLAttributes } from "react"
 import { Badge } from "../ui/badge"
 import { cn } from "@/lib/utils"
-import { ProjectCardImage, ProjectCardStartStopButton } from "./ProjectCard"
+import {
+  ProjectCardImage,
+  ProjectCardStartStopButton,
+  ProjectCardTitle,
+} from "./ProjectCard"
 import { IconPlaneDeparture } from "@tabler/icons-react"
 import ProjectFavStar from "./ProjectFavStar"
 
@@ -21,7 +25,7 @@ const ProjectListItem = ({
   return (
     <div
       className={cn(
-        "group flex flex-row items-center justify-between gap-2 rounded-md  p-2",
+        "group flex flex-row items-center justify-between gap-2 rounded-md p-2",
         "shadow-sm transition-all duration-200 ease-in-out hover:shadow-md",
         className,
       )}
@@ -29,45 +33,50 @@ const ProjectListItem = ({
     >
       <div className="flex w-full flex-row gap-4">
         <div className="relative">
-        <ProjectCardImage summary={summary} className="h-24 w-32" />
-        <div className="absolute inset-0 flex items-start justify-start p-2">
-        <ProjectFavStar summary={summary} variant="small" />
-        </div>
-        </div>
-        <div className="flex w-1/2 flex-col gap-2">
-          <h3 className="text-lg font-semibold">{summary.Name}</h3>
-          <p className="flex w-1/2 flex-row gap-1">
-            {summary.Sims.map((s) => {
-              const bgColor = s.Available ? "bg-primary" : "bg-muted-foreground"
-              return (
-                <Badge key={s.Name} className={bgColor}>
-                  {s.Name}
-                </Badge>
-              )
-            })}
-          </p>
-          <div className="flex flex-row gap-2">
-            {summary.Aircraft[0] && (
-              <IconPlaneDeparture
-                className={
-                  summary.Aircraft[0].Available
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                }
-              />
-            )}
-            <p className="text-muted-foreground truncate">
-              {summary.Aircraft.map((a) => `${a.Name} (${a.Filter})`).join(
-                ", ",
-              )}
-            </p>
+          <ProjectCardImage summary={summary} className="h-24 w-32" />
+          <div className="absolute inset-0 flex items-start justify-start p-2">
+            <ProjectFavStar summary={summary} variant="small" />
           </div>
         </div>
-        <div className="flex w-1/4 pr-8 items-end -mb-1">
-          <ProjectCardStartStopButton
-            isAvailable={isAvailable}
-            isRunning={isRunning}
-          />
+        <div className="flex w-full flex-col gap-2">
+          <ProjectCardTitle summary={summary} variant="listitem" />
+          <div className="flex w-full flex-row items-end justify-between">
+            <div className="flex flex-col gap-2">
+              <p className="flex flex-row gap-1">
+                {summary.Sims.map((s) => {
+                  const bgColor = s.Available
+                    ? "bg-primary"
+                    : "bg-muted-foreground"
+                  return (
+                    <Badge key={s.Name} className={bgColor}>
+                      {s.Name}
+                    </Badge>
+                  )
+                })}
+              </p>
+              <div className="flex flex-row gap-2">
+                {summary.Aircraft[0] && (
+                  <IconPlaneDeparture
+                    className={
+                      summary.Aircraft[0].Available
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    }
+                  />
+                )}
+                <p className="text-muted-foreground truncate">
+                  {summary.Aircraft.map((a) => `${a.Name} (${a.Filter})`).join(
+                    ", ",
+                  )}
+                </p>
+              </div>
+            </div>
+            <ProjectCardStartStopButton
+              isAvailable={isAvailable}
+              isRunning={isRunning}
+              className="-mb-1.5"
+            />
+          </div>
         </div>
       </div>
     </div>

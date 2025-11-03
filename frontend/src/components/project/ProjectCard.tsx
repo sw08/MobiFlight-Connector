@@ -6,7 +6,7 @@ import {
   IconFile,
   IconPlaneDeparture,
   IconPlayerPlayFilled,
-  IconPlayerStopFilled
+  IconPlayerStopFilled,
 } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import { HtmlHTMLAttributes } from "react"
@@ -18,15 +18,38 @@ import ProjectFavStar from "./ProjectFavStar"
 export type ProjectCardProps = HtmlHTMLAttributes<HTMLDivElement> & {
   summary: ProjectSummary
 }
-const ProjectCardTitle = ({ summary }: { summary: ProjectSummary }) => {
+export const ProjectCardTitle = ({
+  summary,
+  variant,
+}: {
+  summary: ProjectSummary
+  variant?: "default" | "listitem"
+}) => {
+  const variants = {
+    default: {
+      title: "text-xl font-medium",
+      button: "p-0 [&_svg]:size-8",
+      icon: "h-8",
+    },
+    listitem: {
+      title: "text-lg font-semibold",
+      button: "h-6 p-0 [&_svg]:size-6",
+      icon: "h-6",
+    },
+  }
+
+  const titleClassName = variants[variant || "default"].title
+  const buttonClassName = variants[variant || "default"].button
+  const iconClassName = variants[variant || "default"].icon
+
   return (
     <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row items-center justify-start gap-2">
-        <h2 className="truncate text-xl font-medium">{summary.Name}</h2>
+        <h2 className={titleClassName}>{summary.Name}</h2>
       </div>
-      <div>
-        <IconChevronRight className="text-primary h-8" />
-      </div>
+      <Button variant="ghost" className={buttonClassName}>
+        <IconChevronRight className={cn("text-primary", iconClassName)} />
+      </Button>
     </div>
   )
 }
