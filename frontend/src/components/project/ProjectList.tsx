@@ -28,7 +28,7 @@ const ProjectList = ({ summarys, activeProject }: ProjectListProps) => {
           X-Plane
         </Button>
       </div>
-      <ScrollArea className="h-108 pr-4">
+      <ScrollArea className="h-112 pr-4">
         <div className="grid grid-cols-1 gap-2 pb-2 xl:grid-cols-2">
           {summarys.map((project) => {
             const isActive = activeProject?.Name === project.Name;
@@ -37,7 +37,7 @@ const ProjectList = ({ summarys, activeProject }: ProjectListProps) => {
                 <ProjectListItem
                   key={project.Name}
                   summary={project}
-                  className="border-muted max-w-240 min-w-100 py-4"
+                  className="border-muted max-w-240 min-w-100 p-3"
                   active={isActive}
                 />
               </>
