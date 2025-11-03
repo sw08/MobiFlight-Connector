@@ -6,15 +6,14 @@ import {
   IconFile,
   IconPlaneDeparture,
   IconPlayerPlayFilled,
-  IconPlayerStopFilled,
-  IconStar,
-  IconStarFilled,
+  IconPlayerStopFilled
 } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import { HtmlHTMLAttributes } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import TwoStateIcon from "../icons/TwoStateIcon"
+import ProjectFavStar from "./ProjectFavStar"
 
 export type ProjectCardProps = HtmlHTMLAttributes<HTMLDivElement> & {
   summary: ProjectSummary
@@ -110,13 +109,7 @@ const ProjectCard = ({
         <div className="relative">
           <ProjectCardImage summary={summary} className="h-72" />
           <div className="absolute inset-0 flex items-start justify-start p-4">
-            <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-md">
-              {summary.Favorite ? (
-                <IconStarFilled className="h-8 fill-amber-400 stroke-amber-400" />
-              ) : (
-                <IconStar className="stroke-muted-foreground h-6" />
-              )}
-              </div>
+            <ProjectFavStar summary={summary} />
           </div>
         </div>
         <div className="flex flex-row">
