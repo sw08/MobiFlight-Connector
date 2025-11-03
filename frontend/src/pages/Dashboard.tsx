@@ -236,7 +236,7 @@ const Dashboard = () => {
               <div className="grow-0">
                 <h3 className="text-lg font-semibold">All Projects</h3>
               </div>
-              <ProjectList summarys={projectSummarys} />
+              <ProjectList summarys={projectSummarys} activeProject={activeProject} />
             </div>
           </div>
         </CardContent>

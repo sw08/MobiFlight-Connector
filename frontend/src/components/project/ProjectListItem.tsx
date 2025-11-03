@@ -12,21 +12,26 @@ import ProjectFavStar from "./ProjectFavStar"
 
 export type ProjectListItemProps = HtmlHTMLAttributes<HTMLDivElement> & {
   summary: ProjectSummary
+  active?: boolean
 }
 
 const ProjectListItem = ({
   summary: summary,
   className,
+  active,
   ...props
 }: ProjectListItemProps) => {
   const isRunning = summary.Name === "Fenix A320"
   const isAvailable = summary.Sims.every((sim) => sim.Available)
+  const activateStateClassName = active ? "bg-primary/20" : ""
 
   return (
     <div
       className={cn(
         "group flex flex-row items-center justify-between gap-2 rounded-md p-2",
         "shadow-sm transition-all duration-200 ease-in-out hover:shadow-md",
+        "hover:border-primary hover:bg-primary/10 cursor-pointer",
+        activateStateClassName,
         className,
       )}
       {...props}

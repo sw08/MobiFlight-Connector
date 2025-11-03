@@ -5,9 +5,10 @@ import { ScrollArea } from "../ui/scroll-area"
 
 export type ProjectListProps = {
   summarys: ProjectSummary[]
+  activeProject?: ProjectSummary
 }
 
-const ProjectList = ({ summarys }: ProjectListProps) => {
+const ProjectList = ({ summarys, activeProject }: ProjectListProps) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row gap-2">
@@ -28,16 +29,20 @@ const ProjectList = ({ summarys }: ProjectListProps) => {
         </Button>
       </div>
       <ScrollArea className="h-108 pr-4">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 pb-2">
-          {summarys.map((project) => (
-            <>
-              <ProjectListItem
-                key={project.Name}
-                summary={project}
-                className="border-muted max-w-240 min-w-100 py-4"
-              />
-            </>
-          ))}
+        <div className="grid grid-cols-1 gap-2 pb-2 xl:grid-cols-2">
+          {summarys.map((project) => {
+            const isActive = activeProject?.Name === project.Name;
+            return (
+              <>
+                <ProjectListItem
+                  key={project.Name}
+                  summary={project}
+                  className="border-muted max-w-240 min-w-100 py-4"
+                  active={isActive}
+                />
+              </>
+            )
+          })}
         </div>
       </ScrollArea>
     </div>
