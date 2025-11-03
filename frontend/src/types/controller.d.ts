@@ -9,4 +9,5 @@ export type Controller = {
   Connected: boolean
   ImageUrl: string | null
   certified: boolean
+  firmwareUpdate?: boolean
 }

@@ -1,5 +1,6 @@
 import { ProjectSummary } from "@/types/project"
 import {
+  IconChevronRight,
   IconDeviceGamepad2,
   IconDotsVertical,
   IconFile,
@@ -14,7 +15,6 @@ import { HtmlHTMLAttributes } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import TwoStateIcon from "../icons/TwoStateIcon"
-import { useTranslation } from "react-i18next"
 
 export type ProjectCardProps = HtmlHTMLAttributes<HTMLDivElement> & {
   summary: ProjectSummary
@@ -23,15 +23,10 @@ const ProjectCardTitle = ({ summary }: { summary: ProjectSummary }) => {
   return (
     <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row items-center justify-start gap-2">
-        {summary.Favorite ? (
-          <IconStarFilled className="h-6 fill-amber-400 stroke-amber-400" />
-        ) : (
-          <IconStar className="stroke-muted-foreground h-6" />
-        )}
         <h2 className="truncate text-xl font-medium">{summary.Name}</h2>
       </div>
       <div>
-        <IconDotsVertical className="text-muted-foreground h-6" />
+        <IconChevronRight className="text-primary h-8" />
       </div>
     </div>
   )
@@ -65,13 +60,12 @@ export const ProjectCardStartStopButton = ({
   isAvailable: boolean
   isRunning: boolean
 }) => {
-  const { t } = useTranslation()
   return (
     <Button
       // disabled={isTesting}
       variant="ghost"
       className={cn(
-        "text-md gap-1 p-1 hover:bg-none [&_svg]:size-12",
+        "text-md gap-1 p-1 hover:bg-none [&_svg]:size-7",
         className,
       )}
       onClick={() =>
@@ -91,11 +85,6 @@ export const ProjectCardStartStopButton = ({
         }
         secondaryClassName="fill-red-700 stroke-red-700"
       />
-      <div className="hidden pr-1 text-xl lg:inline-flex">
-        {!isRunning
-          ? t("Project.Execution.Run.Label")
-          : t("Project.Execution.Run.Stop")}
-      </div>
     </Button>
   )
 }
@@ -118,7 +107,18 @@ const ProjectCard = ({
     >
       <ProjectCardTitle summary={summary} />
       <div className="flex flex-col gap-4">
-        <ProjectCardImage summary={summary} className="h-72" />
+        <div className="relative">
+          <ProjectCardImage summary={summary} className="h-72" />
+          <div className="absolute inset-0 flex items-start justify-start p-4">
+            <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-md">
+              {summary.Favorite ? (
+                <IconStarFilled className="h-8 fill-amber-400 stroke-amber-400" />
+              ) : (
+                <IconStar className="stroke-muted-foreground h-6" />
+              )}
+              </div>
+          </div>
+        </div>
         <div className="flex flex-row">
           <div className="flex flex-1 flex-col gap-4">
             <div className="text-muted-foreground flex flex-row items-center justify-items-center gap-2">
@@ -162,11 +162,19 @@ const ProjectCard = ({
               </div>
             </div>
           </div>
-          <div className="flex flex-row items-end">
-            <ProjectCardStartStopButton
-              isAvailable={isAvailable}
-              isRunning={isRunning}
-            />
+          <div className="flex flex-col items-end justify-between">
+            <div
+              className="text-muted-foreground hover:text-foreground flex flex-row items-center font-semibold"
+              role="button"
+            >
+              <IconDotsVertical className="h-6" />
+            </div>
+            <div className="-mb-2 flex flex-row items-end">
+              <ProjectCardStartStopButton
+                isAvailable={isAvailable}
+                isRunning={isRunning}
+              />
+            </div>
           </div>
         </div>
       </div>

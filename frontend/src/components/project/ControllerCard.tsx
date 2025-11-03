@@ -7,6 +7,7 @@ import {
   IconRosetteDiscountCheckFilled,
 } from "@tabler/icons-react"
 import { HtmlHTMLAttributes } from "react"
+import { Button } from "../ui/button"
 
 export type ControllerCardProps = HtmlHTMLAttributes<HTMLDivElement> & {
   controller: Controller
@@ -27,7 +28,7 @@ const ControllerCard = ({
     >
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center justify-start">
-          <h3 className="text-lg font-semibold truncate">{controller.Name}</h3>
+          <h3 className="truncate text-lg font-semibold">{controller.Name}</h3>
           {controller.certified && (
             <span className="text-primary flex flex-row items-center font-semibold">
               <IconRosetteDiscountCheckFilled className="h-6" />
@@ -38,17 +39,25 @@ const ControllerCard = ({
           <IconDotsVertical className="text-muted-foreground h-6" />
         </div>
       </div>
-      <div className="3xl:h-48 h-32 w-full overflow-hidden rounded-md">
-      <img
-        src={
-          new URL(
-            `${controller.ImageUrl || "default-controller.png"}`,
-            import.meta.url,
-          ).href
-        }
-        alt={controller.Name}
-        className="rounded-md object-scale-down w-full h-full"
-      />
+      <div className="3xl:h-48 relative h-32 w-full overflow-hidden rounded-md">
+        {controller.firmwareUpdate && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Button className="shadow-md">Update available!</Button>
+          </div>
+        )}
+        <img
+          src={
+            new URL(
+              `${controller.ImageUrl || "default-controller.png"}`,
+              import.meta.url,
+            ).href
+          }
+          alt={controller.Name}
+          className={cn(
+            "h-full w-full rounded-md object-scale-down",
+            controller.Connected ? "" : "opacity-60",
+          )}
+        />
       </div>
       <p className="text-muted-foreground flex flex-col gap-2 text-sm">
         <span className="flex flex-row items-center gap-1">

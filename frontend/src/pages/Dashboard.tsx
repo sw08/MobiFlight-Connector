@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import { ControllerType } from "@/types"
 import { Controller } from "@/types/controller"
 import { ProjectSummary } from "@/types/project"
+import { IconPlus } from "@tabler/icons-react"
 
 const Dashboard = () => {
   const projectSummarys: ProjectSummary[] = [
@@ -98,6 +99,17 @@ const Dashboard = () => {
   ]
 
   const controller: Controller[] = [
+    {
+      Name: "MobiFlight Mega",
+      Vendor: "MobiFlight",
+      ProductId: "1234",
+      VendorId: "5678",
+      Type: "MobiFlight" as ControllerType,
+      Connected: true,
+      ImageUrl: "/controller/mobiflight/mobiflight-mega.jpg",
+      certified: false,
+      firmwareUpdate: true,
+    },
     {
       Name: "Thrustmaster T.16000M",
       Vendor: "Thrustmaster",
@@ -205,7 +217,7 @@ const Dashboard = () => {
               </CardTitle>
               <CardDescription>Quick access to my projects.</CardDescription>
             </div>
-            <Button>Create Project</Button>
+            <Button><IconPlus /> Project</Button>
           </div>
         </CardHeader>
         <CardContent className="border-none">
@@ -259,7 +271,7 @@ const Dashboard = () => {
               </Button>
             </div>
             <div className="overflow-auto scroll-smooth">
-              <div className="flex flex-row gap-6">
+              <div className="flex flex-row gap-6 pb-3">
                 {controller.map((ctrl) => (
                   <ControllerCard
                     controller={ctrl}

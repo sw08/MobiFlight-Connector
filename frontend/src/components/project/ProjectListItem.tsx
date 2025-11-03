@@ -57,7 +57,7 @@ const ProjectListItem = ({
             </p>
           </div>
         </div>
-        <div className="flex w-1/4 pr-8">
+        <div className="flex w-1/4 pr-8 items-end -mb-1">
           <ProjectCardStartStopButton
             isAvailable={isAvailable}
             isRunning={isRunning}
