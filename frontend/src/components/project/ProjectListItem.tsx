@@ -47,7 +47,7 @@ const ProjectListItem = ({
           <ProjectCardTitle summary={summary} variant="listitem" />
           <div className="flex w-full flex-row items-end justify-between">
             <div className="flex flex-col gap-2">
-              <p className="flex flex-row gap-1">
+              <div className="flex flex-row gap-1">
                 {summary.Sims.map((s) => {
                   const bgColor = s.Available
                     ? "bg-primary"
@@ -58,7 +58,7 @@ const ProjectListItem = ({
                     </Badge>
                   )
                 })}
-              </p>
+              </div>
               <div className="flex flex-row gap-2">
                 {summary.Aircraft[0] && (
                   <IconPlaneDeparture

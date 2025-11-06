@@ -16,6 +16,7 @@ import { publishOnMessageExchange } from "@/lib/hooks/appMessage"
 import { CommandMainMenuPayload } from "@/types/commands"
 import DarkModeToggle from "./DarkModeToggle"
 import { useProjectStore } from "@/stores/projectStore"
+import { useProjectModal } from "@/lib/hooks/useProjectModal"
 
 export const MainMenu = () => {
   const { settings } = useSettingsStore()
@@ -27,6 +28,9 @@ export const MainMenu = () => {
       payload: payload,
     })
   }
+
+  const { showOverlay } = useProjectModal()
+
   return (
     <Menubar className="justify-between bg-muted/20">
       <div className="flex items-center">
@@ -34,7 +38,9 @@ export const MainMenu = () => {
           <MenubarTrigger>File</MenubarTrigger>
           <MenubarContent>
             <MenubarItem
-              onSelect={() => handleMenuItemClick({ action: "file.new" })}
+              onSelect={() => {
+                showOverlay()
+              }}
             >
               New<MenubarShortcut>Ctrl+N</MenubarShortcut>
             </MenubarItem>

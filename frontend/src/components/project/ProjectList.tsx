@@ -29,18 +29,16 @@ const ProjectList = ({ summarys, activeProject }: ProjectListProps) => {
         </Button>
       </div>
       <ScrollArea className="h-112 pr-4">
-        <div className="grid grid-cols-1 gap-2 pb-2 xl:grid-cols-2 group/projectlist">
+        <div className="group/projectlist grid grid-cols-1 gap-2 pb-2 xl:grid-cols-2">
           {summarys.map((project) => {
-            const isActive = activeProject?.Name === project.Name;
+            const isActive = activeProject?.Name === project.Name
             return (
-              <>
-                <ProjectListItem
-                  key={project.Name}
-                  summary={project}
-                  className="border-muted max-w-240 min-w-100 p-3"
-                  active={isActive}
-                />
-              </>
+              <ProjectListItem
+                key={project.Name}
+                summary={project}
+                className="border-muted max-w-240 min-w-100 p-3"
+                active={isActive}
+              />
             )
           })}
         </div>
