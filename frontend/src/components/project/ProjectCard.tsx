@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import TwoStateIcon from "../icons/TwoStateIcon"
 import ProjectFavStar from "./ProjectFavStar"
+import { useNavigate } from "react-router"
 
 export type ProjectCardProps = HtmlHTMLAttributes<HTMLDivElement> & {
   summary: ProjectSummary
@@ -38,6 +39,12 @@ export const ProjectCardTitle = ({
     },
   }
 
+  const navigate = useNavigate();
+
+  const navigateToProject = () => {
+    navigate(`/config`);
+  }
+
   const titleClassName = variants[variant || "default"].title
   const buttonClassName = variants[variant || "default"].button
   const iconClassName = variants[variant || "default"].icon
@@ -47,7 +54,7 @@ export const ProjectCardTitle = ({
       <div className="flex flex-row items-center justify-start gap-2">
         <h2 className={titleClassName}>{summary.Name}</h2>
       </div>
-      <Button variant="ghost" className={buttonClassName}>
+      <Button variant="ghost" className={buttonClassName} onClick={navigateToProject}>
         <IconChevronRight className={cn("text-primary", iconClassName)} />
       </Button>
     </div>

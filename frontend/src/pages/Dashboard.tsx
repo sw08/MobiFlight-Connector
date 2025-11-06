@@ -217,7 +217,7 @@ const Dashboard = () => {
               </CardTitle>
               <CardDescription>Quick access to my projects.</CardDescription>
             </div>
-            <Button><IconPlus /> Project</Button>
+            <Button className="[&_svg]:size-6"><IconPlus /> Project</Button>
           </div>
         </CardHeader>
         <CardContent className="border-none">
