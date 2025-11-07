@@ -19,6 +19,8 @@ namespace MobiFlight.BrowserMessages.Incoming
         file_exit,
         [EnumMember(Value = "file.recent")]
         file_recent,
+        [EnumMember(Value = "project.edit")]
+        project_edit,
         [EnumMember(Value = "extras.hubhop.download")]
         extras_hubhop_download,
         [EnumMember(Value = "extras.msfs.reinstall")]

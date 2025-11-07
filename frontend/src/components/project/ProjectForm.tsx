@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from "react"
 import { ProjectSummary } from "@/types/project"
+import { useLocation } from "react-router"
 
 type ProjectFormProps = {
   project: ProjectSummary
@@ -39,6 +40,9 @@ const ProjectForm = ({
   const [useFsuipc, setUseFsuipc] = useState(project?.Sim?.Options?.UseFsuipc ?? false)
   const [selectedAircraft, setSelectedAircraft] = useState<string[]>([])
   // const [thumbnail, setThumbnail] = useState<File>()
+
+  const location = useLocation()
+  const isEdit = location.state?.mode === "edit"
 
   // Aircraft options based on simulator selection
   const aircraftOptions: Record<string, string[]> = {
@@ -71,7 +75,7 @@ const ProjectForm = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Create New Project</DialogTitle>
+          <DialogTitle className="text-2xl">{isEdit ? "Edit Project" : "Create New Project"}</DialogTitle>
           <DialogDescription className="text-md">
             Configure your project settings and select your aircraft.
           </DialogDescription>

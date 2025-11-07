@@ -9,6 +9,7 @@ export default function NewProjectModalRoute() {
   const location = useLocation()
 
   const project = location.state?.project as ProjectSummary | { Name: "" } as ProjectSummary
+  const isEdit = location.state?.mode === "edit"
   const { publish } = publishOnMessageExchange()
 
   return (
@@ -23,7 +24,7 @@ export default function NewProjectModalRoute() {
         publish({
           key: "CommandMainMenu",
           payload: {
-            action: "file.new",
+            action: isEdit ? "project.edit" : "file.new",
             options: {
               project: values
             }

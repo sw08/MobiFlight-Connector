@@ -36,6 +36,9 @@ namespace MobiFlight.BrowserMessages.Incoming.Handler
                         _mainForm.LoadConfig(filename);
                     }
                     break;
+                case CommandMainMenuAction.project_edit:
+                    _mainForm.updateProjectSettings(message.Options.Project);
+                    break;
                 case CommandMainMenuAction.file_exit:
                     _mainForm.exitToolStripMenuItem_Click(_mainForm, null);
                     break;

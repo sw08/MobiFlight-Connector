@@ -2828,6 +2828,14 @@ namespace MobiFlight.UI
             MessageBox.Show("Logs successfully copied to the clipboard.", "Copy to clipboard");
         }
 
+        internal void updateProjectSettings(Project project)
+        {
+            execManager.Project.Name = project.Name;
+            execManager.Project.Sim = project.Sim;
+            execManager.Project.UseFsuipc = project.UseFsuipc;
+            execManager.Project.Aircraft = project.Aircraft;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 

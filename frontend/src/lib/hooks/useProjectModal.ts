@@ -13,12 +13,12 @@ export function useProjectModal() {
   const showOverlay = (options: ProjectModalOptions) => {
     console.log("Showing project modal with options:", options)
     const route = options.mode === "create" ? "/project/new" : `/project/edit`
-    navigate(route, { state: { backgroundLocation: location, project: options.project } })
+    navigate(route, { state: { backgroundLocation: location, ...options } })
   }
 
   const showStandalone = (options: ProjectModalOptions) => {
     const route = options.mode === "create" ? "/project/new" : `/project/edit`
-    navigate(route, { state: { backgroundLocation: location, project: options.project } })
+    navigate(route, { state: { backgroundLocation: location, ...options } })
   }
 
   return { showOverlay, showStandalone }
