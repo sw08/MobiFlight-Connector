@@ -45,7 +45,8 @@
         "HasChanges": "Save changes",
         "NoChanges": "No changes to save",
         "Success": "Saved successfully"
-      }
+      },
+      "Settings": "Settings"
     },
     "Execution": {
       "AutoRun": {

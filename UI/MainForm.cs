@@ -1118,7 +1118,7 @@ namespace MobiFlight.UI
 
 
             // Initialize properly the empty project state.
-            CreateNewProject();
+            CreateNewProject(new Project() { Name = i18n._tr("DefaultProjectName") });
         }
 
 #if ARCAZE

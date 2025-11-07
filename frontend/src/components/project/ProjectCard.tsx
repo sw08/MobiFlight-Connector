@@ -213,7 +213,7 @@ const ProjectCard = ({
                     onClick={handleEditSettings}
                   >
                     <IconSettings />
-                    {t("Project.Settings")}
+                    {t("Project.Toolbar.Settings")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
