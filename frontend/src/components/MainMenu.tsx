@@ -39,7 +39,7 @@ export const MainMenu = () => {
           <MenubarContent>
             <MenubarItem
               onSelect={() => {
-                showOverlay()
+                showOverlay({ mode: "create" })
               }}
             >
               New<MenubarShortcut>Ctrl+N</MenubarShortcut>

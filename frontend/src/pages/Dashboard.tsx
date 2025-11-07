@@ -9,6 +9,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card"
+import { useProjectModal } from "@/lib/hooks/useProjectModal"
 import { cn } from "@/lib/utils"
 import { ControllerType } from "@/types"
 import { Controller } from "@/types/controller"
@@ -16,6 +17,8 @@ import { ProjectSummary } from "@/types/project"
 import { IconPlus } from "@tabler/icons-react"
 
 const Dashboard = () => {
+  const { showOverlay } = useProjectModal()
+
   const projectSummarys: ProjectSummary[] = [
     {
       Name: "Fenix A320",
@@ -217,7 +220,7 @@ const Dashboard = () => {
               </CardTitle>
               <CardDescription>Quick access to my projects.</CardDescription>
             </div>
-            <Button className="[&_svg]:size-6"><IconPlus /> Project</Button>
+            <Button className="[&_svg]:size-6" onClick={() => showOverlay({mode: "create"})}><IconPlus /> Project</Button>
           </div>
         </CardHeader>
         <CardContent className="border-none">

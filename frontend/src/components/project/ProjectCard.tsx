@@ -7,6 +7,7 @@ import {
   IconPlaneDeparture,
   IconPlayerPlayFilled,
   IconPlayerStopFilled,
+  IconSettings,
 } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import { HtmlHTMLAttributes } from "react"
@@ -15,6 +16,9 @@ import { Button } from "../ui/button"
 import TwoStateIcon from "../icons/TwoStateIcon"
 import ProjectFavStar from "./ProjectFavStar"
 import { useNavigate } from "react-router"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useTranslation } from "react-i18next"
+import { ProjectModalOptions, useProjectModal } from "@/lib/hooks/useProjectModal"
 
 export type ProjectCardProps = HtmlHTMLAttributes<HTMLDivElement> & {
   summary: ProjectSummary
@@ -39,10 +43,10 @@ export const ProjectCardTitle = ({
     },
   }
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const navigateToProject = () => {
-    navigate(`/config`);
+    navigate(`/config`)
   }
 
   const titleClassName = variants[variant || "default"].title
@@ -54,7 +58,11 @@ export const ProjectCardTitle = ({
       <div className="flex flex-row items-center justify-start gap-2">
         <h2 className={titleClassName}>{summary.Name}</h2>
       </div>
-      <Button variant="ghost" className={buttonClassName} onClick={navigateToProject}>
+      <Button
+        variant="ghost"
+        className={buttonClassName}
+        onClick={navigateToProject}
+      >
         <IconChevronRight className={cn("text-primary", iconClassName)} />
       </Button>
     </div>
@@ -125,6 +133,13 @@ const ProjectCard = ({
 }: ProjectCardProps) => {
   const isRunning = summary.Name === "Fenix A320"
   const isAvailable = summary.Sims.every((sim) => sim.Available)
+  const { t } = useTranslation()
+  const { showOverlay } = useProjectModal()
+
+  const handleEditSettings = () => {
+    const options = { mode: "edit", project: summary } as ProjectModalOptions
+    showOverlay(options)
+  }
 
   return (
     <div
@@ -186,11 +201,25 @@ const ProjectCard = ({
             </div>
           </div>
           <div className="flex flex-col items-end justify-between">
-            <div
-              className="text-muted-foreground hover:text-foreground flex flex-row items-center font-semibold"
-              role="button"
-            >
-              <IconDotsVertical className="h-6" />
+            <div className="relative">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-4 px-2">
+                    <span className="sr-only">
+                      {t("General.Action.OpenMenu")}
+                    </span>
+                    <IconDotsVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={handleEditSettings}
+                  >
+                    <IconSettings />
+                    {t("Project.Settings")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <div className="-mb-2 flex flex-row items-end">
               <ProjectCardStartStopButton

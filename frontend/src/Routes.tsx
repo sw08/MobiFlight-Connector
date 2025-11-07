@@ -24,6 +24,7 @@ export function AppRoutes() {
       {state?.backgroundLocation && (
         <Routes>
           <Route path="/project/new" element={<NewProjectModalRoute />} />
+          <Route path="/project/edit" element={<NewProjectModalRoute />} />
         </Routes>
       )}
 

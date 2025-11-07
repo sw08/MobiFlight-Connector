@@ -1,16 +1,17 @@
-import { useNavigate } from "react-router-dom"
-import type { Project } from "@/types/project"
+import { useLocation, useNavigate } from "react-router-dom"
+import type { ProjectSummary } from "@/types/project"
 import ProjectForm from "@/components/project/ProjectForm"
 
 export default function NewProjectModalRoute() {
   const navigate = useNavigate()
   const close = () => navigate(-1)
+  const location = useLocation()
 
-  const emptyProject = { Name: "" } as Project
+  const project = location.state?.project as ProjectSummary | { Name: "" } as ProjectSummary
 
   return (
     <ProjectForm
-      project={emptyProject}
+      project={project}
       isOpen
       onOpenChange={(open: boolean) => {
         if (!open) close()
