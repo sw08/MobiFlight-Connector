@@ -35,8 +35,8 @@ const ProjectForm = ({
   onSave,
 }: ProjectFormProps) => {
   const [name, setName] = useState(project?.Name ?? "")
-  const [simulator, setSimulator] = useState<string>("msfs")
-  const [useFsuipc, setUseFsuipc] = useState(false)
+  const [simulator, setSimulator] = useState<string>(project?.Sim?.Type ?? "msfs")
+  const [useFsuipc, setUseFsuipc] = useState(project?.Sim?.Options?.UseFsuipc ?? false)
   const [selectedAircraft, setSelectedAircraft] = useState<string[]>([])
   // const [thumbnail, setThumbnail] = useState<File>()
 

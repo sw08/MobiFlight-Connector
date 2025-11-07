@@ -22,8 +22,11 @@ const ProjectListItem = ({
   ...props
 }: ProjectListItemProps) => {
   const isRunning = summary.Name === "Fenix A320"
-  const isAvailable = summary.Sims.every((sim) => sim.Available)
+  const isAvailable = summary.Sim.Available
   const activateStateClassName = active ? "bg-primary/20" : "opacity-40 group-hover/projectlist:opacity-100"
+  const bgColor = isAvailable
+                    ? "bg-primary"
+                    : "bg-muted-foreground"
 
   return (
     <div
@@ -48,16 +51,9 @@ const ProjectListItem = ({
           <div className="flex w-full flex-row items-end justify-between">
             <div className="flex flex-col gap-2">
               <div className="flex flex-row gap-1">
-                {summary.Sims.map((s) => {
-                  const bgColor = s.Available
-                    ? "bg-primary"
-                    : "bg-muted-foreground"
-                  return (
-                    <Badge key={s.Name} className={bgColor}>
-                      {s.Name}
-                    </Badge>
-                  )
-                })}
+                  <Badge key={summary.Sim.Type} className={bgColor}>
+                  {summary.Sim.Type}
+                </Badge>
               </div>
               <div className="flex flex-row gap-2">
                 {summary.Aircraft[0] && (

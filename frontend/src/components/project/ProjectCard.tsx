@@ -75,7 +75,7 @@ export const ProjectCardImage = ({
 }: HtmlHTMLAttributes<HTMLDivElement> & { summary: ProjectSummary }) => {
   const imageUrl =
     summary.Thumbnail ||
-    `/aircraft/default/${summary.Sims[0].Name.toLowerCase()}.jpg`
+    `/sim/${summary.Sim.Type.toLowerCase()}.jpg`
 
   return (
     <div className={cn("bg-accent rounded-lg", className)}>
@@ -132,7 +132,7 @@ const ProjectCard = ({
   ...otherProps
 }: ProjectCardProps) => {
   const isRunning = summary.Name === "Fenix A320"
-  const isAvailable = summary.Sims.every((sim) => sim.Available)
+  const isAvailable = summary.Sim.Available
   const { t } = useTranslation()
   const { showOverlay } = useProjectModal()
 
@@ -140,6 +140,10 @@ const ProjectCard = ({
     const options = { mode: "edit", project: summary } as ProjectModalOptions
     showOverlay(options)
   }
+
+  const bgColor = isAvailable
+                  ? "bg-primary"
+                  : "bg-muted-foreground"
 
   return (
     <div
@@ -160,16 +164,9 @@ const ProjectCard = ({
         <div className="flex flex-row">
           <div className="flex flex-1 flex-col gap-4">
             <div className="text-muted-foreground flex flex-row items-center justify-items-center gap-2">
-              {summary.Sims.map((s) => {
-                const bgColor = s.Available
-                  ? "bg-primary"
-                  : "bg-muted-foreground"
-                return (
-                  <Badge key={s.Name} className={bgColor}>
-                    {s.Name}
-                  </Badge>
-                )
-              })}
+              <Badge key={summary.Sim.Type} className={bgColor}>
+                {summary.Sim.Type}
+              </Badge>
             </div>
             <div className="flex flex-row gap-2">
               {summary.Aircraft[0] && (

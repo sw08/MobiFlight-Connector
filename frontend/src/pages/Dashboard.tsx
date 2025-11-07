@@ -21,12 +21,11 @@ const Dashboard = () => {
 
   const projectSummarys: ProjectSummary[] = [
     {
-      Name: "Fenix A320",
+      Name: "Fenix A320 Project",
       Favorite: true,
-      Sims: [
-        { Name: "MSFS2020", Available: true },
-        { Name: "FSUIPC", Available: false },
-      ],
+      Sim: { 
+        Type: "msfs", Available: true, Options: { UseFsuipc: true } 
+      },
       Controllers: [
         { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: true },
         { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
@@ -35,7 +34,7 @@ const Dashboard = () => {
     },
     {
       Name: "Boeing 737",
-      Sims: [{ Name: "MSFS2020", Available: true }],
+      Sim: { Type: "msfs", Available: true, Options: { UseFsuipc: false } },
       Controllers: [
         { Name: "Yoke", Type: "Logitech G Pro Flight", Available: true },
         { Name: "Throttle", Type: "Logitech G Pro Flight", Available: false },
@@ -44,7 +43,7 @@ const Dashboard = () => {
     },
     {
       Name: "Airbus A380",
-      Sims: [{ Name: "X-Plane", Available: false }],
+      Sim: { Type: "X-Plane", Available: false },
       Controllers: [
         { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: false },
         { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
@@ -53,10 +52,7 @@ const Dashboard = () => {
     },
     {
       Name: "FBW A320",
-      Sims: [
-        { Name: "MSFS2024", Available: true },
-        { Name: "FSUIPC", Available: false },
-      ],
+      Sim: { Type: "MSFS2024", Available: true, Options: { UseFsuipc: true } },
       Controllers: [
         { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: true },
         { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
@@ -65,7 +61,7 @@ const Dashboard = () => {
     },
     {
       Name: "Boeing 738",
-      Sims: [{ Name: "MSFS2020", Available: true }],
+      Sim: { Type: "msfs", Available: true },
       Controllers: [
         { Name: "Yoke", Type: "Logitech G Pro Flight", Available: true },
         { Name: "Throttle", Type: "Logitech G Pro Flight", Available: false },
@@ -74,7 +70,7 @@ const Dashboard = () => {
     },
     {
       Name: "Airbus A381",
-      Sims: [{ Name: "X-Plane", Available: false }],
+      Sim: { Type: "X-Plane", Available: false },
       Controllers: [
         { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: false },
         { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
@@ -83,7 +79,7 @@ const Dashboard = () => {
     },
     {
       Name: "Airbus FooBar",
-      Sims: [{ Name: "X-Plane", Available: false }],
+      Sim: { Type: "X-Plane", Available: false },
       Controllers: [
         { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: false },
         { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
@@ -92,7 +88,7 @@ const Dashboard = () => {
     },
     {
       Name: "Airbus Blabla",
-      Sims: [{ Name: "X-Plane", Available: false }],
+      Sim: { Type: "X-Plane", Available: false },
       Controllers: [
         { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: false },
         { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
@@ -200,7 +196,7 @@ const Dashboard = () => {
         "Connect with other MobiFlight users, share your projects, and get help on our official forum.",
     },
     {
-      title: "New Tutorial: Setting Up MobiFlight with MSFS2020",
+      title: "New Tutorial: Setting Up MobiFlight with msfs",
       date: "2024-04-10",
       content:
         "Check out our latest tutorial on how to set up MobiFlight with Microsoft Flight Simulator 2020 for an immersive experience.",

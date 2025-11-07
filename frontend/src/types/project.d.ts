@@ -10,10 +10,13 @@ export interface ProjectSummary {
   Name: string
   Thumbnail?: string
   Favorite?: boolean
-  Sims: {
-    Name: string
+  Sim: {
+    Type: string
+    Options?: {
+      UseFsuipc?: boolean
+    }
     Available: boolean
-  }[]
+  }
   Controllers: {
     Name: string
     Type: string
