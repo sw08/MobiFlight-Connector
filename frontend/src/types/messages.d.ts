@@ -1,11 +1,13 @@
 import { Settings } from "http2"
 import { IConfigValueOnlyItem } from "./config"
 import { JoystickDefinition, MidiControllerDefinition } from "./definitions"
+import { ProjectInfo } from "@/types/project"
 
 export type AppMessageKey =
   | "StatusBarUpdate"
   | "ConfigFile"
   | "Project"
+  | "RecentProjects"
   | "ConfigValueFullUpdate"
   | "ConfigValuePartialUpdate"
   | "ConfigValueRawAndFinalUpdate"
@@ -31,6 +33,7 @@ export type AppMessagePayload =
   | OverlayState
   | Notification
   | HubHopState
+  | RecentProjects
   
 // AppMessage is the message format
 // when receiving messages from the backend
@@ -104,6 +107,10 @@ export interface HubHopState {
   ShouldUpdate: boolean
   UpdateProgress: number
   Result: "Success" | "Error" | "InProgress" | "Pending"
+}
+
+export interface RecentProjects {
+  Projects: ProjectInfo[]
 }
 
 // Not sure what this is for

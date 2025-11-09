@@ -8,13 +8,14 @@ import Settings from "./types/settings"
 import _ from "lodash"
 import { useProjectStore } from "./stores/projectStore"
 import { MainMenu } from "./components/MainMenu"
-import { useSettingsStore } from "./stores/settingsStore"
+import { useRecentProjects, useSettingsStore } from "./stores/settingsStore"
 import { useControllerDefinitionsStore } from "./stores/definitionStore"
 import {
   HubHopState,
   JoystickDefinitions,
   MidiControllerDefinitions,
   OverlayState,
+  RecentProjects,
 } from "./types/messages"
 import {
   useKeyAccelerators,
@@ -30,6 +31,7 @@ function App() {
   const [queryParameters] = useSearchParams()
   const navigate = useNavigate()
   const { setProject, setHasChanged } = useProjectStore()
+  const { setRecentProjects } = useRecentProjects()
   const { setSettings } = useSettingsStore()
   const { setJoystickDefinitions, setMidiControllerDefinitions } =
     useControllerDefinitionsStore()
@@ -70,6 +72,12 @@ function App() {
     const project = message.payload as Project
     console.log("Project message received", project)
     setProject(project)
+  })
+
+  useAppMessage("RecentProjects", (message) => {
+    const recentProjects = message.payload as RecentProjects
+    setRecentProjects(recentProjects.Projects)
+    console.log("List of Recent Projects received", recentProjects.Projects)
   })
 
   useAppMessage("Settings", (message) => {
@@ -118,9 +126,9 @@ function App() {
   })
 
   useEffect(() => {
-    if (startupProgress.Value == 100) {
-      console.log("Finished loading, navigating to config page")
-      navigate("/config")
+    if (startupProgress.Value == 100 && location.pathname == "/index.html") {
+      console.log("Finished loading, navigating to home")
+      navigate("/home")
     }
   }, [startupProgress.Value, navigate])
 

@@ -446,6 +446,31 @@ namespace MobiFlight.UI
             Refresh();
 
             PublishSettings();
+            PublishRecentProjectList();
+        }
+
+        private void PublishRecentProjectList()
+        {
+            var recentFiles = Properties.Settings.Default.RecentFiles.Cast<string>().ToList();
+            var recentProjects = new List<ProjectInfo>();
+            Task.Run(() =>
+            {
+                foreach (var project in recentFiles) {
+                    try
+                    {
+                        var p = new Project();
+                        p.FilePath = project;
+                        p.OpenFile();
+
+                        recentProjects.Add(p.ToProjectInfo());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Instance.log($"Could not load recent project file {project}: {ex.Message}", LogSeverity.Warn);
+                    }
+                }
+                MessageExchange.Instance.Publish(new RecentProjects() { Projects = recentProjects });
+            }).ConfigureAwait(false);
         }
 
         private void PublishSettings()
@@ -832,6 +857,7 @@ namespace MobiFlight.UI
             UpdateAllConnectionIcons();
 
             UpdateStatusBarModuleInformation();
+            PublishRecentProjectList();
 
             // Track config loaded event
             AppTelemetry.Instance.TrackStart();

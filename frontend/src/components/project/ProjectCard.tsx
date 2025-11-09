@@ -1,4 +1,4 @@
-import { ProjectSummary } from "@/types/project"
+import { ProjectInfo } from "@/types/project"
 import {
   IconChevronRight,
   IconDeviceGamepad2,
@@ -16,18 +16,26 @@ import { Button } from "../ui/button"
 import TwoStateIcon from "../icons/TwoStateIcon"
 import ProjectFavStar from "./ProjectFavStar"
 import { useNavigate } from "react-router"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useTranslation } from "react-i18next"
-import { ProjectModalOptions, useProjectModal } from "@/lib/hooks/useProjectModal"
+import {
+  ProjectModalOptions,
+  useProjectModal,
+} from "@/lib/hooks/useProjectModal"
 
 export type ProjectCardProps = HtmlHTMLAttributes<HTMLDivElement> & {
-  summary: ProjectSummary
+  summary: ProjectInfo
 }
 export const ProjectCardTitle = ({
   summary,
   variant,
 }: {
-  summary: ProjectSummary
+  summary: ProjectInfo
   variant?: "default" | "listitem"
 }) => {
   const variants = {
@@ -72,10 +80,8 @@ export const ProjectCardTitle = ({
 export const ProjectCardImage = ({
   summary,
   className,
-}: HtmlHTMLAttributes<HTMLDivElement> & { summary: ProjectSummary }) => {
-  const imageUrl =
-    summary.Thumbnail ||
-    `/sim/${summary.Sim.Type.toLowerCase()}.jpg`
+}: HtmlHTMLAttributes<HTMLDivElement> & { summary: ProjectInfo }) => {
+  const imageUrl = summary.Thumbnail || `/sim/${summary.Sim.toLowerCase()}.jpg`
 
   return (
     <div className={cn("bg-accent rounded-lg", className)}>
@@ -132,7 +138,7 @@ const ProjectCard = ({
   ...otherProps
 }: ProjectCardProps) => {
   const isRunning = summary.Name === "Fenix A320"
-  const isAvailable = summary.Sim.Available
+  const isAvailable = false
   const { t } = useTranslation()
   const { showOverlay } = useProjectModal()
 
@@ -141,9 +147,8 @@ const ProjectCard = ({
     showOverlay(options)
   }
 
-  const bgColor = isAvailable
-                  ? "bg-primary"
-                  : "bg-muted-foreground"
+  const bgColor = isAvailable ? "bg-primary" : "bg-muted-foreground"
+  console.log("Rendering ProjectCard for:", summary)
 
   return (
     <div
@@ -164,22 +169,14 @@ const ProjectCard = ({
         <div className="flex flex-row">
           <div className="flex flex-1 flex-col gap-4">
             <div className="text-muted-foreground flex flex-row items-center justify-items-center gap-2">
-              <Badge key={summary.Sim.Type} className={bgColor}>
-                {summary.Sim.Type}
+              <Badge key={summary.Sim} className={bgColor}>
+                {summary.Sim}
               </Badge>
             </div>
             <div className="flex flex-row gap-2">
-              {summary.Aircraft[0] && (
-                <IconPlaneDeparture
-                  className={
-                    summary.Aircraft[0].Available
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  }
-                />
-              )}
+              <IconPlaneDeparture className={"text-primary"} />
               <p className="text-muted-foreground truncate">
-                {summary.Aircraft.map((a) => `${a.Name} (${a.Filter})`).join(
+                {summary.Aircraft?.map((a) => `${a})`).join(
                   ", ",
                 )}
               </p>
@@ -188,7 +185,7 @@ const ProjectCard = ({
               <div className="flex flex-row gap-2">
                 <IconDeviceGamepad2 className="text-muted-foreground" />
                 <p className="text-muted-foreground">
-                  {summary.Controllers.length}
+                  {summary.Controllers?.length}
                 </p>
               </div>
               <div className="flex flex-row gap-2">
@@ -209,9 +206,7 @@ const ProjectCard = ({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={handleEditSettings}
-                  >
+                  <DropdownMenuItem onClick={handleEditSettings}>
                     <IconSettings />
                     {t("Project.Toolbar.Settings")}
                   </DropdownMenuItem>

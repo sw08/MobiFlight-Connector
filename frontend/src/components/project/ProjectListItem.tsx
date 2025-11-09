@@ -1,4 +1,4 @@
-import { ProjectSummary } from "@/types/project"
+import { ProjectInfo } from "@/types/project"
 import { HtmlHTMLAttributes } from "react"
 import { Badge } from "../ui/badge"
 import { cn } from "@/lib/utils"
@@ -11,7 +11,7 @@ import { IconPlaneDeparture } from "@tabler/icons-react"
 import ProjectFavStar from "./ProjectFavStar"
 
 export type ProjectListItemProps = HtmlHTMLAttributes<HTMLDivElement> & {
-  summary: ProjectSummary
+  summary: ProjectInfo
   active?: boolean
 }
 

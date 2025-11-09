@@ -11,91 +11,17 @@ import {
 } from "@/components/ui/card"
 import { useProjectModal } from "@/lib/hooks/useProjectModal"
 import { cn } from "@/lib/utils"
+import { useProjectStore } from "@/stores/projectStore"
+import { useRecentProjects } from "@/stores/settingsStore"
 import { ControllerType } from "@/types"
 import { Controller } from "@/types/controller"
-import { ProjectSummary } from "@/types/project"
+import { ProjectInfo } from "@/types/project"
 import { IconPlus } from "@tabler/icons-react"
 
 const Dashboard = () => {
   const { showOverlay } = useProjectModal()
-
-  const projectSummarys: ProjectSummary[] = [
-    {
-      Name: "Fenix A320 Project",
-      Favorite: true,
-      Sim: { 
-        Type: "msfs", Available: true, Options: { UseFsuipc: true } 
-      },
-      Controllers: [
-        { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: true },
-        { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
-      ],
-      Aircraft: [{ Name: "Fenix A320", Filter: "Airbus", Available: true }],
-    },
-    {
-      Name: "Boeing 737",
-      Sim: { Type: "msfs", Available: true, Options: { UseFsuipc: false } },
-      Controllers: [
-        { Name: "Yoke", Type: "Logitech G Pro Flight", Available: true },
-        { Name: "Throttle", Type: "Logitech G Pro Flight", Available: false },
-      ],
-      Aircraft: [{ Name: "Boeing 737", Filter: "Boeing", Available: false }],
-    },
-    {
-      Name: "Airbus A380",
-      Sim: { Type: "X-Plane", Available: false },
-      Controllers: [
-        { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: false },
-        { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
-      ],
-      Aircraft: [{ Name: "Airbus A380", Filter: "Airbus", Available: false }],
-    },
-    {
-      Name: "FBW A320",
-      Sim: { Type: "MSFS2024", Available: true, Options: { UseFsuipc: true } },
-      Controllers: [
-        { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: true },
-        { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
-      ],
-      Aircraft: [{ Name: "Fenix A320", Filter: "Airbus", Available: true }],
-    },
-    {
-      Name: "Boeing 738",
-      Sim: { Type: "msfs", Available: true },
-      Controllers: [
-        { Name: "Yoke", Type: "Logitech G Pro Flight", Available: true },
-        { Name: "Throttle", Type: "Logitech G Pro Flight", Available: false },
-      ],
-      Aircraft: [{ Name: "Boeing 737", Filter: "Boeing", Available: false }],
-    },
-    {
-      Name: "Airbus A381",
-      Sim: { Type: "X-Plane", Available: false },
-      Controllers: [
-        { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: false },
-        { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
-      ],
-      Aircraft: [{ Name: "Airbus A380", Filter: "Airbus", Available: false }],
-    },
-    {
-      Name: "Airbus FooBar",
-      Sim: { Type: "X-Plane", Available: false },
-      Controllers: [
-        { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: false },
-        { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
-      ],
-      Aircraft: [{ Name: "Airbus A380", Filter: "Airbus", Available: false }],
-    },
-    {
-      Name: "Airbus Blabla",
-      Sim: { Type: "X-Plane", Available: false },
-      Controllers: [
-        { Name: "Joystick", Type: "Thrustmaster T.16000M", Available: false },
-        { Name: "Throttle", Type: "Thrustmaster TWCS", Available: false },
-      ],
-      Aircraft: [{ Name: "Airbus A380", Filter: "Airbus", Available: false }],
-    },
-  ]
+  const { recentProjects } = useRecentProjects()
+  const { project } = useProjectStore()
 
   const controller: Controller[] = [
     {
@@ -203,7 +129,7 @@ const Dashboard = () => {
     },
   ]
 
-  const activeProject = projectSummarys[0]
+  const activeProject = project
 
   return (
     <div className="grid-flow item grid grid-flow-row-dense grid-cols-1 grid-rows-2 gap-4 border-none 2xl:grid-cols-4">
@@ -216,7 +142,12 @@ const Dashboard = () => {
               </CardTitle>
               <CardDescription>Quick access to my projects.</CardDescription>
             </div>
-            <Button className="[&_svg]:size-6" onClick={() => showOverlay({mode: "create"})}><IconPlus /> Project</Button>
+            <Button
+              className="[&_svg]:size-6"
+              onClick={() => showOverlay({ mode: "create" })}
+            >
+              <IconPlus /> Project
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="border-none">
@@ -225,17 +156,24 @@ const Dashboard = () => {
               <div>
                 <h3 className="text-lg font-semibold">Current Project</h3>
               </div>
-              <ProjectCard
-                key={activeProject.Name}
-                summary={activeProject}
-                className=""
-              />
+              {activeProject ? (
+                <ProjectCard
+                  key={activeProject.Name}
+                  summary={activeProject}
+                  className=""
+                />
+              ) : (
+                <div>No project loaded</div>
+              )}
             </div>
             <div className="flex h-full grow flex-col gap-4">
               <div className="grow-0">
                 <h3 className="text-lg font-semibold">All Projects</h3>
               </div>
-              <ProjectList summarys={projectSummarys} activeProject={activeProject} />
+              <ProjectList
+                summarys={recentProjects}
+                activeProject={activeProject as ProjectInfo}
+              />
             </div>
           </div>
         </CardContent>

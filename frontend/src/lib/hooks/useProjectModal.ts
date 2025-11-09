@@ -1,9 +1,9 @@
-import { ProjectSummary } from "@/types/project"
+import { ProjectInfo } from "@/types/project"
 import { useLocation, useNavigate } from "react-router"
 
 export type ProjectModalOptions = {
   mode: "create" | "edit"
-  project?: ProjectSummary
+  project?: ProjectInfo
 }
 
 export function useProjectModal() {

@@ -545,5 +545,9 @@
     }
   ],
   "Name": "Test Project",
-  "FilePath": "tests/data/project.testdata.json"
+  "FilePath": "tests/data/project.testdata.json",
+  "Sim": "MSFS2020",
+  "Aircraft": [],
+  "Conrollers": [],
+  "UseFsuipc": false
 }

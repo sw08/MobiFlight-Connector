@@ -15,7 +15,7 @@ import { AnimatedSaveButton } from "../ui/AnimatedSaveButton"
 import { InlineEditLabel, InlineEditLabelRef } from "../InlineEditLabel"
 import { Project } from "@/types"
 import { useProjectModal } from "@/lib/hooks/useProjectModal"
-import { ProjectSummary } from "@/types/project"
+import { ProjectInfo } from "@/types/project"
 
 export type ProjectNameLabelProps = {
   project: Project | null
@@ -55,7 +55,7 @@ const ProjectNameLabel = () => {
 
   const { showOverlay } = useProjectModal()
   const handleSettingsClick = () => {
-    showOverlay({ mode: "edit", project: project as ProjectSummary })
+    showOverlay({ mode: "edit", project: project as ProjectInfo })
   }
 
   return (

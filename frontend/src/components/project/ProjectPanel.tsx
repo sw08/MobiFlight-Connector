@@ -1,6 +1,7 @@
 import FileButton from "./FileButton"
 import { Button } from "../ui/button"
 import {
+  IconChevronLeft,
   IconFolderPlus,
   IconMinusVertical,
   IconPlus,
@@ -18,10 +19,12 @@ import { useTranslation } from "react-i18next"
 import ExecutionToolbar from "../ExecutionToolbar"
 import ProjectNameLabel from "./ProjectNameLabel"
 import { useConfigItemDragContext } from "@/lib/hooks/useConfigItemDragContext"
+import { useNavigate } from "react-router"
 
 const ProjectPanel = () => {
   const { t } = useTranslation()
   const { publish } = publishOnMessageExchange()
+  const navigate = useNavigate()
 
   const { 
     activeConfigFileIndex,
@@ -100,6 +103,9 @@ const ProjectPanel = () => {
       className="border-b-solid flex flex-row gap-2 border-b border-b-muted-foreground/50 pb-0 pl-0 pr-2 pt-1"
       data-testid="project-panel"
     >
+      <div className="flex flex-row gap-2 items-center">
+        <IconChevronLeft role="button" onClick={() => navigate("/home")} />
+      </div>
       <div className="flex flex-row items-center rounded-md rounded-bl-none rounded-br-none border border-b-0 border-solid border-muted-foreground/50 px-2">
         <ProjectNameLabel />
         <IconMinusVertical className="stroke-muted-foreground/50" />

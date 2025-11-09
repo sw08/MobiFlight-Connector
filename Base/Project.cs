@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -9,6 +10,20 @@ using System.Linq;
 
 namespace MobiFlight.Base
 {
+    /// <summary>
+    /// Lightweight project metadata used for listings, previews or indexing.
+    /// Can be loaded from a full project file (it ignores unknown properties).
+    /// </summary>
+    public class ProjectInfo
+    {
+        public string Name { get; set; }
+        public string Sim { get; set; } = "";
+        public bool UseFsuipc { get; set; }
+        public List<string> Aircraft { get; set; }
+        public string FilePath { get; set; }
+        public bool Favorite { get; set; } = false;
+    }
+
     /// <summary>
     /// Represents a MobiFlight project containing configuration files and project metadata.
     /// </summary>
@@ -88,7 +103,7 @@ namespace MobiFlight.Base
             }
         }
 
-        private string _sim;
+        private string _sim = "";
         /// <summary>
         /// Gets or sets the name of the project.
         /// </summary>
@@ -106,7 +121,7 @@ namespace MobiFlight.Base
             }
         }
 
-        private bool _useFsuipc;
+        private bool _useFsuipc = false;
         public bool UseFsuipc
         {
             get => _useFsuipc;
@@ -121,7 +136,7 @@ namespace MobiFlight.Base
             }
         }
 
-        private ObservableCollection<string> _aircraft;
+        private ObservableCollection<string> _aircraft = new ObservableCollection<string>();
         /// <summary>
         /// Gets or sets the name of the project.
         /// </summary>
@@ -157,6 +172,18 @@ namespace MobiFlight.Base
         {
             ConfigFiles.CollectionChanged += CollectionChanged;
             Name = "New MobiFlight Project";
+        }
+
+        public ProjectInfo ToProjectInfo()
+        {
+            return new ProjectInfo()
+            {
+                Name = this.Name,
+                Sim = this.Sim,
+                UseFsuipc = this.UseFsuipc,
+                Aircraft = this.Aircraft?.ToList() ?? new List<string>(),
+                FilePath = this.FilePath
+            };
         }
 
         /// <summary>

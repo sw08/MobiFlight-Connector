@@ -13,11 +13,11 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from "react"
-import { ProjectSummary } from "@/types/project"
+import { ProjectInfo } from "@/types/project"
 import { useLocation } from "react-router"
 
 type ProjectFormProps = {
-  project: ProjectSummary
+  project: ProjectInfo
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSave: (values: {
@@ -36,8 +36,8 @@ const ProjectForm = ({
   onSave,
 }: ProjectFormProps) => {
   const [name, setName] = useState(project?.Name ?? "")
-  const [simulator, setSimulator] = useState<string>(project?.Sim?.Type ?? "msfs")
-  const [useFsuipc, setUseFsuipc] = useState(project?.Sim?.Options?.UseFsuipc ?? false)
+  const [simulator, setSimulator] = useState<string>(project?.Sim ?? "msfs")
+  const [useFsuipc, setUseFsuipc] = useState(project?.UseFsuipc ?? false)
   const [selectedAircraft, setSelectedAircraft] = useState<string[]>([])
   // const [thumbnail, setThumbnail] = useState<File>()
 

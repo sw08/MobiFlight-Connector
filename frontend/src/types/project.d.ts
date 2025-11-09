@@ -5,19 +5,14 @@ export interface Project {
   FilePath: string
   ConfigFiles: ConfigFile[]
   Thumbnail?: string
-  Favorite?: boolean
-  Sim: {
-    Type: string
-    Options?: {
-      UseFsuipc?: boolean
-    }
-    Available: boolean
-  }
+  Sim: string
+  UseFsuipc: boolean
   Controllers: {
     Name: string
     Type: string
     Available: boolean
   }[]
+
   Aircraft: {
     Name: string
     Filter: string
@@ -25,25 +20,21 @@ export interface Project {
   }[]
 }
 
-export interface ProjectSummary {
+export interface ProjectInfo {
   Name: string
+  FilePath: string
+  
   Thumbnail?: string
+  Sim: string
   Favorite?: boolean
-  Sim: {
-    Type: string
-    Options?: {
-      UseFsuipc?: boolean
-    }
-    Available: boolean
-  }
+  UseFsuipc: boolean
   Controllers: {
     Name: string
     Type: string
-    Available: boolean
   }[]
+  
   Aircraft: {
     Name: string
     Filter: string
-    Available: boolean
   }[]
 }

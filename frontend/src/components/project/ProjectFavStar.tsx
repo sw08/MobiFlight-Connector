@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils"
-import { ProjectSummary } from "@/types/project"
+import { ProjectInfo } from "@/types/project"
 import { IconStarFilled, IconStar } from "@tabler/icons-react"
 import { HtmlHTMLAttributes } from "react"
 
 export type ProjectFavStarProps = HtmlHTMLAttributes<HTMLDivElement> & {
-  summary: ProjectSummary
+  summary: ProjectInfo
   variant?: "default" | "small"
 }
 
