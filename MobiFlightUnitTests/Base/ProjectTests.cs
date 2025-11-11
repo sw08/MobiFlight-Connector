@@ -97,6 +97,22 @@ namespace MobiFlight.Base.Tests
         }
 
         [TestMethod()]
+        public void SaveFileTest_Should_Not_Serialize_FilePath()
+        {
+            string inFile = @"assets\Base\ConfigFile\Json\OpenProjectTest.mfproj";
+            var o = new Project();
+            o.FilePath = inFile;
+            o.OpenFile();
+
+            string outFile = @"assets\Base\ConfigFile\Json\SaveProjectTest.mfproj";
+            o.FilePath = outFile;
+            o.SaveFile();
+
+            string fileContent = File.ReadAllText(outFile);
+            Assert.IsFalse(fileContent.Contains("\"FilePath\":"));
+        }
+
+        [TestMethod()]
         public void EqualsTest()
         {
             var o = new Project();
@@ -195,10 +211,10 @@ namespace MobiFlight.Base.Tests
             // Assert
             var totalItemsAfterMerge = targetProject.ConfigFiles.SelectMany(cf => cf.ConfigItems).Count();
             Assert.IsTrue(totalItemsAfterMerge > originalItemCount);
-            
+
             // Verify original items are still there
             Assert.IsTrue(targetProject.ConfigFiles.SelectMany(cf => cf.ConfigItems).Any(item => item.GUID == "original-guid"));
-            
+
             // Verify merged items are there
             Assert.IsTrue(targetProject.ConfigFiles.SelectMany(cf => cf.ConfigItems).Any(item => item.GUID == "merge-test-guid-1"));
         }
@@ -363,7 +379,7 @@ namespace MobiFlight.Base.Tests
             string sourceFile = @"assets\Base\ConfigFile\Json\MergeTest2.mfproj";
             var targetProject = new Project();
             targetProject.Name = "Target Project";
-            
+
             // Add some original config items
             var originalConfigFile = new ConfigFile { Label = "Original Config" };
             originalConfigFile.ConfigItems.Add(new OutputConfigItem { Name = "Original Output", GUID = "original-output-guid" });
@@ -375,18 +391,18 @@ namespace MobiFlight.Base.Tests
 
             // Assert
             var allItems = targetProject.ConfigFiles.SelectMany(cf => cf.ConfigItems).ToList();
-            
+
             // Verify original items are preserved
             Assert.IsTrue(allItems.Any(item => item.GUID == "original-output-guid"));
             Assert.IsTrue(allItems.Any(item => item.GUID == "original-input-guid"));
-            
+
             // Verify merged items include both input and output configs
             var outputItems = allItems.Where(item => item is OutputConfigItem).ToList();
             var inputItems = allItems.Where(item => item is InputConfigItem).ToList();
-            
+
             Assert.IsTrue(outputItems.Count > 1); // Original + merged outputs
             Assert.IsTrue(inputItems.Count > 1); // Original + merged inputs
-            
+
             // Verify specific merged items
             Assert.IsTrue(allItems.Any(item => item.GUID == "merge-test-guid-2a"));
             Assert.IsTrue(allItems.Any(item => item.GUID == "merge-test-guid-2b"));

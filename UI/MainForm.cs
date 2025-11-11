@@ -2276,6 +2276,11 @@ namespace MobiFlight.UI
             ResetProjectAndConfigChanges();
         }
 
+        public void CreateNewProject()
+        {
+            CreateNewProject(new Project());
+        }
+
         public void AddNewFileToProject()
         {
             execManager.Stop();

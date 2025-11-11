@@ -32,7 +32,7 @@ const ProjectList = ({ summarys, activeProject, onSelect }: ProjectListProps) =>
       <ScrollArea className="h-112 pr-4">
         <div className="group/projectlist grid grid-cols-1 gap-2 pb-2 xl:grid-cols-2">
           {summarys.map((project, index) => {
-            const isActive = activeProject?.Name === project.Name
+            const isActive = activeProject?.FilePath === project.FilePath
             return (
               <ProjectListItem
                 key={`${project.Name}-${index}`}

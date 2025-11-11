@@ -60,7 +60,6 @@ namespace MobiFlight.Base
         /// <summary>
         /// Gets or sets the file path where the project is stored. This property is not serialized to JSON.
         /// </summary>
-        [JsonIgnore]
         public string FilePath
         {
             get => _filePath;
@@ -386,6 +385,10 @@ namespace MobiFlight.Base
             // Add version when serializing
             var document = JObject.FromObject(this);
             document["_version"] = SchemaVersion.ToString();
+            
+            // we don't want to serialize the FilePath
+            document.Property("FilePath").Remove();
+
             File.WriteAllText(FilePath, document.ToString(Formatting.Indented));
         }
 
