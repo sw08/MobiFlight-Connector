@@ -24,8 +24,6 @@ type ProjectFormProps = {
     Name: string
     Sim: string
     UseFsuipc: boolean
-    Aircraft: string[]
-    // thumbnail?: File
   }) => void
 }
 
@@ -38,26 +36,9 @@ const ProjectForm = ({
   const [name, setName] = useState(project?.Name ?? "")
   const [simulator, setSimulator] = useState<string>(project?.Sim ?? "msfs")
   const [useFsuipc, setUseFsuipc] = useState(project?.UseFsuipc ?? false)
-  const [selectedAircraft, setSelectedAircraft] = useState<string[]>([])
-  // const [thumbnail, setThumbnail] = useState<File>()
-
+  
   const location = useLocation()
   const isEdit = location.state?.mode === "edit"
-
-  // Aircraft options based on simulator selection
-  const aircraftOptions: Record<string, string[]> = {
-    msfs: ["Boeing 737", "Airbus A320", "Cessna 172", "Fenix A320"],
-    xplane: ["Zibo 737", "ToLiss A321", "Cessna 172"],
-    fsx: ["PMDG 737", "Airbus A320", "Cessna 172"],
-  }
-
-  const handleAircraftToggle = (aircraft: string) => {
-    setSelectedAircraft((prev) =>
-      prev.includes(aircraft)
-        ? prev.filter((a) => a !== aircraft)
-        : [...prev, aircraft],
-    )
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,9 +46,7 @@ const ProjectForm = ({
     onSave({
       Name: name,
       Sim: simulator,
-      UseFsuipc: useFsuipc,
-      Aircraft: selectedAircraft,
-      // thumbnail,
+      UseFsuipc: useFsuipc
     })
   }
 
@@ -110,7 +89,6 @@ const ProjectForm = ({
               onValueChange={(value) => {
                 setSimulator(value)
                 setUseFsuipc(false) // Reset FSUIPC when changing simulator
-                setSelectedAircraft([]) // Reset aircraft selection
               }}
             >
               <div className="flex items-center space-x-2">
@@ -141,64 +119,19 @@ const ProjectForm = ({
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
+                <RadioGroupItem value="p3d" id="p3d" />
+                <Label htmlFor="p3d" className="font-normal">
+                  Prepar3D
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
                 <RadioGroupItem value="fsx" id="fsx" />
                 <Label htmlFor="fsx" className="font-normal">
-                  Prepar3D / FSX / FS2004
+                  FSX / FS2004
                 </Label>
               </div>
             </RadioGroup>
           </div>
-
-          {/* Aircraft Selection */}
-          {simulator != "fsx" && (
-            <div className="grid gap-3">
-              <Label className="text-base font-semibold">Aircraft</Label>
-              <p className="text-muted-foreground text-sm">
-                Select the aircraft you'll use in this project.
-              </p>
-              <div className="grid gap-2">
-                {aircraftOptions[simulator]?.map((aircraft) => (
-                  <div key={aircraft} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`aircraft-${aircraft}`}
-                      checked={selectedAircraft.includes(aircraft)}
-                      onCheckedChange={() => handleAircraftToggle(aircraft)}
-                    />
-                    <Label
-                      htmlFor={`aircraft-${aircraft}`}
-                      className="font-normal"
-                    >
-                      {aircraft}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {/* Thumbnail Upload */}
-          {/* <div className="grid gap-2">
-            <Label htmlFor="thumbnail" className="text-base font-semibold">
-              Project Thumbnail
-            </Label>
-            <p className="text-muted-foreground text-sm">
-              Upload an image to represent your project.
-            </p>
-            <Input
-              id="thumbnail"
-              name="thumbnail"
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0]
-                if (file) setThumbnail(file)
-              }}
-            />
-            {thumbnail && (
-              <p className="text-muted-foreground text-sm">
-                Selected: {thumbnail.name}
-              </p>
-            )}
-          </div> */}
         </div>
 
         <DialogFooter>
