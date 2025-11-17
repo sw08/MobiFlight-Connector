@@ -5,6 +5,7 @@ import { ScrollArea } from "../ui/scroll-area"
 import { useSearchParams } from "react-router"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
+import { useRef } from "react"
 
 export type ProjectListProps = {
   summarys: ProjectInfo[]
@@ -20,6 +21,7 @@ const ProjectList = ({
   const [searchParams, setSearchParams] = useSearchParams()
   const activeFilter = searchParams.get("projects_filter") || "all"
   const activeTextFilter = searchParams.get("projects_text") || ""
+  const refActiveElement = useRef<HTMLDivElement | null>(null)
 
   const resetAllFilters = () => {
     setSearchParams({})
@@ -32,6 +34,14 @@ const ProjectList = ({
     })
   }
 
+  const scrollActiveProjectIntoView = () => {
+    if (refActiveElement.current) {
+      window.setTimeout(() => {
+        refActiveElement.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+      }, 500)
+    }
+  }
+  
   const filteredSummarys = summarys
     .filter((project) => {
       if (activeFilter === "all") return true
@@ -49,7 +59,7 @@ const ProjectList = ({
       <div className="flex flex-row gap-2">
         <Input
           placeholder="Filter projects..."
-          className="h-8 w-36 md:w-56"
+          className="h-8 w-36 md:w-56 transition-all duration-500"
           value={activeTextFilter}
           onChange={(e) =>
             setSearchParams({
@@ -80,13 +90,15 @@ const ProjectList = ({
           X-Plane
         </Button>
       </div>
-      <ScrollArea className="h-112 pr-2">
+      <ScrollArea className="h-112 pr-2" onMouseLeave={scrollActiveProjectIntoView}>
         <div className="group/projectlist flex flex-row flex-wrap gap-4">
           {filteredSummarys.length > 0 ? (
             filteredSummarys.map((project, index) => {
               const isActive = activeProject?.FilePath === project.FilePath
+              const refActive = isActive ? { ref: refActiveElement } : {}
               return (
                 <ProjectListItem
+                  {...refActive}
                   key={`${project.Name}-${index}`}
                   summary={project}
                   className={`w-[calc(100%-1rem)] 2xl:w-[calc(50%-1rem)] 2xl:max-w-[calc(50%-1rem)] 2xl:min-w-[calc(50%-1rem)]`}

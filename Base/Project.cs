@@ -261,10 +261,8 @@ namespace MobiFlight.Base
                     Log.Instance.log("Project could not be loaded", LogSeverity.Error);
                     throw new InvalidDataException("Failed to deserialize project file.");
                 }
-
-                Name = project.Name;
-                ConfigFiles = project.ConfigFiles;
-
+                this.CopyFrom(project);
+                
                 foreach (var configFile in ConfigFiles)
                 {
                     if (!configFile.EmbedContent)
@@ -301,6 +299,15 @@ namespace MobiFlight.Base
             {
                 throw new InvalidDataException("Unsupported file format.");
             }
+        }
+
+        private void CopyFrom(Project project)
+        {
+            this.Name = project.Name;
+            this.Sim = project.Sim;
+            this.UseFsuipc = project.UseFsuipc;
+            this.Aircraft = project.Aircraft;
+            this.ConfigFiles = project.ConfigFiles;
         }
 
         /// <summary>
