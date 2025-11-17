@@ -49,7 +49,7 @@ const ProjectList = ({
       <div className="flex flex-row gap-2">
         <Input
           placeholder="Filter projects..."
-          className="h-8 w-72"
+          className="h-8 w-36 md:w-56"
           value={activeTextFilter}
           onChange={(e) =>
             setSearchParams({

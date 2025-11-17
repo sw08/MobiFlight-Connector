@@ -32,6 +32,7 @@ import testJsDefinition from "@/../tests/data/joystick.definition.json" with { t
 import testMidiDefinition from "@/../tests/data/midicontroller.definition.json" with { type: "json" }
 
 import { MidiControllerDefinition, JoystickDefinition } from "@/types/definitions"
+import DebugInfo from "@/components/DebugInfo"
 
 function App() {
   const [queryParameters] = useSearchParams()
@@ -47,7 +48,6 @@ function App() {
   const outlet = useOutlet()
   const [overlayVisible, setOverlayVisible] = useState(false)
   const { theme } = useTheme()
-  const windowSize = { x: window.innerWidth, y: window.innerHeight }
 
   // State for startup progress from app messages
   const [appStartupProgress, setAppStartupProgress] = useState<StatusBarUpdate>(
@@ -171,15 +171,7 @@ function App() {
             <div className="flex grow flex-col overflow-hidden p-2">
               <Outlet />
             </div>
-            <div className="flex flex-row justify-end gap-2 px-5">
-              <div className="text-muted-foreground text-xs">
-                {windowSize.x}x{windowSize.y}
-              </div>
-              <div className="text-muted-foreground text-xs">
-                MobiFlight 2025
-              </div>
-              <div className="text-muted-foreground text-xs">Version 1.0.0</div>
-            </div>
+            <DebugInfo />
           </div>
         </div>
       ) : (
