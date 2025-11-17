@@ -29,9 +29,10 @@ namespace MobiFlight.BrowserMessages.Incoming.Handler
                     _mainForm.saveAsToolStripMenuItem_Click(null, null);
                     break;
                 case CommandMainMenuAction.file_recent:
-                    if (message.Options?.Project.FilePath == null) return;
+                    var filePath = message.Options?.FilePath != null ? message.Options.FilePath : message.Options?.Project.FilePath;
+                    if (filePath == null) return;
 
-                    _mainForm.LoadConfig(message.Options.Project.FilePath);
+                    _mainForm.LoadConfig(filePath);
                     break;
                 case CommandMainMenuAction.project_edit:
                     _mainForm.updateProjectSettings(message.Options.Project);
@@ -80,7 +81,7 @@ namespace MobiFlight.BrowserMessages.Incoming.Handler
 
                 case CommandMainMenuAction.help_hubhop:
                     _mainForm.HubHopToolStripButton_Click(null, null);
-                    break;  
+                    break;
 
                 case CommandMainMenuAction.help_about:
                     _mainForm.AboutToolStripMenuItem_Click(null, null);
@@ -97,4 +98,4 @@ namespace MobiFlight.BrowserMessages.Incoming.Handler
         }
     }
 }
-    
+
