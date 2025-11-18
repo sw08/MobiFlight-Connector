@@ -2280,7 +2280,7 @@ namespace MobiFlight.UI
 
         public void CreateNewProject()
         {
-            CreateNewProject(new Project());
+            CreateNewProject(new Project() { Name = i18n._tr("DefaultProjectName") });
         }
 
         public void AddNewFileToProject()
