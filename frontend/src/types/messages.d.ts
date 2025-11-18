@@ -13,6 +13,7 @@ export type AppMessageKey =
   | "ConfigValueRawAndFinalUpdate"
   | "Settings"
   | "ExecutionState"
+  | "BoardDefinitions"
   | "JoystickDefinitions"
   | "MidiControllerDefinitions"
   | "ProjectStatus"
@@ -27,6 +28,7 @@ export type AppMessagePayload =
   | ConfigValuePartialUpdate
   | ConfigValueRawAndFinalUpdate
   | ExecutionState
+  | BoardDefinitions
   | JoystickDefinitions
   | MidiControllerDefinitions
   | ProjectStatus
@@ -78,6 +80,10 @@ export interface ExecutionState {
   IsTesting: boolean
   RunAvailable: boolean
   TestAvailable: boolean
+}
+
+export interface BoardDefinitions {
+  Definitions: BoardDefinition[]
 }
 
 export interface JoystickDefinitions {

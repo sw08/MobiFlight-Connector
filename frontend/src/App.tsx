@@ -11,6 +11,7 @@ import { MainMenu } from "./components/MainMenu"
 import { useRecentProjects, useSettingsStore } from "./stores/settingsStore"
 import { useControllerDefinitionsStore } from "./stores/definitionStore"
 import {
+  BoardDefinitions,
   ExecutionState,
   HubHopState,
   JoystickDefinitions,
@@ -32,7 +33,7 @@ import testProject from "@/../tests/data/project.testdata.json" with { type: "js
 import testJsDefinition from "@/../tests/data/joystick.definition.json" with { type: "json" }
 import testMidiDefinition from "@/../tests/data/midicontroller.definition.json" with { type: "json" }
 
-import { MidiControllerDefinition, JoystickDefinition } from "@/types/definitions"
+import { MidiControllerDefinition, JoystickDefinition, BoardDefinition } from "@/types/definitions"
 import DebugInfo from "@/components/DebugInfo"
 import { useExecutionStateStore } from "@/stores/executionStateStore"
 
@@ -42,7 +43,7 @@ function App() {
   const { project, setProject, setHasChanged } = useProjectStore()
   const { setRecentProjects } = useRecentProjects()
   const { setSettings } = useSettingsStore()
-  const { setJoystickDefinitions, setMidiControllerDefinitions } =
+  const { setBoardDefinitions, setJoystickDefinitions, setMidiControllerDefinitions } =
     useControllerDefinitionsStore()
 
   const { setIsRunning, setIsTesting } = useExecutionStateStore()
@@ -98,6 +99,15 @@ function App() {
     const language = settings.Language.split("-")[0]
     if (!_.isEmpty(language)) i18next.changeLanguage(settings.Language)
     else i18next.changeLanguage()
+  })
+
+  useAppMessage("BoardDefinitions", (message) => {
+    const boardDefinitions = message.payload as BoardDefinitions
+    console.log(
+      "BoardDefinitions message received",
+      boardDefinitions.Definitions,
+    )
+    setBoardDefinitions(boardDefinitions.Definitions)
   })
 
   useAppMessage("JoystickDefinitions", (message) => {
