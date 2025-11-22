@@ -37,7 +37,7 @@ const ProjectList = ({
   const scrollActiveProjectIntoView = () => {
     if (refActiveElement.current) {
       window.setTimeout(() => {
-        refActiveElement.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+        refActiveElement.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
       }, 500)
     }
   }
