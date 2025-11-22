@@ -33,7 +33,8 @@ import testProject from "@/../tests/data/project.testdata.json" with { type: "js
 import testJsDefinition from "@/../tests/data/joystick.definition.json" with { type: "json" }
 import testMidiDefinition from "@/../tests/data/midicontroller.definition.json" with { type: "json" }
 
-import { MidiControllerDefinition, JoystickDefinition, BoardDefinition } from "@/types/definitions"
+import { MidiControllerDefinition, JoystickDefinition
+ } from "@/types/definitions"
 import DebugInfo from "@/components/DebugInfo"
 import { useExecutionStateStore } from "@/stores/executionStateStore"
 

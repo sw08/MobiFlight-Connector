@@ -1,8 +1,7 @@
+import { useWindowSize } from "@/lib/hooks/useWindowSize"
+
 const DebugInfo = () => {
-  const windowSize = {
-    x: window.innerWidth,
-    y: window.innerHeight
-  }
+  const windowSize = useWindowSize()
 
   return (
     <div className="flex flex-row justify-end gap-2 px-5 items-center">
@@ -14,8 +13,11 @@ const DebugInfo = () => {
               <div className="rounded border px-2 hidden 2xl:block 3xl:hidden text-xs">2xl</div>
               <div className="rounded border px-2 hidden 3xl:block 4xl:hidden text-xs">3xl</div>
               <div className="rounded border px-2 hidden 4xl:block 5xl:hidden text-xs">4xl</div>
+              <div className="text-xs"> | </div>
+              <div className="rounded border px-2 vlg:hidden text-xs">vsm</div>
+              <div className="rounded border px-2 hidden vlg:block text-xs">vlg</div>
               <div className="text-muted-foreground text-xs">
-                {windowSize.x}x{windowSize.y}
+                {windowSize.width}x{windowSize.height}
               </div>
               <div className="text-muted-foreground text-xs">
                 MobiFlight 2025
