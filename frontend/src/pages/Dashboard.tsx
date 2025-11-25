@@ -12,7 +12,7 @@ const Dashboard = () => {
   const isCommunityActive = activeContent === "community"
 
   return (
-    <div className="flex h-full flex-col gap-2 py-2">
+    <div className="flex h-full flex-col gap-2">
       <div className="flex grow flex-row gap-2">
         <div
           className={`w-full opacity-100 transition-all duration-300 xl:w-2/3 ${isProjectActive ? "" : "max-lg:hidden opacity-0"}`}
