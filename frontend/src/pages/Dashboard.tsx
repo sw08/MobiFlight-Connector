@@ -9,19 +9,17 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card"
-import { useProjectModal } from "@/lib/hooks/useProjectModal"
 import { cn } from "@/lib/utils"
 import { useProjectStore } from "@/stores/projectStore"
 import { useRecentProjects } from "@/stores/settingsStore"
 import { ControllerType } from "@/types"
 import { Controller } from "@/types/controller"
 import { ProjectInfo } from "@/types/project"
-import { IconPlus } from "@tabler/icons-react"
 import useMessageExchange from "@/lib/hooks/useMessageExchange"
 import { CommandMainMenu } from "@/types/commands"
+import { ProjectCreateButton } from "@/components/project/ProjectCreateButton"
 
 const Dashboard = () => {
-  const { showOverlay } = useProjectModal()
   const { recentProjects } = useRecentProjects()
   const { project } = useProjectStore()
   const { publish } = useMessageExchange()
@@ -156,12 +154,7 @@ const Dashboard = () => {
               </CardTitle>
               <CardDescription>Quick access to my projects.</CardDescription>
             </div>
-            <Button
-              className="[&_svg]:size-6"
-              onClick={() => showOverlay({ mode: "create" })}
-            >
-              <IconPlus /> Project
-            </Button>
+            <ProjectCreateButton />
           </div>
         </CardHeader>
         <CardContent className="">

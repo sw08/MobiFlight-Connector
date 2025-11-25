@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { useRef } from "react"
+import { ProjectCreateButton } from "@/components/project/ProjectCreateButton"
 
 export type ProjectListProps = {
   summarys: ProjectInfo[]
@@ -37,11 +38,14 @@ const ProjectList = ({
   const scrollActiveProjectIntoView = () => {
     if (refActiveElement.current) {
       window.setTimeout(() => {
-        refActiveElement.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+        refActiveElement.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        })
       }, 500)
     }
   }
-  
+
   const filteredSummarys = summarys
     .filter((project) => {
       if (activeFilter === "all") return true
@@ -59,7 +63,7 @@ const ProjectList = ({
       <div className="flex flex-row gap-2">
         <Input
           placeholder="Filter projects..."
-          className="h-8 w-36 md:w-56 transition-all duration-500"
+          className="h-8 w-36 transition-all duration-500 md:w-56"
           value={activeTextFilter}
           onChange={(e) =>
             setSearchParams({
@@ -90,38 +94,54 @@ const ProjectList = ({
           X-Plane
         </Button>
       </div>
-      <ScrollArea className="h-112 pr-2" onMouseLeave={scrollActiveProjectIntoView}>
-        <div className="group/projectlist flex flex-row flex-wrap gap-4 w-[calc(100%)]">
-          {filteredSummarys.length > 0 ? (
-            filteredSummarys.map((project, index) => {
-              const isActive = activeProject?.FilePath === project.FilePath
-              const refActive = isActive ? { ref: refActiveElement } : {}
-              return (
-                <ProjectListItem
-                  {...refActive}
-                  key={`${project.Name}-${index}`}
-                  summary={project}
-                  className={`w-[calc(100%-1rem)] 2xl:w-[calc(50%-1rem)] 2xl:max-w-[calc(50%-1rem)]`}
-                  active={isActive}
-                  onClick={() => {
-                    if (isActive) return
-                    onSelect(project)
-                  }}
-                />
-              )
-            })
-          ) : (
-            <Card className="w-full">
-              <CardContent className="flex flex-col items-center justify-center pt-4 gap-4">
-              <div className="text-muted-foreground">
-                Current filter doesn't match any projects.
-              </div>
-              <Button className="h-8" onClick={() => resetAllFilters()}>Clear Filter</Button>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </ScrollArea>
+      {summarys.length > 0 ? (
+        <ScrollArea
+          className="h-112 pr-2"
+          onMouseLeave={scrollActiveProjectIntoView}
+        >
+          <div className="group/projectlist flex w-[calc(100%)] flex-row flex-wrap gap-4">
+            {filteredSummarys.length > 0 ? (
+              filteredSummarys.map((project, index) => {
+                const isActive = activeProject?.FilePath === project.FilePath
+                const refActive = isActive ? { ref: refActiveElement } : {}
+                return (
+                  <ProjectListItem
+                    {...refActive}
+                    key={`${project.Name}-${index}`}
+                    summary={project}
+                    className={`w-[calc(100%-1rem)] 2xl:w-[calc(50%-1rem)] 2xl:max-w-[calc(50%-1rem)]`}
+                    active={isActive}
+                    onClick={() => {
+                      if (isActive) return
+                      onSelect(project)
+                    }}
+                  />
+                )
+              })
+            ) : (
+              <Card className="w-full">
+                <CardContent className="flex flex-col items-center justify-center gap-4 pt-4">
+                  <div className="text-muted-foreground">
+                    Current filter doesn't match any projects.
+                  </div>
+                  <Button className="h-8" onClick={() => resetAllFilters()}>
+                    Clear Filter
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </ScrollArea>
+      ) : (
+        <Card className="w-full">
+          <CardContent className="flex flex-col items-center justify-center gap-4 pt-4">
+            <div className="text-muted-foreground">
+              Create your first project to get started!
+            </div>
+            <ProjectCreateButton />
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
