@@ -186,7 +186,7 @@ function App() {
         <LoaderOverlay open={overlayVisible} onOpenChange={setOverlayVisible} />
       )}
       {outlet ? (
-        <div className="flex h-svh flex-row p-0 select-none">
+        <div className="flex h-svh flex-row p-0 select-none overflow-hidden">
           {/* <Sidebar /> */}
           <div className="flex grow flex-col">
             <MainMenu />

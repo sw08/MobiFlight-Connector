@@ -11,7 +11,11 @@ export function AppRoutes() {
   return (
     <>
       <Routes location={state?.backgroundLocation || location}>
+
         <Route path="/home" element={<App />}>
+          <Route index element={<Dashboard />} />
+        </Route>
+        <Route path="/home/:content" element={<App />}>
           <Route index element={<Dashboard />} />
         </Route>
         <Route path="/config" element={<App />}>

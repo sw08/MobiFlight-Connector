@@ -1,7 +1,13 @@
 import ProjectCard from "@/components/project/ProjectCard"
 import { ProjectCreateButton } from "@/components/project/ProjectCreateButton"
 import ProjectList from "@/components/project/ProjectList"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import useMessageExchange from "@/lib/hooks/useMessageExchange"
 import { useProjectStore } from "@/stores/projectStore"
 import { useRecentProjects } from "@/stores/settingsStore"

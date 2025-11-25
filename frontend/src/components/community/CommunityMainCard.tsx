@@ -1,3 +1,4 @@
+import IconBrandMobiFlightLogo from "@/components/icons/IconBrandMobiFlightLogo"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -42,9 +43,9 @@ const CommunityMainCard = () => {
   ]
 
   return (
-    <Card className="border-shadow-none bg-muted rounded-none">
+    <Card className="border-shadow-none bg-muted rounded-none h-full">
       <CardHeader>
-        <CardTitle>MobiFlight Community</CardTitle>
+        <CardTitle className="flex flex-row gap-2"><IconBrandMobiFlightLogo /> Community Feed</CardTitle>
         <CardDescription>
           News and updates from the MobiFlight community.
         </CardDescription>
