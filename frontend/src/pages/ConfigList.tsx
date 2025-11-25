@@ -75,7 +75,7 @@ const ConfigListPage = () => {
   }, [project])
 
   return (
-    <div className="flex flex-col gap-4 overflow-y-auto">
+    <div className="flex flex-col gap-2 overflow-y-auto">
       <ConfigItemDragProvider
         initialConfigIndex={activeConfigFileIndex}
         updateConfigItems={setConfigItems}
