@@ -68,13 +68,15 @@ export const ProjectCardTitle = ({
       <div className="flex min-w-0 flex-row items-center justify-start gap-2">
         <h2 className={titleClassName}>{summary.Name}</h2>
       </div>
-      <Button
-        variant="ghost"
-        className={buttonClassName}
-        onClick={navigateToProject}
-      >
-        <IconChevronRight className={cn("text-primary", iconClassName)} />
-      </Button>
+      {summary && (
+        <Button
+          variant="ghost"
+          className={buttonClassName}
+          onClick={navigateToProject}
+        >
+          <IconChevronRight className={cn("text-primary", iconClassName)} />
+        </Button>
+      )}
     </div>
   )
 }
@@ -104,10 +106,7 @@ export const ProjectCardImage = ({
 export const ProjectCardStartStopButton = ({
   className,
   ...props
-}: HtmlHTMLAttributes<HTMLButtonElement> & {
-  isAvailable: boolean
-  isRunning: boolean
-}) => {
+}: HtmlHTMLAttributes<HTMLButtonElement>) => {
   const { publish } = publishOnMessageExchange()
   const { isRunning, isTesting } = useExecutionStateStore()
 
@@ -149,8 +148,6 @@ const ProjectCard = ({
   className,
   ...otherProps
 }: ProjectCardProps) => {
-  const isRunning = summary.Name === "Fenix A320"
-  const isAvailable = false
   const { t } = useTranslation()
   const { showOverlay } = useProjectModal()
 
@@ -159,10 +156,10 @@ const ProjectCard = ({
     showOverlay(options)
   }
 
-  const bgColor = isAvailable ? "bg-primary" : "bg-muted-foreground"
-  console.log("Rendering ProjectCard for:", summary)
-  const simulatorLabel = summary.Sim
-    ? t(`Project.Simulator.${summary.Sim.toLowerCase()}`)
+  const simulatorLabel = summary
+    ? summary.Sim
+      ? t(`Project.Simulator.${summary.Sim.toLowerCase()}`)
+      : "No simulator set"
     : "No simulator set"
 
   return (
@@ -175,61 +172,68 @@ const ProjectCard = ({
       )}
     >
       <ProjectCardTitle summary={summary} />
-      <div className="flex flex-col gap-4">
-        <div className="relative">
-          <ProjectCardImage summary={summary} className="h-84" />
-          <div className="absolute inset-0 flex items-start justify-start p-4">
-            <ProjectFavStar summary={summary} />
-          </div>
-        </div>
-        <div className="flex flex-row">
-          <div className="flex flex-1 flex-col gap-4">
-            <div className="text-muted-foreground flex flex-row items-center justify-items-center gap-2">
-              <Badge key={summary.Sim} className={bgColor}>
-                {simulatorLabel}
-              </Badge>
+      {summary ? (
+        <div className="flex flex-col gap-4">
+          <div className="relative">
+            <ProjectCardImage summary={summary} className="h-84" />
+            <div className="absolute inset-0 flex items-start justify-start p-4">
+              <ProjectFavStar summary={summary} />
             </div>
-            <div className="flex flex-row gap-4 items-center">
-              <div className="flex flex-row -space-x-4 hover:space-x-0" data-testid="controller-icons">
-                {summary.Controllers?.map((controllerName, index) => (
-                  controllerName != "-" && 
-                  <ControllerIcon
-                    className="ease-in-out transition-all"
-                    key={`${controllerName}-${index}`}
-                    serial={controllerName}
-                  />
-                ))}
+          </div>
+          <div className="flex flex-row">
+            <div className="flex flex-1 flex-col gap-4">
+              <div className="text-muted-foreground flex flex-row items-center justify-items-center gap-2">
+                <Badge key={summary.Sim}>{simulatorLabel}</Badge>
+              </div>
+              <div className="flex flex-row items-center gap-4">
+                <div
+                  className="flex flex-row -space-x-4 hover:space-x-0"
+                  data-testid="controller-icons"
+                >
+                  {summary.Controllers?.map(
+                    (controllerName, index) =>
+                      controllerName != "-" && (
+                        <ControllerIcon
+                          className="transition-all ease-in-out"
+                          key={`${controllerName}-${index}`}
+                          serial={controllerName}
+                        />
+                      ),
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col items-end justify-between">
+              <div className="relative">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-4 px-2">
+                      <span className="sr-only">
+                        {t("General.Action.OpenMenu")}
+                      </span>
+                      <IconDotsVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleEditSettings}>
+                      <IconSettings />
+                      {t("Project.Toolbar.Settings")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="flex flex-row items-end">
+                <ProjectCardStartStopButton />
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-end justify-between">
-            <div className="relative">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-4 px-2">
-                    <span className="sr-only">
-                      {t("General.Action.OpenMenu")}
-                    </span>
-                    <IconDotsVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={handleEditSettings}>
-                    <IconSettings />
-                    {t("Project.Toolbar.Settings")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <div className="flex flex-row items-end">
-              <ProjectCardStartStopButton
-                isAvailable={isAvailable}
-                isRunning={isRunning}
-              />
-            </div>
-          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <div>Open one of your recent projects from the right, or</div>
+          <div>create a new project to get started!</div>
+        </div>
+      )}
     </div>
   )
 }

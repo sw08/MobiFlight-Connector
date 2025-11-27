@@ -35,7 +35,10 @@ const ProjectMainCard = () => {
   const showRecentProjects = recentProjects.length > 0
 
   return (
-    <Card className="border-shadow-none flex flex-col border-none shadow-none" data-testid="project-main-card">
+    <Card
+      className="border-shadow-none flex flex-col border-none shadow-none"
+      data-testid="project-main-card"
+    >
       <CardHeader>
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-col gap-2">
@@ -44,44 +47,53 @@ const ProjectMainCard = () => {
             </CardTitle>
             <CardDescription>Quick access to my projects.</CardDescription>
           </div>
-          { 
-            showRecentProjects &&<ProjectCreateButton />
-          }
+          {showRecentProjects && <ProjectCreateButton />}
         </div>
       </CardHeader>
       <CardContent className="">
-        { showRecentProjects ? (
-        <div className="flex flex-row gap-8">
-          <div className="flex min-w-96 flex-col gap-4">
-            <div>
-              <h3 className="text-lg font-semibold">Current Project</h3>
+        {showRecentProjects ? (
+          <div className="flex flex-row gap-8">
+            <div className="flex min-w-96 flex-col gap-4">
+              <div>
+                {activeProject ? (
+                  <h3 className="text-lg font-semibold">Current project</h3>
+                ) : (
+                  <h3 className="text-lg font-semibold">No active project</h3>
+                )}
+              </div>
+              {activeProject ? (
+                <ProjectCard summary={activeProject} className="" />
+              ) : (
+                <div className="border-primary/25 bg-card space-y-2 rounded-xl border p-4 shadow-md transition-all duration-200 ease-in-out hover:shadow-lg">
+                  <div className="flex flex-col gap-4">
+                    <div className="text-muted-foreground flex flex-row items-center justify-items-center gap-2">
+                      No project is currently loaded.
+                    </div>
+                    <ProjectCreateButton />
+                  </div>
+                </div>
+              )}
             </div>
-            {activeProject ? (
-              <ProjectCard summary={activeProject} className="" />
-            ) : (
-              <div>No project loaded</div>
-            )}
-          </div>
-          <div className="flex h-full grow flex-col gap-4 overflow-hidden">
-            <div className="grow-0">
-              <h3 className="text-lg font-semibold">All Projects</h3>
+            <div className="flex h-full grow flex-col gap-4 overflow-hidden">
+              <div className="grow-0">
+                <h3 className="text-lg font-semibold">All Projects</h3>
+              </div>
+              <ProjectList
+                summarys={recentProjects}
+                activeProject={activeProject as ProjectInfo}
+                onSelect={(project) => loadProject(project)}
+              />
             </div>
-            <ProjectList
-              summarys={recentProjects}
-              activeProject={activeProject as ProjectInfo}
-              onSelect={(project) => loadProject(project)}
-            />
           </div>
-        </div>
         ) : (
           <Card className="w-full">
-          <CardContent className="flex flex-col items-center justify-center gap-4 pt-4">
-            <div className="text-muted-foreground">
-              Create your first project to get started!
-            </div>
-            <ProjectCreateButton />
-          </CardContent>
-        </Card>
+            <CardContent className="flex flex-col items-center justify-center gap-4 pt-4">
+              <div className="text-muted-foreground">
+                Create your first project to get started!
+              </div>
+              <ProjectCreateButton />
+            </CardContent>
+          </Card>
         )}
       </CardContent>
     </Card>

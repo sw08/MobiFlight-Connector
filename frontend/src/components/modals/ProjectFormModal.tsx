@@ -30,6 +30,10 @@ export default function NewProjectModalRoute() {
             }
           }
         })
+        if(!isEdit) {
+          navigate(`/config`)
+          return
+        }        
         close()
       }}
     />

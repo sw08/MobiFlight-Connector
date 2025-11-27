@@ -150,6 +150,10 @@ namespace MobiFlight.UI
             Properties.Settings.Default.PropertyChanged += (s, e) =>
             {
                 PublishSettings();
+                if (e.PropertyName == "RecentFiles")
+                {
+                    PublishRecentProjectList();
+                }
             };
 
             Properties.Settings.Default.SettingsSaving += (s, e) =>
@@ -1815,6 +1819,7 @@ namespace MobiFlight.UI
             }
             Properties.Settings.Default.RecentFiles.Insert(0, fileName);
             Properties.Settings.Default.Save();
+            PublishRecentProjectList();
         }
 
         /// <summary>
@@ -2134,6 +2139,7 @@ namespace MobiFlight.UI
             // errors during save and show it in a dialog instead of crashing.
             try
             {
+                execManager.Project.DetermineProjectInfos();
                 execManager.Project.SaveFile();
             }
             catch (Exception ex)
@@ -2142,6 +2148,7 @@ namespace MobiFlight.UI
                 return;
             }
 
+            MessageExchange.Instance.Publish(execManager.Project);
             _storeAsRecentFile(execManager.Project.FilePath);
             ResetProjectAndConfigChanges();
         }
@@ -2277,6 +2284,7 @@ namespace MobiFlight.UI
             project.ConfigFiles.Add(CreateDefaultConfigFile());
             execManager.Project = project;
             ResetProjectAndConfigChanges();
+            ProjectHasUnsavedChanges = true;
         }
 
         public void CreateNewProject()
