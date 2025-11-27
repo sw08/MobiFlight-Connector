@@ -135,10 +135,10 @@ test.describe("Project view tests", () => {
       { name: "X-Plane", value: "x-plane", useFsuipc: false },
       { name: "Prepar3D", value: "p3d", useFsuipc: false },
     ]
-
-    await dashboardPage.mobiFlightPage.trackCommand("CommandMainMenu")
-
+    
     for (const option of projectOptions) {
+      await dashboardPage.mobiFlightPage.trackCommand("CommandMainMenu")
+      
       await createProjectButton.click()
       await expect(createProjectDialog).toBeVisible()
       await projectNameInput.fill(option.name)
@@ -164,6 +164,8 @@ test.describe("Project view tests", () => {
       expect(lastCommand.payload.options.project.UseFsuipc).toEqual(
         option.useFsuipc,
       )
+
+      await dashboardPage.gotoPage()
     }
   })
 
