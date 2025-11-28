@@ -108,6 +108,12 @@ const ProjectPanel = () => {
 
     // Discard a newly created project
     if (project?.FilePath==null) {
+      publish({
+        key: "CommandDiscardChanges",
+        payload: {
+          project: project,
+        },
+      })
       setProject(null)
     } else {
       console.log("Re-opening project to discard changes", project.FilePath)

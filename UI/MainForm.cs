@@ -245,6 +245,12 @@ namespace MobiFlight.UI
             {
                 commandProjectToolbarHandler.Handle(message);
             });
+
+            MessageExchange.Instance.Subscribe<CommandDiscardChanges>((message) =>
+            {
+                ProjectHasUnsavedChanges = false;
+                SetTitle("");
+            });
         }
 
         private void OpenOutputConfigWizardForId(string guid)
@@ -2124,7 +2130,7 @@ namespace MobiFlight.UI
 
         private void SetProjectNameInTitle()
         {
-            SetTitle(execManager.Project.Name);
+            SetTitle(execManager.Project?.Name ?? string.Empty);
         }
 
         /// <summary>
