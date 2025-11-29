@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { useRef } from "react"
 import { ProjectCreateButton } from "@/components/project/ProjectCreateButton"
+import { useTranslation } from "react-i18next"
 
 export type ProjectListProps = {
   summarys: ProjectInfo[]
@@ -20,6 +21,7 @@ const ProjectList = ({
   onSelect,
 }: ProjectListProps) => {
   const [searchParams, setSearchParams] = useSearchParams()
+  const { t } = useTranslation()
   const activeFilter = searchParams.get("projects_filter") || "all"
   const activeTextFilter = searchParams.get("projects_text") || ""
   const refActiveElement = useRef<HTMLDivElement | null>(null)
@@ -62,7 +64,7 @@ const ProjectList = ({
     <div className="flex flex-col gap-4">
       <div className="flex flex-row gap-2" data-testid="recent-projects-filter-bar">
         <Input
-          placeholder="Filter projects..."
+          placeholder={t("Project.Card.Filter.Search.Placeholder")}
           className="h-8 w-36 transition-all duration-500 md:w-56"
           value={activeTextFilter}
           onChange={(e) =>

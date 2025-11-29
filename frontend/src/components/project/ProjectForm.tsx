@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from "react"
 import { ProjectInfo } from "@/types/project"
 import { useLocation } from "react-router"
+import { useTranslation } from "react-i18next"
 
 type ProjectFormProps = {
   project: ProjectInfo
@@ -40,6 +41,8 @@ const ProjectForm = ({
   const location = useLocation()
   const isEdit = location.state?.mode === "edit"
 
+  const { t } = useTranslation()
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Saving")
@@ -58,7 +61,7 @@ const ProjectForm = ({
             {isEdit ? "Edit Project" : "Create New Project"}
           </DialogTitle>
           <DialogDescription className="text-md">
-            Configure your project settings and select your aircraft.
+            {t("Project.Form.Description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -66,23 +69,23 @@ const ProjectForm = ({
           {/* Project Name */}
           <div className="grid gap-2">
             <Label htmlFor="project-name" className="text-base font-semibold">
-              Project Name
+              { t("Project.Form.Name.Label") }
             </Label>
             <Input
               id="project-name"
               name="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Boeing 737 Home Cockpit"
+              placeholder={t("Project.Form.Name.Placeholder")}
               required
             />
           </div>
 
           {/* Flight Simulator Selection */}
           <div className="grid gap-3">
-            <Label className="text-base font-semibold">Flight Simulator</Label>
+            <Label className="text-base font-semibold">{ t("Project.Form.Simulator.Label") }</Label>
             <p className="text-muted-foreground text-sm">
-              Select the primary simulator for this project.
+              { t("Project.Form.Simulator.HelpText") }
             </p>
             <RadioGroup
               value={simulator}
@@ -94,7 +97,7 @@ const ProjectForm = ({
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="msfs" id="msfs" />
                 <Label htmlFor="msfs" className="font-normal">
-                  Microsoft Flight Simulator 2020 / 2024
+                  { t("Project.Simulator.msfs") }
                 </Label>
               </div>
               {/* FSUIPC Option (only for MSFS) */}
@@ -108,26 +111,26 @@ const ProjectForm = ({
                     }
                   />
                   <Label htmlFor="fsuipc" className="font-normal">
-                    Use FSUIPC
+                    {t("Project.Form.Simulator.UseFsuipc")}
                   </Label>
                 </div>
               )}
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="x-plane" id="x-plane" />
                 <Label htmlFor="x-plane" className="font-normal">
-                  X-Plane 11 / 12
+                  { t("Project.Simulator.xplane") }
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="p3d" id="p3d" />
                 <Label htmlFor="p3d" className="font-normal">
-                  Prepar3D
+                  { t("Project.Simulator.p3d") }
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="fsx" id="fsx" />
                 <Label htmlFor="fsx" className="font-normal">
-                  FSX / FS2004
+                  { t("Project.Simulator.fsx") }
                 </Label>
               </div>
             </RadioGroup>

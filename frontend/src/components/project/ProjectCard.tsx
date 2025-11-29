@@ -159,8 +159,8 @@ const ProjectCard = ({
   const simulatorLabel = summary
     ? summary.Sim
       ? t(`Project.Simulator.${summary.Sim.toLowerCase()}`)
-      : "No simulator set"
-    : "No simulator set"
+      : t(`Project.Simulator.none`)
+    : t(`Project.Simulator.none`)
 
   return (
     <div
@@ -230,8 +230,7 @@ const ProjectCard = ({
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <div>Open one of your recent projects from the right, or</div>
-          <div>create a new project to get started!</div>
+          <div>{t("Project.Card.Main.NoActiveProjectHint")}</div>
         </div>
       )}
     </div>

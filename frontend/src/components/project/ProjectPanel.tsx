@@ -20,8 +20,8 @@ import ExecutionToolbar from "../ExecutionToolbar"
 import ProjectNameLabel from "./ProjectNameLabel"
 import { useConfigItemDragContext } from "@/lib/hooks/useConfigItemDragContext"
 import { useNavigate } from "react-router"
-import { Dialog } from "@radix-ui/react-dialog"
-import { DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogTitle } from "@radix-ui/react-dialog"
+import { DialogContent, DialogHeader } from "@/components/ui/dialog"
 
 const ProjectPanel = () => {
   const { t } = useTranslation()
@@ -107,7 +107,7 @@ const ProjectPanel = () => {
     setIsDialogOpen(false)
 
     // Discard a newly created project
-    if (project?.FilePath==null) {
+    if (project?.FilePath == null) {
       publish({
         key: "CommandDiscardChanges",
         payload: {
@@ -215,14 +215,18 @@ const ProjectPanel = () => {
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
-          You have unsaved changes. Would you like to save them before leaving?
-          <Button onClick={saveChanges}>Save</Button>
-          <Button
-            variant="ghost"
-            onClick={discardChanges}
-          >
-            Discard changes
-          </Button>
+          <DialogHeader className="sr-only">
+            <DialogTitle >{t("Project.UnsavedChanges.Title")}</DialogTitle>
+          </DialogHeader>
+          <div>{t("Project.UnsavedChanges.Description")}</div>
+          <div className="flex flex-row justify-end gap-4">
+            <Button variant="ghost" onClick={discardChanges}>
+              {t("Project.UnsavedChanges.Discard")}
+            </Button>
+            <Button onClick={saveChanges}>
+              {t("Project.UnsavedChanges.Save")}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

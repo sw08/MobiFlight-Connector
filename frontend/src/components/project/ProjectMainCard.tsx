@@ -13,8 +13,10 @@ import { useProjectStore } from "@/stores/projectStore"
 import { useRecentProjects } from "@/stores/settingsStore"
 import { CommandMainMenu } from "@/types/commands"
 import { ProjectInfo } from "@/types/project"
+import { useTranslation } from "react-i18next"
 
 const ProjectMainCard = () => {
+  const { t } = useTranslation()
   const { publish } = useMessageExchange()
   const { recentProjects } = useRecentProjects()
   const { project } = useProjectStore()
@@ -43,9 +45,9 @@ const ProjectMainCard = () => {
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-col gap-2">
             <CardTitle>
-              <h2>My Projects</h2>
+              <h2>{t("Project.Card.Main.Title")}</h2>
             </CardTitle>
-            <CardDescription>Quick access to my projects.</CardDescription>
+            <CardDescription>{t("Project.Card.Main.Description")}</CardDescription>
           </div>
           {showRecentProjects && <ProjectCreateButton />}
         </div>
@@ -56,9 +58,9 @@ const ProjectMainCard = () => {
             <div className="flex min-w-96 flex-col gap-4">
               <div>
                 {activeProject ? (
-                  <h3 className="text-lg font-semibold">Current project</h3>
+                  <h3 className="text-lg font-semibold">{t("Project.Card.Main.CurrentProject")}</h3>
                 ) : (
-                  <h3 className="text-lg font-semibold">No active project</h3>
+                  <h3 className="text-lg font-semibold">{t("Project.Card.Main.NoActiveProject")}</h3>
                 )}
               </div>
               {activeProject ? (
@@ -67,7 +69,7 @@ const ProjectMainCard = () => {
                 <div className="border-primary/25 bg-card space-y-2 rounded-xl border p-4 shadow-md transition-all duration-200 ease-in-out hover:shadow-lg">
                   <div className="flex flex-col gap-4">
                     <div className="text-muted-foreground flex flex-row items-center justify-items-center gap-2">
-                      No project is currently loaded.
+                      {t("Project.Card.Main.NoActiveProject")}
                     </div>
                     <ProjectCreateButton />
                   </div>
@@ -76,7 +78,7 @@ const ProjectMainCard = () => {
             </div>
             <div className="flex h-full grow flex-col gap-4 overflow-hidden">
               <div className="grow-0">
-                <h3 className="text-lg font-semibold">All Projects</h3>
+                <h3 className="text-lg font-semibold">{t("Project.Card.Main.AllProjects")}</h3>
               </div>
               <ProjectList
                 summarys={recentProjects}
@@ -89,7 +91,7 @@ const ProjectMainCard = () => {
           <Card className="w-full">
             <CardContent className="flex flex-col items-center justify-center gap-4 pt-4">
               <div className="text-muted-foreground">
-                Create your first project to get started!
+                {t("Project.Card.Main.CreateFirstProject")}
               </div>
               <ProjectCreateButton />
             </CardContent>

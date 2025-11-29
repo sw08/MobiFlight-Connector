@@ -22,7 +22,7 @@ const ProjectListItem = forwardRef<HTMLDivElement, ProjectListItemProps>(
 
     const simulatorLabel = summary.Sim
       ? t(`Project.Simulator.${summary.Sim.toLowerCase()}`)
-      : "No simulator set"
+      : t(`Project.Simulator.none`)
 
     return (
       <div
