@@ -116,8 +116,8 @@ const ProjectForm = ({
                 </div>
               )}
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="x-plane" id="x-plane" />
-                <Label htmlFor="x-plane" className="font-normal">
+                <RadioGroupItem value="xplane" id="xplane" />
+                <Label htmlFor="xplane" className="font-normal">
                   { t("Project.Simulator.xplane") }
                 </Label>
               </div>

@@ -132,7 +132,7 @@ test.describe("Project view tests", () => {
     const projectOptions = [
       { name: "MSFS no FSUIPC", value: "msfs", useFsuipc: false },
       { name: "MSFS with FSUIPC", value: "msfs", useFsuipc: true },
-      { name: "X-Plane", value: "x-plane", useFsuipc: false },
+      { name: "X-Plane", value: "xplane", useFsuipc: false },
       { name: "Prepar3D", value: "p3d", useFsuipc: false },
     ]
     
