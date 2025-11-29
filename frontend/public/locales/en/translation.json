@@ -101,7 +101,10 @@
       "Description": "Configure your project settings, like name, simulator and aircraft.",
       "Name": {
         "Label": "Project Name",
-        "Placeholder": "e.g., Boeing 737 Home Cockpit"
+        "Placeholder": "e.g., Boeing 737 Home Cockpit",
+        "Error": {
+          "Required": "Please provide a name for your project. It is required."
+        }
       },
       "Simulator" : {
         "Label": "Flight simulator",
@@ -111,6 +114,11 @@
       "Aircraft": {
         "Label": "Aircraft",
         "HelpText": "Select the aircraft for this project."
+      },
+      "Buttons": {
+        "Create": "Create project",
+        "Update": "Update project",
+        "Cancel": "Cancel"
       }
     },
     "UnsavedChanges": {

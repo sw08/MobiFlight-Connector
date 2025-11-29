@@ -101,7 +101,10 @@
       "Description": "Configurar tu proyecto, definir nombre, simulador y avión.",
       "Name": {
         "Label": "Nombre del proyecto",
-        "Placeholder": "ej., Boeing 737 Home Cockpit"
+        "Placeholder": "ej., Boeing 737 Home Cockpit",
+        "Error": {
+          "Required": "Por favor, pon un nombre para tu proyecto. Es obligatorio."
+        }
       },
       "Simulator" : {
         "Label": "Simulador de vuelo",
@@ -111,6 +114,11 @@
       "Aircraft": {
         "Label": "Avión",
         "HelpText": "Selecciona el avión para este proyecto."
+      },
+      "Buttons": {
+        "Create": "Crear proyecto",
+        "Update": "Actualizar proyecto",
+        "Cancel": "Cancelar"
       }
     },
     "UnsavedChanges": {

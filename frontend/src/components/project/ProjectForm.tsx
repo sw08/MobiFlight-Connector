@@ -21,11 +21,7 @@ type ProjectFormProps = {
   project: ProjectInfo
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  onSave: (values: {
-    Name: string
-    Sim: string
-    UseFsuipc: boolean
-  }) => void
+  onSave: (values: { Name: string; Sim: string; UseFsuipc: boolean }) => void
 }
 
 const ProjectForm = ({
@@ -37,7 +33,8 @@ const ProjectForm = ({
   const [name, setName] = useState(project?.Name ?? "")
   const [simulator, setSimulator] = useState<string>(project?.Sim ?? "msfs")
   const [useFsuipc, setUseFsuipc] = useState(project?.UseFsuipc ?? false)
-  
+  const [hasError, setHasError] = useState(false)
+
   const location = useLocation()
   const isEdit = location.state?.mode === "edit"
 
@@ -45,20 +42,29 @@ const ProjectForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (name.trim() === "") {
+      setHasError(true)
+      return
+    }
+    setHasError(false)
     console.log("Saving")
     onSave({
       Name: name,
       Sim: simulator,
-      UseFsuipc: useFsuipc
+      UseFsuipc: useFsuipc,
     })
   }
+
+  const showErrorMessage = hasError && name.length === 0
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-2xl">
-            {isEdit ? t("Project.Form.Title.Edit") : t("Project.Form.Title.New")}
+            {isEdit
+              ? t("Project.Form.Title.Edit")
+              : t("Project.Form.Title.New")}
           </DialogTitle>
           <DialogDescription className="text-md">
             {t("Project.Form.Description")}
@@ -69,23 +75,32 @@ const ProjectForm = ({
           {/* Project Name */}
           <div className="grid gap-2">
             <Label htmlFor="project-name" className="text-base font-semibold">
-              { t("Project.Form.Name.Label") }
+              {t("Project.Form.Name.Label")}
             </Label>
             <Input
               id="project-name"
               name="name"
               value={name}
+              className={showErrorMessage ? "border-red-500" : ""}
               onChange={(e) => setName(e.target.value)}
               placeholder={t("Project.Form.Name.Placeholder")}
               required
             />
+            {showErrorMessage && (
+              <p className="text-sm text-red-500">
+                {t("Project.Form.Name.Error.Required")}
+              </p>
+            )}{" "}
+            {/* Show error */}
           </div>
 
           {/* Flight Simulator Selection */}
           <div className="grid gap-3">
-            <Label className="text-base font-semibold">{ t("Project.Form.Simulator.Label") }</Label>
+            <Label className="text-base font-semibold">
+              {t("Project.Form.Simulator.Label")}
+            </Label>
             <p className="text-muted-foreground text-sm">
-              { t("Project.Form.Simulator.HelpText") }
+              {t("Project.Form.Simulator.HelpText")}
             </p>
             <RadioGroup
               value={simulator}
@@ -97,7 +112,7 @@ const ProjectForm = ({
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="msfs" id="msfs" />
                 <Label htmlFor="msfs" className="font-normal">
-                  { t("Project.Simulator.msfs") }
+                  {t("Project.Simulator.msfs")}
                 </Label>
               </div>
               {/* FSUIPC Option (only for MSFS) */}
@@ -118,19 +133,19 @@ const ProjectForm = ({
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="xplane" id="xplane" />
                 <Label htmlFor="xplane" className="font-normal">
-                  { t("Project.Simulator.xplane") }
+                  {t("Project.Simulator.xplane")}
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="p3d" id="p3d" />
                 <Label htmlFor="p3d" className="font-normal">
-                  { t("Project.Simulator.p3d") }
+                  {t("Project.Simulator.p3d")}
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="fsx" id="fsx" />
                 <Label htmlFor="fsx" className="font-normal">
-                  { t("Project.Simulator.fsx") }
+                  {t("Project.Simulator.fsx")}
                 </Label>
               </div>
             </RadioGroup>
@@ -140,11 +155,11 @@ const ProjectForm = ({
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" type="button">
-              Cancel
+              { t("Project.Form.Buttons.Cancel") }
             </Button>
           </DialogClose>
           <Button onClick={handleSubmit}>
-            {isEdit ? "Save Changes" : "Create Project"}
+            {isEdit ? t("Project.Form.Buttons.Update") : t("Project.Form.Buttons.Create")}
           </Button>
         </DialogFooter>
       </DialogContent>
