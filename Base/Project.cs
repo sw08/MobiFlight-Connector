@@ -235,10 +235,10 @@ namespace MobiFlight.Base
                     {
                         Sim = sim;
                     }
-
-                    var useFsuipc = item.DetermineUsingFsuipc();
-                    UseFsuipc |= useFsuipc;
                 }
+
+                var useFsuipc = item.DetermineUsingFsuipc();
+                UseFsuipc |= useFsuipc;
 
                 item.GetIUniqueControllerSerials().ForEach(c => controllerSerials.Add(c));
             }
