@@ -40,31 +40,33 @@ export const ProjectCardTitle = ({
   summary: ProjectInfo
   variant?: "default" | "listitem"
 }) => {
+  const navigate = useNavigate()
+  const navigateToProject = () => {
+    navigate(`/config`)
+  }
+
   const variants = {
     default: {
       title: "text-xl font-medium truncate",
       button: "p-0 [&_svg]:size-8",
       icon: "h-8",
+      options: { role: "button", onClick: navigateToProject }
     },
     listitem: {
       title: "text-lg font-semibold truncate",
       button: "h-6 p-0 [&_svg]:size-6",
       icon: "h-6",
+      options: {}
     },
   }
-
-  const navigate = useNavigate()
-
-  const navigateToProject = () => {
-    navigate(`/config`)
-  }
-
+  
   const titleClassName = variants[variant || "default"].title
   const buttonClassName = variants[variant || "default"].button
   const iconClassName = variants[variant || "default"].icon
+  const titleOptions = variants[variant || "default"].options
 
   return (
-    <div role="button" onClick={navigateToProject} className="flex flex-row items-center justify-between">
+    <div {...titleOptions} className="flex flex-row items-center justify-between">
       <div className="flex min-w-0 flex-row items-center justify-start gap-2">
         <h2 className={titleClassName}>{summary.Name}</h2>
       </div>
