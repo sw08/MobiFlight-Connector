@@ -64,7 +64,7 @@ const ProjectMainCard = () => {
                 )}
               </div>
               {activeProject ? (
-                <ProjectCard summary={activeProject} className="" />
+                <ProjectCard summary={activeProject} className="w-96 max-w-96" />
               ) : (
                 <div className="border-primary/25 bg-card space-y-2 rounded-xl border p-4 shadow-md transition-all duration-200 ease-in-out hover:shadow-lg">
                   <div className="flex flex-col gap-4">

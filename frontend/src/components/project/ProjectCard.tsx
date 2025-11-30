@@ -64,7 +64,7 @@ export const ProjectCardTitle = ({
   const iconClassName = variants[variant || "default"].icon
 
   return (
-    <div className="flex flex-row items-center justify-between">
+    <div role="button" onClick={navigateToProject} className="flex flex-row items-center justify-between">
       <div className="flex min-w-0 flex-row items-center justify-start gap-2">
         <h2 className={titleClassName}>{summary.Name}</h2>
       </div>
