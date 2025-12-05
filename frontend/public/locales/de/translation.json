@@ -229,6 +229,9 @@
     }
   },
   "Feed": {
+    "Title": "Community Feed",
+    "Description": "Neuigkeiten und Updates aus der MobiFlight-Community.",
+    "NoPosts": "Keine Beiträge verfügbar.",
     "Filter": {
       "all": "Alle",
       "shop": "Angebote",

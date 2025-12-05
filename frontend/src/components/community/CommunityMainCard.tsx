@@ -10,11 +10,13 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { CommunityPost } from "@/types/feed"
+import { useTranslation } from "react-i18next"
 import { useSearchParams } from "react-router"
 
 const CommunityMainCard = () => {
   const [searchParams] = useSearchParams()
   const activeFilter = searchParams.get("feed_filter") || "all"
+  const { t } = useTranslation()
 
   const communityFeed = [
     {
@@ -101,10 +103,10 @@ const CommunityMainCard = () => {
     <Card className="border-shadow-none bg-muted flex h-full flex-col rounded-none">
       <CardHeader>
         <CardTitle className="flex flex-row gap-2">
-          <IconBrandMobiFlightLogo /> Community Feed
+          <IconBrandMobiFlightLogo /> {t("Feed.Title")}
         </CardTitle>
         <CardDescription>
-          News and updates from the MobiFlight community.
+          {t("Feed.Description")}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex h-full flex-col gap-8">
@@ -119,7 +121,7 @@ const CommunityMainCard = () => {
             ))}
             {filteredFeed.length === 0 && (
               <p className="text-muted-foreground text-md bg-background rounded-md border p-8 text-center">
-                No posts available.
+                {t("Feed.NoPosts")}
               </p>
             )}
           </div>
