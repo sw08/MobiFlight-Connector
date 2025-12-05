@@ -12,29 +12,28 @@ import {
 import { CommunityPost } from "@/types/feed"
 import { useSearchParams } from "react-router"
 
-
-
 const CommunityMainCard = () => {
   const [searchParams] = useSearchParams()
   const activeFilter = searchParams.get("feed_filter") || "all"
 
   const communityFeed = [
     {
-      title: "100% Dedication to MobiFlight!",
+      title: "Applying Full Throttle!",
       date: "2025-11-30",
       content: [
-        "This year, I decided to commit myself full-time to MobiFlight development.",
-        "Please consider supporting us through donations to help sustain the continuous development and growth of MobiFlight.",
+        "This year I took a big step: I now work on MobiFlight full time to push the project further than ever.",
+        "Your financial support is essential to cover my living costs and keep MobiFlight advancing.",
       ],
       featured: false,
       tags: ["community"],
       media: {
         type: "image",
         src: "/feed/full-time.jpg",
-        alt: "100% dedication to Flight Simulation",
+        alt: "Full Throttle!",
+        className: "bg-foreground dark:bg-background",
       },
       action: {
-        title: "Donate to MobiFlight",
+        title: "Support Us!",
         url: "https://mobiflight.com/donate",
       },
     },
@@ -50,6 +49,7 @@ const CommunityMainCard = () => {
         type: "image",
         src: "/feed/shop-new-boards.jpg",
         alt: "New products in MobiFlight Store",
+        className: "bg-foreground dark:bg-background",
       },
       action: {
         title: "Register Now",
@@ -60,7 +60,7 @@ const CommunityMainCard = () => {
       title: "Subscribe to Our Newsletter",
       date: "2025-11-30",
       content: [
-        "Stay updated with the **latest news, tutorials, and community highlights** by subscribing to [our newsletter](https://mobiflight.com/newsletter).",
+        "Stay up-to-date with the **latest news, tutorials, and community highlights** by subscribing to [our newsletter](https://mobiflight.com/newsletter).",
       ],
       action: {
         title: "Subscribe",
@@ -70,61 +70,32 @@ const CommunityMainCard = () => {
         type: "image",
         src: "/feed/newsletter-subscribe.jpg",
         alt: "Subscribe to Our Newsletter",
+        className: "bg-gray-100 dark:bg-gray-100",
       },
       tags: ["community"],
     },
     {
-      title: "Meet us in Paderborn",
-      date: "2025-10-30",
+      title: "Meet MobiFlight at FSWeekend 2026!",
+      date: "2025-12-04",
       content: [
-        "Stay updated with the **latest news, tutorials, and community highlights** by subscribing to [our newsletter](https://mobiflight.com/newsletter).",
+        "We're excited to announce that MobiFlight will be present at FSWeekend 2026! Come meet the team, see live demos, and get exclusive insights into upcoming features.",
       ],
       action: {
-        title: "Subscribe",
-        url: "https://mobiflight.com/newsletter",
+        title: "Learn More",
+        url: "https://flightsimweekend.com/",
       },
       media: {
         type: "image",
-        src: "/feed/newsletter-subscribe.jpg",
-        alt: "Subscribe to Our Newsletter",
+        src: "/feed/fsweekend-2025.jpg",
+        alt: "Meet the team at FSWeekend 2026",
       },
       tags: ["events"],
     },
-    {
-      title: "Subscribe to Our Newsletter",
-      date: "2025-11-30",
-      content: [
-        "Stay updated with the **latest news, tutorials, and community highlights** by subscribing to [our newsletter](https://mobiflight.com/newsletter).",
-      ],
-      action: {
-        title: "Subscribe",
-        url: "https://mobiflight.com/newsletter",
-      },
-      media: {
-        type: "image",
-        src: "/feed/newsletter-subscribe.jpg",
-        alt: "Subscribe to Our Newsletter",
-      },
-      tags: ["community"],
-    },
-    {
-      title: "Subscribe to Our Newsletter",
-      date: "2025-11-30",
-      content: [
-        "Stay updated with the **latest news, tutorials, and community highlights** by subscribing to [our newsletter](https://mobiflight.com/newsletter).",
-      ],
-      action: {
-        title: "Subscribe",
-        url: "https://mobiflight.com/newsletter",
-      },
-      media: {
-        type: "image",
-        src: "/feed/newsletter-subscribe.jpg",
-        alt: "Subscribe to Our Newsletter",
-      },
-      tags: ["community"],
-    },
   ] as CommunityPost[]
+
+  const filteredFeed = communityFeed.filter(
+    (post) => post.tags.includes(activeFilter) || activeFilter === "all",
+  )
 
   return (
     <Card className="border-shadow-none bg-muted flex h-full flex-col rounded-none">
@@ -136,15 +107,21 @@ const CommunityMainCard = () => {
           News and updates from the MobiFlight community.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex h-full flex-col gap-2">
+      <CardContent className="flex h-full flex-col gap-8">
         <CommunityFeedFilter />
         <div className="relative grow p-4">
-          <div className="absolute inset-0 overflow-auto">
-            {communityFeed.map((post, index) => (
-              post.tags.includes(activeFilter) || activeFilter === "all" ? (
-                <CommunityFeedItem key={index} post={post} />
-              ) : null 
+          <div className="absolute inset-0 flex flex-col gap-8 overflow-auto pr-4">
+            {filteredFeed.map((post, index) => (
+              <div key={index} className="flex flex-col gap-8">
+                <CommunityFeedItem post={post} />
+                <div className="border" />
+              </div>
             ))}
+            {filteredFeed.length === 0 && (
+              <p className="text-muted-foreground text-md bg-background rounded-md border p-8 text-center">
+                No posts available.
+              </p>
+            )}
           </div>
         </div>
       </CardContent>

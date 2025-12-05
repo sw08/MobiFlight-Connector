@@ -39,20 +39,25 @@ const CommunityFeedItem = (props: CommunityFeedItemProps) => {
     <div
       key={post.title}
       className={cn(
-        "border-muted 4xl:flex-row flex flex-row justify-between gap-8 border-b p-8 lg:flex-col"        
+        "border-muted 4xl:flex-row flex flex-row justify-between gap-8 border-b lg:flex-col",
       )}
     >
       {post.media && post.media.type === "image" && (
-        <div className="max-h-48 w-1/2 lg:w-full">
+        <div
+          className={cn(
+            "bg-background flex max-h-48 min-h-48 w-1/2 items-center justify-center overflow-hidden rounded-lg border shadow-md lg:w-full",
+            post.media.className || "",
+          )}
+        >
           <img
-            className="max-h-48 w-full rounded-lg object-cover"
+            className={`max-h-60 w-full object-cover`}
             src={post.media.src}
             alt={post.media.alt}
           />
         </div>
       )}
       <div className="flex w-1/2 flex-col justify-between gap-4 lg:w-full">
-        <div>
+        <div className="flex flex-col gap-4">
           <h4 className="text-xl font-semibold">{post.title}</h4>
           <div className="flex flex-col gap-4 text-sm">
             {post.content.map((paragraph, index) => (

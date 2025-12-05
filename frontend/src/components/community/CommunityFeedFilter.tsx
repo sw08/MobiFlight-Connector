@@ -13,28 +13,33 @@ const CommunityFeedFilter = () => {
     setSearchParams(newParams)
   }
 
+  const className = "h-8 px-3 text-sm"
+  const allActive = activeFilter === "all"
+  const shopActive = activeFilter === "shop"
+  const eventsActive = activeFilter === "events"
+
   return (
     <div
       className="flex flex-row gap-2"
       data-testid="recent-projects-filter-bar"
     >
       <Button
-        className="h-8 px-3 text-sm"
-        variant={activeFilter === "all" ? "default" : "outline"}
+        className={className}
+        variant={allActive ? "default" : "outline"}
         onClick={() => handleFilterChange("all")}
       >
         {t("Feed.Filter.all")}
       </Button>
       <Button
-        className="h-8 px-3 text-sm"
-        variant={activeFilter === "shop" ? "default" : "outline"}
+        className={className}
+        variant={shopActive ? "default" : "outline"}
         onClick={() => handleFilterChange("shop")}
       >
         {t("Feed.Filter.shop")}
       </Button>
       <Button
-        className="h-8 px-3 text-sm"
-        variant={activeFilter === "events" ? "default" : "outline"}
+        className={className}
+        variant={eventsActive ? "default" : "outline"}
         onClick={() => handleFilterChange("events")}
       >
         {t("Feed.Filter.events")}

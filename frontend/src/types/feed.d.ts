@@ -12,5 +12,6 @@ export interface CommunityPost {
     type: "image" | "video"
     src: string
     alt: string
+    className?: string
   }
 }
