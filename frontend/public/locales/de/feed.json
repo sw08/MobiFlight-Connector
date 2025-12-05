@@ -1,18 +1,18 @@
 {
   "community": [
     {
-      "title": "Voller Schub voraus!",
       "date": "2025-11-30",
+      "title": "Freigabe für neue Flight Levels!",
       "content": [
-        "Dieses Jahr habe ich einen großen Schritt gemacht: Ich arbeite jetzt Vollzeit an MobiFlight, um das Projekt weiter voranzutreiben als je zuvor.",
-        "Deine finanzielle Unterstützung ist entscheidend, um meine Lebenshaltungskosten zu decken und MobiFlight weiter voranzubringen."
+        "Dieses Jahr bin ich voll eingestiegen – ich arbeite nun Vollzeit an MobiFlight, um das Projekt intensiver voranzutreiben.",
+        "Deine finanzielle Unterstützung ist entscheidend, um meinen Lebensunterhalt zu decken und die Entwicklung fortzusetzen."
       ],
       "featured": false,
       "tags": ["community"],
       "media": {
         "type": "image",
         "src": "/feed/full-time.jpg",
-        "alt": "Voller Schub voraus!",
+        "alt": "Freigabe für neue Flight Levels!",
         "className": "bg-foreground dark:bg-background"
       },
       "action": {

@@ -1,18 +1,18 @@
 {
   "community": [
     {
-      "title": "Aplicando Full Throttle!",
       "date": "2025-11-30",
+      "title": "Autorizado para nuevos niveles de vuelo!",
       "content": [
-        "Este año di un gran paso: ahora trabajo en MobiFlight a tiempo completo para impulsar el proyecto más que nunca.",
-        "Tu apoyo financiero es esencial para cubrir mis gastos de vida y mantener el avance de MobiFlight."
+        "Este año di un gran paso: trabajo a tiempo completo en MobiFlight para que el proyecto siga avanzando.",
+        "Tu apoyo económico es clave para cubrir mis gastos y mantener el desarrollo en marcha."
       ],
       "featured": false,
       "tags": ["community"],
       "media": {
         "type": "image",
         "src": "/feed/full-time.jpg",
-        "alt": "Aplicando Full Throttle!",
+        "alt": "Autorizado para nuevos niveles de vuelo!",
         "className": "bg-foreground dark:bg-background"
       },
       "action": {

@@ -1,18 +1,18 @@
 {
   "community": [
     {
-      "title": "Applying Full Throttle!",
       "date": "2025-11-30",
+      "title": "Cleared for new flight levels!",
       "content": [
-        "This year I took a big step: I now work on MobiFlight full time to push the project further than ever.",
-        "Your financial support is essential to cover my living costs and keep MobiFlight advancing."
+        "This year I went all in — I now work full time on MobiFlight to push the project to next levels.",
+        "Your financial support is crucial to cover my living costs and sustain ongoing development."
       ],
       "featured": false,
       "tags": ["community"],
       "media": {
         "type": "image",
         "src": "/feed/full-time.jpg",
-        "alt": "Full Throttle!",
+        "alt": "Cleared for new flight levels!",
         "className": "bg-foreground dark:bg-background"
       },
       "action": {
@@ -21,8 +21,8 @@
       }
     },
     {
-      "title": "New products in the MobiFlight Store",
       "date": "2025-11-30",
+      "title": "New products in the MobiFlight Store",
       "content": [
         "Check out the latest additions to our store, including new modules and accessories to enhance your flight simulation experience."
       ],
@@ -40,8 +40,8 @@
       }
     },
     {
-      "title": "Subscribe to Our Newsletter",
       "date": "2025-11-30",
+      "title": "Subscribe to Our Newsletter",
       "content": [
         "Stay up-to-date with the **latest news, tutorials, and community highlights** by subscribing to [our newsletter](https://mobiflight.com/newsletter)."
       ],
@@ -58,8 +58,8 @@
       "tags": ["community"]
     },
     {
-      "title": "Meet MobiFlight at FSWeekend 2026!",
       "date": "2025-12-04",
+      "title": "Meet MobiFlight at FSWeekend 2026!",
       "content": [
         "We're excited to announce that MobiFlight will be present at FSWeekend 2026! Come meet the team, see live demos, and get exclusive insights into upcoming features."
       ],
