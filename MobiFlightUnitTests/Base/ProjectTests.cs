@@ -33,6 +33,52 @@ namespace MobiFlight.Base.Tests
         }
 
         [TestMethod()]
+        public void OpenFileTest_Single_Xml_Dont_Load_Empty_Preconditions()
+        {
+            string inFile = @"assets\Base\ConfigFile\OpenFileTest.xml";
+            var o = new Project();
+            Assert.IsNotNull(o);
+
+            o.FilePath = inFile;
+            o.OpenFile();
+
+            Assert.IsNotNull(o.ConfigFiles);
+            Assert.IsTrue(o.ConfigFiles.Count > 0);
+
+            var config = o.ConfigFiles[0];
+            var outputConfig = config.ConfigItems.Where(i => i is OutputConfigItem && i.Name == "COM1 Active").First();
+
+            Assert.IsNotNull(outputConfig);
+            Assert.IsTrue(outputConfig as OutputConfigItem != null);
+            var preconditions = (outputConfig as OutputConfigItem).Preconditions;
+
+            Assert.AreEqual(0, preconditions.Count);    
+        }
+
+        [TestMethod()]
+        public void OpenFileTest_Single_Xml_Correctly_Load_Existing_Preconditions()
+        {
+            string inFile = @"assets\Base\ConfigFile\OpenFileTest.xml";
+            var o = new Project();
+            Assert.IsNotNull(o);
+
+            o.FilePath = inFile;
+            o.OpenFile();
+
+            Assert.IsNotNull(o.ConfigFiles);
+            Assert.IsTrue(o.ConfigFiles.Count > 0);
+
+            var config = o.ConfigFiles[0];
+            var outputConfig = config.ConfigItems.Where(i => i is OutputConfigItem && i.Name == "COM1 Standby").First();
+
+            Assert.IsNotNull(outputConfig);
+            Assert.IsTrue(outputConfig as OutputConfigItem != null);
+            var preconditions = (outputConfig as OutputConfigItem).Preconditions;
+
+            Assert.AreEqual(2, preconditions.Count);
+        }
+
+        [TestMethod()]
         public void OpenFileTest_Single_Json_Embedded()
         {
             string inFile = @"assets\Base\ConfigFile\Json\OpenProjectTest.mfproj";
