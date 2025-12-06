@@ -754,20 +754,40 @@ namespace MobiFlight.Base.Tests
         public void MigrateFileExtensionTest()
         {
             var project = new Project();
-            var mccExtension = "Extension.FilePath.mcc";
-            var aicExtension = "Extension.FilePath.aic";
+
+            var testExtensions = new[]
+            {
+                "Extension.FilePath.mcc",
+                "Extension.FilePath.MCC",
+                "Extension.FilePath.aic",
+                "Extension.FilePath.AIC",
+                "Extension.FilePath.mfproj",
+            };
+           
             var mfprojExtension = "Extension.FilePath.mfproj";
 
-            project.FilePath = mccExtension;
-            project.MigrateFileExtension();
+            testExtensions.ToList().ForEach(ext =>
+            {
+                project.FilePath = ext;
+                var result = project.MigrateFileExtension();
+                Assert.AreEqual(mfprojExtension, project.FilePath, "Extension was not migrated to .mfproj");
+                Assert.AreEqual(project.FilePath, result, "Return value should be the same as FilePath value");
+            });
 
-            Assert.AreEqual(mfprojExtension, project.FilePath, "Extension is still old.");
+            var invalidExtensions = new[]
+            {
+                "Extension.FilePath.txt",
+                "Extension.FilePath.json",
+                "Extension.FilePath.xml",
+                "Extension.FilePath.config",
+            };
 
-            project.FilePath = aicExtension;
-            var result = project.MigrateFileExtension();
-
-            Assert.AreEqual(mfprojExtension, project.FilePath, "Extension is still old.");
-            Assert.AreEqual(project.FilePath, result, "Return value should be the same as FilePath value");
+            invalidExtensions.ToList().ForEach(ext => {
+                project.FilePath = ext;
+                var result = project.MigrateFileExtension();
+                Assert.AreEqual(ext, project.FilePath, "Extension should not be changed for invalid extensions");
+                Assert.AreEqual(project.FilePath, result, "Return value should be the same as FilePath value");
+            });
         }
     }
 }

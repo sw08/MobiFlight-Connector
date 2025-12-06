@@ -206,7 +206,8 @@ namespace MobiFlight.Base
 
         public ProjectInfo ToProjectInfo()
         {
-            if (string.IsNullOrEmpty(Sim)) {
+            if (string.IsNullOrEmpty(Sim))
+            {
                 DetermineProjectInfos();
             }
 
@@ -223,7 +224,8 @@ namespace MobiFlight.Base
             return projectInfo;
         }
 
-        public void DetermineProjectInfos() {
+        public void DetermineProjectInfos()
+        {
             var controllerSerials = new List<string>();
             foreach (var item in ConfigFiles)
             {
@@ -246,7 +248,8 @@ namespace MobiFlight.Base
 
             Controllers.Clear();
 
-            controllerSerials.Distinct().ToList().ForEach(c => {
+            controllerSerials.Distinct().ToList().ForEach(c =>
+            {
                 Controllers.Add(c);
             });
         }
@@ -301,7 +304,7 @@ namespace MobiFlight.Base
                     throw new InvalidDataException("Failed to deserialize project file.");
                 }
                 this.CopyFrom(project);
-                
+
                 foreach (var configFile in ConfigFiles)
                 {
                     if (!configFile.EmbedContent)
@@ -444,7 +447,7 @@ namespace MobiFlight.Base
             // Add version when serializing
             var document = JObject.FromObject(this);
             document["_version"] = SchemaVersion.ToString();
-            
+
             // we don't want to serialize the FilePath
             document.Property("FilePath").Remove();
 
@@ -538,7 +541,8 @@ namespace MobiFlight.Base
 
         public string MigrateFileExtension()
         {
-            if (FilePath.EndsWith(".mcc") || FilePath.EndsWith(".aic"))
+            if (FilePath.EndsWith(".mcc", StringComparison.OrdinalIgnoreCase) || 
+                FilePath.EndsWith(".aic", StringComparison.OrdinalIgnoreCase))
             {
                 FilePath = Path.ChangeExtension(FilePath, FileExtension);
             }

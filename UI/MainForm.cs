@@ -2345,7 +2345,6 @@ namespace MobiFlight.UI
             if (!currentProject.FilePath.EndsWith(Project.FileExtension))
             {
                 // migrate the file extension
-                var oldFilePath = currentProject.FilePath;
                 var newFilePath = currentProject.MigrateFileExtension();
 
                 // we can't just save
@@ -2358,7 +2357,7 @@ namespace MobiFlight.UI
                     return;
                 }
 
-                // if no conflict, we can show a notfication 
+                // if no conflict, we can show a notification 
                 // to the user to let them know we saved it with a new name
                 MessageExchange.Instance.Publish(new Notification()
                 {
