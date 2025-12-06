@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { CommunityPost } from "@/types/feed"
 import { useTranslation } from "react-i18next"
 import { useSearchParams } from "react-router"
@@ -18,7 +19,9 @@ const CommunityMainCard = () => {
   const activeFilter = searchParams.get("feed_filter") || "all"
   const { t } = useTranslation()
 
-  const communityFeed = t('feed:community', { returnObjects: true }) as CommunityPost[]
+  const communityFeed = t("feed:community", {
+    returnObjects: true,
+  }) as CommunityPost[]
 
   const filteredFeed = communityFeed.filter(
     (post) => post.tags.includes(activeFilter) || activeFilter === "all",
@@ -30,14 +33,12 @@ const CommunityMainCard = () => {
         <CardTitle className="flex flex-row gap-2">
           <IconBrandMobiFlightLogo /> {t("Feed.Title")}
         </CardTitle>
-        <CardDescription>
-          {t("Feed.Description")}
-        </CardDescription>
+        <CardDescription>{t("Feed.Description")}</CardDescription>
       </CardHeader>
-      <CardContent className="flex h-full flex-col gap-8">
+      <CardContent className="flex grow flex-col gap-8">
         <CommunityFeedFilter />
-        <div className="relative grow p-4">
-          <div className="absolute inset-0 flex flex-col gap-8 overflow-auto pr-4">
+        <ScrollArea className="grow">
+          <div className="flex flex-col gap-8 pr-4">
             {filteredFeed.map((post, index) => (
               <div key={index} className="flex flex-col gap-8">
                 <CommunityFeedItem post={post} />
@@ -50,7 +51,7 @@ const CommunityMainCard = () => {
               </p>
             )}
           </div>
-        </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   )
