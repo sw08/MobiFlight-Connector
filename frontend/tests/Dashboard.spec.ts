@@ -333,6 +333,29 @@ test.describe("Community Feed tests", () => {
     await expect(feedItems).toHaveCount(1)
   })
 
+  test("Confirm button links are working correctly", async ({
+    dashboardPage,
+    page,
+  }) => {
+    await dashboardPage.gotoPage()
+    const feedItems = page.getByTestId("community-feed-item")
+    await expect(feedItems).toHaveCount(4)
+    const offerItem = feedItems.nth(0)
+    const offerButton = offerItem.getByRole("button", { name: "Support Us!", exact: true })
+    await expect(offerButton).toBeVisible()
+
+    await dashboardPage.mobiFlightPage.trackCommand("CommandOpenLinkInBrowser")
+    await offerButton.click()
+
+    const postedCommands =
+      await dashboardPage.mobiFlightPage.getTrackedCommands()
+    const lastCommand = postedCommands!.pop()
+    expect(lastCommand.key).toEqual("CommandOpenLinkInBrowser")
+    expect(lastCommand.payload.url).toEqual(
+      "https://mobiflight.com/donate",
+    )
+  })
+
   test("Confirm responsiveness small window size", async ({
     dashboardPage,
     page,

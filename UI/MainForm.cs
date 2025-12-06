@@ -254,7 +254,12 @@ namespace MobiFlight.UI
 
             MessageExchange.Instance.Subscribe<CommandOpenLinkInBrowser>((message) =>
             {
-                Process.Start(message.Url)  ;
+                if (!message.Url.IsValidUrl())
+                {
+                    Log.Instance.log($"Invalid URL: {message.Url}", LogSeverity.Warn);
+                    return;
+                }
+                Process.Start(message.Url);
             });
         }
 

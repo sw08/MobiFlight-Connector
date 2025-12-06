@@ -21,7 +21,7 @@ const CommunityFeedItem = (props: CommunityFeedItemProps) => {
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    const url = (e.target as HTMLAnchorElement).href
+    const url = (e.currentTarget as HTMLAnchorElement).href
     openUrl(url)
   }
 
