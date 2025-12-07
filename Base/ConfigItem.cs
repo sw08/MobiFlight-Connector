@@ -124,5 +124,22 @@ namespace MobiFlight.Base
                    Value == item.Value &&
                    Status.SequenceEqual(item.Status);
         }
+
+
+        // These methods control whether the property should be serialized
+        public bool ShouldSerializePreconditions()
+        {
+            return Preconditions != null && Preconditions.Count > 0;
+        }
+
+        public bool ShouldSerializeModifiers()
+        {
+            return Modifiers != null && Modifiers.Items.Count > 0;
+        }
+
+        public bool ShouldSerializeConfigRefs()
+        {
+            return ConfigRefs != null && ConfigRefs.Count > 0;
+        }
     }
 }
