@@ -247,6 +247,10 @@ namespace MobiFlight
                     }
                     js = new VKBDevice(diJoystick, GetDefinitionByInstanceName(productName.Trim()));
                 }
+                else if (HidControllerFactory.CanCreate(d.InstanceName)) {
+                    // skip, it will be handled later
+                    continue;
+                }
                 else
                 {
                     js = new Joystick(diJoystick, GetDefinitionByInstanceName(d.InstanceName));
