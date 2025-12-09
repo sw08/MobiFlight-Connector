@@ -2,7 +2,6 @@
 using Hid.Net;
 using Hid.Net.Windows;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
