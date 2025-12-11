@@ -186,6 +186,7 @@ const ProjectPanel = () => {
               }
               file={file}
               index={index}
+              totalCount={configFiles.length}
               selectActiveFile={selectActiveFile}
             ></ProfileTab>
           )
