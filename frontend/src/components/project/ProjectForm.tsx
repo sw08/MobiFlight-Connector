@@ -42,24 +42,34 @@ const ProjectForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (name.trim() === "") {
+    const trimmedName = name.trim()
+
+    if (trimmedName === "") {
       setHasError(true)
       return
     }
     setHasError(false)
     console.log("Saving")
     onSave({
-      Name: name,
+      Name: trimmedName,
       Sim: simulator,
       UseFsuipc: useFsuipc,
     })
   }
 
+  const handleFormKeyDown = (e: React.KeyboardEvent) => {
+    e.stopPropagation()
+    if (e.key === "Enter") {
+      handleSubmit(e as unknown as React.FormEvent)
+    }
+  }
+
+  
   const showErrorMessage = hasError && name.length === 0
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]" onKeyDown={handleFormKeyDown}>
         <DialogHeader>
           <DialogTitle className="text-2xl">
             {isEdit

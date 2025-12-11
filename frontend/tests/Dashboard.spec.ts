@@ -115,10 +115,13 @@ test.describe("Project view tests", () => {
     expect(lastCommand.key).toEqual("CommandProjectToolbar")
     expect(lastCommand.payload.action).toEqual("stop")
   })
+})
 
-  test("Create new project", async ({ dashboardPage, page }) => {
-    await dashboardPage.gotoPage()
-
+test.describe("Project settings modal features", () => {
+  test("Create new project in modal", async ({
+    dashboardPage,
+    page,
+  }) => {
     const createProjectButton = page.getByRole("button", { name: "Project" })
     const createProjectDialog = page.getByRole("dialog", {
       name: "Create New Project",
@@ -135,12 +138,14 @@ test.describe("Project view tests", () => {
       { name: "X-Plane", value: "xplane", useFsuipc: false },
       { name: "Prepar3D", value: "p3d", useFsuipc: false },
     ]
-    
+
     for (const option of projectOptions) {
+      await dashboardPage.gotoPage()
+
       await dashboardPage.mobiFlightPage.trackCommand("CommandMainMenu")
-      
+
       await createProjectButton.click()
-        
+
       await projectNameInput.fill(option.name)
 
       const simOptionLocator = `[role="radio"][value="${option.value}"]`
@@ -153,8 +158,7 @@ test.describe("Project view tests", () => {
 
       await createButton.click()
       await expect(createProjectDialog).not.toBeVisible()
-      const postedCommands =
-        await dashboardPage.mobiFlightPage.getTrackedCommands()
+      const postedCommands = await dashboardPage.mobiFlightPage.getTrackedCommands()
       const lastCommand = postedCommands!.pop()
 
       expect(lastCommand.key).toEqual("CommandMainMenu")
@@ -164,12 +168,13 @@ test.describe("Project view tests", () => {
       expect(lastCommand.payload.options.project.UseFsuipc).toEqual(
         option.useFsuipc,
       )
-
-      await dashboardPage.gotoPage()
     }
   })
 
-  test("Dont allow new project without a name", async ({ dashboardPage, page }) => {
+  test("Dont allow new project without a name", async ({
+    dashboardPage,
+    page,
+  }) => {
     await dashboardPage.gotoPage()
 
     const createProjectButton = page.getByRole("button", { name: "Project" })
@@ -189,7 +194,9 @@ test.describe("Project view tests", () => {
     await expect(createProjectDialog).toBeVisible()
 
     // Error message is shown
-    const errorMessage = createProjectDialog.getByTestId("form-project-name-error")
+    const errorMessage = createProjectDialog.getByTestId(
+      "form-project-name-error",
+    )
     await expect(errorMessage).toBeVisible()
 
     await projectNameInput.fill("Valid Name")
@@ -216,6 +223,41 @@ test.describe("Project view tests", () => {
       name: "Edit Project",
     })
     await expect(editProjectDialog).toBeVisible()
+  })
+
+  test("Using [space] and [del] work when on top of config list view", async ({
+    configListPage,
+    page,
+  }) => {
+    // https://github.com/MobiFlight/MobiFlight-Connector/issues/2448
+    await configListPage.gotoPage()
+    await configListPage.mobiFlightPage.initWithTestData()
+
+    const FileMenu = page
+      .getByRole("menubar")
+      .getByRole("menuitem", { name: "File" })
+    await expect(FileMenu).toBeVisible()
+    await FileMenu.click()
+    const NewMenuItem = page.getByRole("menuitem", { name: "New" })
+    await expect(NewMenuItem).toBeVisible()
+    await NewMenuItem.click()
+
+    const createProjectDialog = page.getByRole("dialog", {
+      name: "Create New Project",
+    })
+    await expect(createProjectDialog).toBeVisible()
+
+    const projectNameInput = createProjectDialog.getByLabel("Project Name")
+    await projectNameInput.fill("Test Project With Space")
+
+    await expect(projectNameInput).toHaveValue("Test Project With Space")
+    await projectNameInput.press("Backspace")
+    await projectNameInput.press("Backspace")
+    await projectNameInput.press("Backspace")
+    await projectNameInput.press("Backspace")
+    await projectNameInput.press("Backspace")
+
+    await expect(projectNameInput).toHaveValue("Test Project With ")
   })
 })
 
@@ -291,15 +333,10 @@ test.describe("Project list view tests", () => {
 })
 
 test.describe("Community Feed tests", () => {
-  test("Confirm default feed items", async ({
-    dashboardPage,
-    page,
-  }) => {
+  test("Confirm default feed items", async ({ dashboardPage, page }) => {
     await dashboardPage.gotoPage()
 
-    await expect(
-      page.getByText("Community Feed"),
-    ).toBeVisible()
+    await expect(page.getByText("Community Feed")).toBeVisible()
 
     const feedFilter = page.getByTestId("community-feed-filter-bar")
     await expect(feedFilter).toBeVisible()
@@ -308,10 +345,12 @@ test.describe("Community Feed tests", () => {
     await expect(allFilterButton).toBeVisible()
     await expect(allFilterButton).toHaveCount(1)
 
-    const communityFilterButton = page.getByRole("button", { name: "Community" })
+    const communityFilterButton = page.getByRole("button", {
+      name: "Community",
+    })
     await expect(communityFilterButton).toBeVisible()
     await expect(communityFilterButton).toHaveCount(1)
-    
+
     const offersFilterButton = page.getByRole("button", { name: "Offers" })
     await expect(offersFilterButton).toBeVisible()
     await expect(offersFilterButton).toHaveCount(1)
@@ -341,7 +380,10 @@ test.describe("Community Feed tests", () => {
     const feedItems = page.getByTestId("community-feed-item")
     await expect(feedItems).toHaveCount(4)
     const offerItem = feedItems.nth(0)
-    const offerButton = offerItem.getByRole("button", { name: "Support Us!", exact: true })
+    const offerButton = offerItem.getByRole("button", {
+      name: "Support Us!",
+      exact: true,
+    })
     await expect(offerButton).toBeVisible()
 
     await dashboardPage.mobiFlightPage.trackCommand("CommandOpenLinkInBrowser")
@@ -351,9 +393,7 @@ test.describe("Community Feed tests", () => {
       await dashboardPage.mobiFlightPage.getTrackedCommands()
     const lastCommand = postedCommands!.pop()
     expect(lastCommand.key).toEqual("CommandOpenLinkInBrowser")
-    expect(lastCommand.payload.url).toEqual(
-      "https://mobiflight.com/donate",
-    )
+    expect(lastCommand.payload.url).toEqual("https://mobiflight.com/donate")
   })
 
   test("Confirm responsiveness small window size", async ({
@@ -365,11 +405,13 @@ test.describe("Community Feed tests", () => {
 
     const feedTitle = page.getByText("Community Feed")
     await expect(feedTitle).not.toBeVisible()
-    
+
     const dashBoardNav = page.getByTestId("dashboard-nav")
     await expect(dashBoardNav).toBeVisible()
 
-    const communityNavButton = dashBoardNav.getByRole("button", { name: "Community" })
+    const communityNavButton = dashBoardNav.getByRole("button", {
+      name: "Community",
+    })
     await expect(communityNavButton).toBeVisible()
     await expect(communityNavButton).toHaveCount(1)
 
