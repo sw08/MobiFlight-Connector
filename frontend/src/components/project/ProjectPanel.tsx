@@ -150,10 +150,10 @@ const ProjectPanel = () => {
 
   return (
     <div
-      className="flex flex-row gap-0 pt-1 pr-2 pb-0 pl-0"
+      className="flex flex-row gap-0 pt-1 pr-2 pb-0 pl-0 h-11"
       data-testid="project-panel"
     >
-      <div className="flex flex-row items-center gap-2 border-b border-solid px-2 border-muted-foreground/50">
+      <div className="border-muted-foreground/50 flex flex-row items-center gap-2 border-b border-solid px-2">
         <IconChevronLeft
           role="button"
           onClick={() => {
@@ -167,13 +167,13 @@ const ProjectPanel = () => {
         />
       </div>
 
-      <div className="flex flex-row items-center rounded-md rounded-br-none rounded-bl-none border border-b-0 border-solid px-2 border-muted-foreground/50">
+      <div className="border-muted-foreground/50 flex flex-row items-center rounded-md rounded-br-none rounded-bl-none border border-b-0 border-solid px-2">
         <ProjectNameLabel />
         <IconMinusVertical className="stroke-muted-foreground/50" />
         <ExecutionToolbar />
       </div>
 
-      <div className="w-2 border-b border-muted-foreground/50"></div>
+      <div className="border-muted-foreground/50 w-2 border-b"></div>
 
       <div className="relative h-full grow" role="tablist">
         <div className="no-scrollbar absolute inset-0 overflow-x-auto overflow-y-hidden">
@@ -196,30 +196,33 @@ const ProjectPanel = () => {
                 />
               )
             })}
+            <div className="relative border-muted-foreground/50 grow border-b px-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="py-1">
+                    <Button variant={"ghost"} className="h-8 px-2">
+                      <span className="sr-only">
+                        {t("General.Action.OpenMenu")}
+                      </span>
+                      <IconPlus />
+                    </Button>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onClick={addConfigFile}>
+                    <IconPlus />
+                    {t("Project.File.Action.New")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={mergeConfigFile}>
+                    <IconFolderPlus />
+                    {t("Project.File.Action.Merge")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="border-muted-foreground/50 grow border-b"></div>
           </div>
         </div>
-      </div>
-      <div className="relative">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="py-1">
-              <Button variant={"ghost"} className="h-8 px-2">
-                <span className="sr-only">{t("General.Action.OpenMenu")}</span>
-                <IconPlus />
-              </Button>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={addConfigFile}>
-              <IconPlus />
-              {t("Project.File.Action.New")}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={mergeConfigFile}>
-              <IconFolderPlus />
-              {t("Project.File.Action.Merge")}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>

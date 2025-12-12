@@ -14,8 +14,6 @@ import ProjectPanel from "@/components/project/ProjectPanel"
 import { ConfigItemTable } from "@/components/tables/config-item-table/config-item-table"
 
 const ConfigListPage = () => {
-  
-
   const {
     project,
     activeConfigFileIndex,
@@ -70,9 +68,12 @@ const ConfigListPage = () => {
     project?.ConfigFiles[activeConfigFileIndex]?.ConfigItems ?? []
 
   // Function to get config items from project store
-  const getConfigItems = useCallback((configIndex: number): IConfigItem[] => {
-    return project?.ConfigFiles[configIndex]?.ConfigItems ?? []
-  }, [project])
+  const getConfigItems = useCallback(
+    (configIndex: number): IConfigItem[] => {
+      return project?.ConfigFiles[configIndex]?.ConfigItems ?? []
+    },
+    [project],
+  )
 
   return (
     <div className="flex flex-col gap-2 overflow-y-auto">
@@ -83,12 +84,9 @@ const ConfigListPage = () => {
         selectActiveFile={setActiveConfigFileIndex}
       >
         <ProjectPanel />
-      <div className="flex flex-col gap-4 overflow-y-auto">
-        <ConfigItemTable
-          columns={columns}
-          data={configItems}
-        />
-      </div>
+        <div className="flex flex-col gap-4 overflow-y-auto">
+          <ConfigItemTable columns={columns} data={configItems} />
+        </div>
       </ConfigItemDragProvider>
     </div>
   )
