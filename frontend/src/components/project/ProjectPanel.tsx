@@ -23,6 +23,7 @@ import { useNavigate } from "react-router"
 import { Dialog, DialogTitle } from "@radix-ui/react-dialog"
 import { DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { useWindowSize } from "@/lib/hooks/useWindowSize"
+import { useOverflowDetector } from "@/lib/hooks/useOverflowDetector"
 
 const ProjectPanel = () => {
   const SCROLL_TAB_INTO_VIEW_DELAY_MS = 1500
@@ -98,10 +99,7 @@ const ProjectPanel = () => {
       scrollActiveProfileTabIntoView,
       SCROLL_TAB_INTO_VIEW_DELAY_MS,
     )
-  }, [
-    scrollActiveProfileTabIntoView,
-    resetScrollActiveProfileTabIntoView,
-  ])
+  }, [scrollActiveProfileTabIntoView, resetScrollActiveProfileTabIntoView])
 
   useEffect(() => {
     // scroll tab into view
@@ -190,6 +188,9 @@ const ProjectPanel = () => {
     navigate("/home")
   }
 
+  const overflowRef = useRef<HTMLDivElement | null>(null)
+  const overflow = useOverflowDetector(overflowRef)
+
   // Hover timer ref
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const activeProfileTabRef = useRef<HTMLDivElement | null>(null)
@@ -254,7 +255,10 @@ const ProjectPanel = () => {
       <div className="border-muted-foreground/50 w-0 border-b"></div>
 
       <div className="relative h-full grow" role="tablist">
-        <div className="no-scrollbar absolute inset-0 overflow-x-auto overflow-y-hidden">
+        <div
+          className="no-scrollbar absolute inset-0 overflow-x-auto overflow-y-hidden"
+          ref={overflowRef}
+        >
           <div className="flex h-full flex-row">
             {configFiles?.map((file, index) => {
               return (
@@ -277,47 +281,84 @@ const ProjectPanel = () => {
                 />
               )
             })}
+            {!overflow.right && (
+              <div className="border-muted-foreground/50 border-b px-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      className="py-1"
+                      onMouseEnter={resetScrollActiveProfileTabIntoView}
+                      onMouseLeave={scrollActiveProfileTabIntoViewWithDelay}
+                    >
+                      <Button variant={"default"} className="h-8 px-2">
+                        <span className="sr-only">
+                          {t("General.Action.OpenMenu")}
+                        </span>
+                        <IconPlus />
+                      </Button>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    onMouseEnter={resetScrollActiveProfileTabIntoView}
+                    onMouseLeave={scrollActiveProfileTabIntoViewWithDelay}
+                  >
+                    <DropdownMenuItem onClick={addConfigFile}>
+                      <IconPlus />
+                      {t("Project.File.Action.New")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={mergeConfigFile}>
+                      <IconFolderPlus />
+                      {t("Project.File.Action.Merge")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
             <div className="border-muted-foreground/50 grow border-b"></div>
           </div>
         </div>
         {/* Left shadow */}
-        {
-          activeConfigFileIndex > 0 &&
-          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-2 bg-linear-to-r from-foreground/20 dark:w-3 dark:from-background dark:bottom-0.5 to-transparent z-20 pb-1 rounded-tl-sm" />
-        }
+        {activeConfigFileIndex > 0 && (
+          <div className="from-foreground/20 dark:from-background pointer-events-none absolute top-0 bottom-0 left-0 z-20 w-2 rounded-tl-sm bg-linear-to-r to-transparent pb-1 dark:bottom-0.5 dark:w-3" />
+        )}
         {/* Right shadow */}
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0.5 w-2 bg-linear-to-l from-background to-transparent z-200 pb-1" />
+        <div className="from-background pointer-events-none absolute top-0 right-0 bottom-0.5 z-200 w-2 bg-linear-to-l to-transparent pb-1" />
       </div>
-      <div className="border-muted-foreground/50 border-b px-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div
-              className="py-1"
+      {overflow.right && (
+        <div className="border-muted-foreground/50 border-b px-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div
+                className="py-1"
+                onMouseEnter={resetScrollActiveProfileTabIntoView}
+                onMouseLeave={scrollActiveProfileTabIntoViewWithDelay}
+              >
+                <Button variant={"default"} className="h-8 px-2">
+                  <span className="sr-only">
+                    {t("General.Action.OpenMenu")}
+                  </span>
+                  <IconPlus />
+                </Button>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
               onMouseEnter={resetScrollActiveProfileTabIntoView}
               onMouseLeave={scrollActiveProfileTabIntoViewWithDelay}
             >
-              <Button variant={"default"} className="h-8 px-2">
-                <span className="sr-only">{t("General.Action.OpenMenu")}</span>
+              <DropdownMenuItem onClick={addConfigFile}>
                 <IconPlus />
-              </Button>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="start"
-            onMouseEnter={resetScrollActiveProfileTabIntoView}
-            onMouseLeave={scrollActiveProfileTabIntoViewWithDelay}
-          >
-            <DropdownMenuItem onClick={addConfigFile}>
-              <IconPlus />
-              {t("Project.File.Action.New")}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={mergeConfigFile}>
-              <IconFolderPlus />
-              {t("Project.File.Action.Merge")}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+                {t("Project.File.Action.New")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={mergeConfigFile}>
+                <IconFolderPlus />
+                {t("Project.File.Action.Merge")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader className="sr-only">
