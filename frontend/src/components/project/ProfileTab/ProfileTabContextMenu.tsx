@@ -9,6 +9,7 @@ import {
 import { buttonVariants } from "@/components/ui/variants"
 import { publishOnMessageExchange } from "@/lib/hooks/appMessage"
 import { cn } from "@/lib/utils"
+import { ConfigFile } from "@/types"
 import { CommandFileContextMenu } from "@/types/commands"
 import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react"
 import { VariantProps } from "class-variance-authority"
@@ -18,7 +19,7 @@ import { useTranslation } from "react-i18next"
 export interface ProfileTabContextMenuProps
   extends VariantProps<typeof buttonVariants> {
   index: number
-  file: string | null
+  file: ConfigFile | null
   groupHoverStyle: string
   inlineEditRef: RefObject<InlineEditLabelRef | null>
 }

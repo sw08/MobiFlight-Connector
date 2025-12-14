@@ -1,5 +1,6 @@
 import { Locator } from "@playwright/test"
 import { test, expect } from "./fixtures"
+import { ConfigFile } from "../src/types"
 
 test("Confirm project name can be renamed", async ({
   configListPage,
@@ -205,6 +206,7 @@ test.describe("Test profile tabs basic features", () => {
     expect(lastCommand.key).toEqual("CommandFileContextMenu")
     expect(lastCommand.payload.action).toEqual("remove")
     expect(lastCommand.payload.index).toEqual(1)
+    expect(lastCommand.payload.file as ConfigFile).not.toBeNull()
   })
 
   test("Confirm tab overflow indicators hide correctly", async ({
@@ -217,10 +219,10 @@ test.describe("Test profile tabs basic features", () => {
     const addTabMenuOverflow = page.getByTestId("add-profile-tab-menu-overflow")
 
     const tabOverflowIndicatorLeft = page.getByTestId(
-      "tab-overflow-indicator-left"
+      "tab-overflow-indicator-left",
     )
     const tabOverflowIndicatorRight = page.getByTestId(
-      "tab-overflow-indicator-right"
+      "tab-overflow-indicator-right",
     )
     // Initially, no overflow indicators should be visible
     await expect(tabOverflowIndicatorLeft).toBeHidden()
@@ -242,12 +244,12 @@ test.describe("Test profile tabs overflow features", () => {
     const addTabMenuOverflow = page.getByTestId("add-profile-tab-menu-overflow")
 
     const tabOverflowIndicatorLeft = page.getByTestId(
-      "tab-overflow-indicator-left"
+      "tab-overflow-indicator-left",
     )
     const tabOverflowIndicatorRight = page.getByTestId(
-      "tab-overflow-indicator-right"
+      "tab-overflow-indicator-right",
     )
-    
+
     // Add multiple tabs to cause overflow
     await expect(tabOverflowIndicatorLeft).toBeHidden()
     await expect(tabOverflowIndicatorRight).toBeVisible()

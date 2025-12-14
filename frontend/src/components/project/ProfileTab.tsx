@@ -119,7 +119,7 @@ export const ProfileTab = forwardRef<HTMLDivElement, ProfileTabProps>(({
         variant={variant}
         groupHoverStyle={groupHoverStyle}
         index={index}
-        file={file.FileName}
+        file={file}
         inlineEditRef={inlineEditRef}
       />
     </div>
