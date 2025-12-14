@@ -3,6 +3,7 @@ import { AddProfileTabMenu } from "./ProfileTab/AddProfileTabMenu"
 import { Button } from "../ui/button"
 import {
   IconChevronLeft,
+  IconChevronRight,
   IconMinusVertical,
 } from "@tabler/icons-react"
 import { publishOnMessageExchange } from "@/lib/hooks/appMessage"
@@ -245,7 +246,21 @@ const ProjectPanel = () => {
         <ExecutionToolbar />
       </div>
 
-      <div className="border-muted-foreground/50 w-0 border-b"></div>
+      <div className="border-muted-foreground/50 flex w-5 flex-col items-center justify-between border-b py-0.5">
+        <Button
+          className={`h-4 w-4 p-1 transition-opacity duration-200 ${!overflow.left ? "opacity-0" : ""}`}
+          variant={"secondary"}
+        >
+          <IconChevronLeft />
+        </Button>
+
+        <Button
+          className={`h-4 w-4 p-1 transition-opacity duration-200 ${!overflow.right ? "opacity-0" : ""}`}
+          variant={"secondary"}
+        >
+          <IconChevronRight />
+        </Button>
+      </div>
 
       <div className="relative h-full grow" role="tablist">
         <div
