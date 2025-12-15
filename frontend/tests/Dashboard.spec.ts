@@ -330,6 +330,30 @@ test.describe("Project list view tests", () => {
       await expect(projectItems.nth(i)).toContainText("New Project")
     }
   })
+
+  test("Remove projects from recent list", async ({ dashboardPage, page }) => {
+    await dashboardPage.gotoPage()
+    await dashboardPage.mobiFlightPage.initWithTestData()
+    await dashboardPage.mobiFlightPage.trackCommand("CommandMainMenu")
+
+    const recentProjectsList = page.getByTestId("recent-projects-list")
+    const projectItems = recentProjectsList.getByTestId("project-list-item")
+
+    await expect(recentProjectsList).toBeVisible()
+    await expect(projectItems).toHaveCount(27)
+
+    const secondProject = projectItems.nth(1)
+    const removeButton = secondProject.getByRole("button", { name: "Remove" })
+    await expect(removeButton).toBeVisible()
+    await removeButton.click()
+
+    const postedCommands =
+      await dashboardPage.mobiFlightPage.getTrackedCommands()
+    const lastCommand = postedCommands!.pop()
+    expect(lastCommand.key).toEqual("CommandMainMenu")
+    expect(lastCommand.payload.action).toEqual("virtual.recent.remove")
+    expect(lastCommand.payload.index).toEqual(1)
+  })
 })
 
 test.describe("Community Feed tests", () => {
