@@ -1,7 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MobiFlight.Base;
+using MobiFlight.BrowserMessages.Incoming;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Reflection;
 
@@ -131,6 +133,43 @@ namespace MobiFlight.UI.Tests
 
             // Act & Assert
             Assert.IsFalse(exceptionThrown, "UpdateAutoLoadMenu should not throw an exception.");
+        }
+
+        [TestMethod()]
+        public void RecentFilesRemove_ViaCommandMainMenu()
+        {
+            // Arrange
+            InitializeExecutionManager();
+
+            var testFiles = new StringCollection
+            {
+                "C:\\project1.mfproj",
+                "C:\\project2.mfproj",
+                "C:\\project3.mfproj"
+            };
+
+            Properties.Settings.Default.RecentFiles = testFiles;
+            Properties.Settings.Default.Save();
+
+            // Create the command message
+            var command = new CommandMainMenu
+            {
+                Action = CommandMainMenuAction.virtual_recent_remove,
+                Index = 1  // Remove the middle entry
+            };
+
+            // Get the handler
+            var handler = new MobiFlight.BrowserMessages.Incoming.Handler.CommandMainMenuHandler(_mainForm);
+
+            // Act
+            handler.Handle(command);
+
+            // Assert
+            var recentFiles = Properties.Settings.Default.RecentFiles;
+            Assert.AreEqual(2, recentFiles.Count, "Should have 2 files remaining");
+            Assert.AreEqual("C:\\project1.mfproj", recentFiles[0]);
+            Assert.AreEqual("C:\\project3.mfproj", recentFiles[1]);
+            Assert.IsFalse(recentFiles.Contains("C:\\project2.mfproj"), "Removed file should not be in the list");
         }
     }
 }
