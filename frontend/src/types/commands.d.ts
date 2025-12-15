@@ -135,6 +135,8 @@ export type CommandMainMenuPayload = {
     | "help.about"
     | "help.releasenotes"
     | "help.donate"
+    // virtual menu actions
+    | "virtual.recent.remove"
   index?: number
   options?: {
     project?: ProjectInfo

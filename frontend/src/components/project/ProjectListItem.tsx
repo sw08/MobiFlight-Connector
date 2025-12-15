@@ -11,10 +11,11 @@ import { IconTrash } from "@tabler/icons-react"
 export type ProjectListItemProps = HtmlHTMLAttributes<HTMLDivElement> & {
   summary: ProjectInfo
   active?: boolean
+  onClickRemove: () => void
 }
 
 const ProjectListItem = forwardRef<HTMLDivElement, ProjectListItemProps>(
-  ({ summary, className, active, ...props }, ref) => {
+  ({ summary, className, active, onClickRemove, ...props }, ref) => {
     const { t } = useTranslation()
 
     const activateStateClassName = active
@@ -47,7 +48,7 @@ const ProjectListItem = forwardRef<HTMLDivElement, ProjectListItemProps>(
             </div>
           </div>
 
-          <div className="flex w-1 flex-1 flex-col gap-2 justify-between">
+          <div className="flex w-1 flex-1 flex-col justify-between gap-2">
             <ProjectCardTitle summary={summary} variant="listitem" />
             <div className="flex flex-row items-end justify-between">
               <div className="flex flex-col gap-2">
@@ -58,14 +59,23 @@ const ProjectListItem = forwardRef<HTMLDivElement, ProjectListItemProps>(
                 </div>
               </div>
             </div>
-            <div className="flex flex-row gap-2 items-center justify-between">
+            <div className="flex flex-row items-center justify-between gap-2">
               <div
                 title={summary.FilePath}
                 className="text-muted-foreground truncate text-sm"
               >
                 {summary.FilePath}
               </div>
-              <Button title={t("Project.File.Action.Remove")} variant="ghost" className="transition-opacity duration-300 opacity-0 group-hover:opacity-100 text-muted-foreground/50 hover:text-foreground h-7 w-auto p-1 [&_svg]:size-6 gap-0" size="icon">
+              <Button
+                title={t("Project.File.Action.Remove")}
+                variant="ghost"
+                className="text-muted-foreground/50 hover:text-foreground h-7 w-auto gap-0 p-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100 [&_svg]:size-6"
+                size="icon"
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onClickRemove()
+                }}
+              >
                 <IconTrash />
               </Button>
             </div>

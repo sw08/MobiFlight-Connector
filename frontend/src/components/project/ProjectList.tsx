@@ -8,6 +8,7 @@ import { useRef } from "react"
 import { ProjectCreateButton } from "@/components/project/ProjectCreateButton"
 import { cn } from "@/lib/utils"
 import ProjectListFilter from "@/components/project/ProjectListFilter"
+import { publishOnMessageExchange } from "@/lib/hooks/appMessage"
 
 export type ProjectListProps = {
   className?: string
@@ -23,6 +24,8 @@ const ProjectList = ({
   onSelect,
 }: ProjectListProps) => {
   const refActiveElement = useRef<HTMLDivElement | null>(null)
+
+  const { publish } = publishOnMessageExchange()
 
   const [searchParams, setSearchParams] = useSearchParams()
   const activeFilter = searchParams.get("projects_filter") || "all"
@@ -55,6 +58,16 @@ const ProjectList = ({
       return project.Name.toLowerCase().includes(activeTextFilter.toLowerCase())
     })
 
+  const onListItemRemove = (index: number) => {
+    publish({
+      key: "CommandMainMenu",
+      payload: {
+        action: "virtual.recent.remove",
+        index: index,
+      },
+    })
+  }
+
   return (
     <div className={cn(`flex grow flex-col gap-4`, className)}>
       <ProjectListFilter />
@@ -83,6 +96,7 @@ const ProjectList = ({
                         if (isActive) return
                         onSelect(project)
                       }}
+                      onClickRemove={() => onListItemRemove(index)}
                     />
                   )
                 })

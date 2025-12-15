@@ -2920,6 +2920,18 @@ namespace MobiFlight.UI
             saveToolStripButton_Click(null, null);
         }
 
+        internal void RecentFilesRemove(int index)
+        {
+            var recentFiles = Properties.Settings.Default.RecentFiles;
+
+            if (index < 0 || index >= recentFiles.Count)
+                return;
+
+            recentFiles.RemoveAt(index);
+            Properties.Settings.Default.RecentFiles = recentFiles;
+            Properties.Settings.Default.Save();
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
