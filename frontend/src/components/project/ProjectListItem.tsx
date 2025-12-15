@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils"
 import { ProjectCardImage, ProjectCardTitle } from "./ProjectCard"
 import ProjectFavStar from "./ProjectFavStar"
 import { useTranslation } from "react-i18next"
+import { Button } from "@/components/ui/button"
+import { IconTrash } from "@tabler/icons-react"
 
 export type ProjectListItemProps = HtmlHTMLAttributes<HTMLDivElement> & {
   summary: ProjectInfo
@@ -26,7 +28,7 @@ const ProjectListItem = forwardRef<HTMLDivElement, ProjectListItemProps>(
 
     return (
       <div
-        data-testid ="project-list-item"
+        data-testid="project-list-item"
         className={cn(
           "group flex flex-row items-center justify-between gap-2 rounded-md p-2",
           "shadow-sm transition-all duration-200 ease-in-out hover:shadow-md",
@@ -37,7 +39,7 @@ const ProjectListItem = forwardRef<HTMLDivElement, ProjectListItemProps>(
         ref={ref}
         {...props}
       >
-        <div className="flex flex-row gap-4 w-full">
+        <div className="flex w-full flex-row gap-4">
           <div className="relative shrink-0">
             <ProjectCardImage summary={summary} className="h-24 w-32" />
             <div className="absolute inset-0 flex items-start justify-start p-2">
@@ -45,7 +47,7 @@ const ProjectListItem = forwardRef<HTMLDivElement, ProjectListItemProps>(
             </div>
           </div>
 
-          <div className="flex flex-1 flex-col gap-2 w-1">
+          <div className="flex w-1 flex-1 flex-col gap-2 justify-between">
             <ProjectCardTitle summary={summary} variant="listitem" />
             <div className="flex flex-row items-end justify-between">
               <div className="flex flex-col gap-2">
@@ -56,11 +58,16 @@ const ProjectListItem = forwardRef<HTMLDivElement, ProjectListItemProps>(
                 </div>
               </div>
             </div>
-            <div
-              title={summary.FilePath}
-              className="text-muted-foreground truncate text-sm"
-            >
-              {summary.FilePath}
+            <div className="flex flex-row gap-2 items-center justify-between">
+              <div
+                title={summary.FilePath}
+                className="text-muted-foreground truncate text-sm"
+              >
+                {summary.FilePath}
+              </div>
+              <Button title={t("Project.File.Action.Remove")} variant="ghost" className="transition-opacity duration-300 opacity-0 group-hover:opacity-100 text-muted-foreground/50 hover:text-foreground h-7 w-auto p-1 [&_svg]:size-6 gap-0" size="icon">
+                <IconTrash />
+              </Button>
             </div>
           </div>
         </div>

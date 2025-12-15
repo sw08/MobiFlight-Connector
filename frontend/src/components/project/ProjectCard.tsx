@@ -54,7 +54,7 @@ export const ProjectCardTitle = ({
     },
     listitem: {
       title: "text-lg font-semibold truncate",
-      button: "h-6 p-0 [&_svg]:size-6",
+      button: "h-6 p-1 [&_svg]:size-6 w-auto",
       icon: "h-6",
       options: {}
     },
