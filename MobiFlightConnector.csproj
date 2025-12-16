@@ -370,8 +370,8 @@
     <Compile Include="MobiFlight\InputConfig\ProSimInputAction.cs" />
     <Compile Include="MobiFlight\InputConfig\XplaneInputAction.cs" />
     <Compile Include="MobiFlight\InputConfig\VariableInputAction.cs" />
-    <Compile Include="MobiFlight\Joysticks\Authentikit\AuthentiKit.cs" />
-    <Compile Include="MobiFlight\Joysticks\Authentikit\AuthentiKitReport.cs" />
+    <Compile Include="MobiFlight\Joysticks\AuthentiKit\AuthentiKit.cs" />
+    <Compile Include="MobiFlight\Joysticks\AuthentiKit\AuthentiKitReport.cs" />
     <Compile Include="MobiFlight\Joysticks\HidControllerFactory.cs" />
     <Compile Include="MobiFlight\Joysticks\Joystick.cs" />
     <Compile Include="MobiFlight\ControllerDefinitionMigrator.cs" />

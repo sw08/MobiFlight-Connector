@@ -1,6 +1,7 @@
 ﻿using HidSharp;
 using MobiFlight.BrowserMessages;
 using MobiFlight.Joysticks;
+using MobiFlight.Joysticks.AuthentiKit;
 using MobiFlight.Joysticks.Octavi;
 using MobiFlight.Joysticks.VKB;
 using MobiFlight.Joysticks.Winwing;

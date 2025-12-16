@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MobiFlight.Joysticks.Tests
+namespace MobiFlight.Joysticks.AuthentiKit.Tests
 {
     [TestClass]
     public class AuthentiKitReportTests

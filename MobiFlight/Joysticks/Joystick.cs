@@ -47,8 +47,7 @@ namespace MobiFlight
             [54] = "Slider1",
             [55] = "Slider2",
             [56] = "Wheel",
-            [57] = "HatSwitch",
-
+            [57] = "HatSwitch"
         };
 
         /// <summary>

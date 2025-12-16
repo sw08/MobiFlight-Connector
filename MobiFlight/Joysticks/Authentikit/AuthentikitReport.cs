@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MobiFlight.Joysticks
+namespace MobiFlight.Joysticks.AuthentiKit
 {
     public class AuthentiKitReport
     {
@@ -71,8 +71,6 @@ namespace MobiFlight.Joysticks
                         break;
                 }
             }
-
-
 
             int buttonByteOffset = Axis.Count * 2;
             // Buttons

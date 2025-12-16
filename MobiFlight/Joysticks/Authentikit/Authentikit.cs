@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MobiFlight.Joysticks
+namespace MobiFlight.Joysticks.AuthentiKit
 {
     internal class AuthentiKit : Joystick
     {
