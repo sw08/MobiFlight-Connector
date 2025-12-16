@@ -481,7 +481,7 @@ namespace MobiFlight.UI
                     {
                         var p = new Project();
                         p.FilePath = project;
-                        p.OpenFile();
+                        p.OpenFile(suppressMigrationLogging: true);
                         p.DetermineProjectInfos();
 
                         recentProjects.Add(p.ToProjectInfo());
