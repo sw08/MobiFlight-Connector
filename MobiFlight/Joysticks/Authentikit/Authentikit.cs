@@ -235,7 +235,7 @@ namespace MobiFlight.Joysticks
 
                 int newValue = GetValueForAxisFromState(CurrentAxis, newState);
 
-                if (StateExists() && Math.Abs(oldValue - newValue) < 2) continue;
+                if (StateExists() && Math.Abs(oldValue - newValue) < 2 << 4) continue;
 
                 TriggerButtonPressed(this, new InputEventArgs()
                 {
