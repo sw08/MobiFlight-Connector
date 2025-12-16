@@ -835,5 +835,97 @@ namespace MobiFlight.Base.Tests
                 Assert.AreEqual(project.FilePath, result, "Return value should be the same as FilePath value");
             });
         }
+
+        #region OpenFile Log Suppression Tests
+
+        // Minimal test appender to capture log messages during tests.
+        class TestAppender : ILogAppender
+        {
+            private readonly object _sync = new object();
+            public readonly System.Collections.Generic.List<(string Message, LogSeverity Severity)> Entries = new System.Collections.Generic.List<(string, LogSeverity)>();
+
+            public void log(string message, LogSeverity severity)
+            {
+                lock (_sync)
+                {
+                    Entries.Add((message, severity));
+                }
+            }
+
+            // Some appenders implement cleanup hooks; provide a no-op to be safe.
+            public void Shutdown() { }
+        }
+
+        [TestMethod()]
+        public void OpenFile_LogSuppression_DoesNotEmitMigrationLogs()
+        {
+            var tempFile = Path.Combine(Path.GetTempPath(), $"project_test_{System.Guid.NewGuid()}.mfproj");
+            try
+            {
+                // old schema version triggers migration path
+                File.WriteAllText(tempFile, "{ \"Name\": \"TestProject\", \"ConfigFiles\": [], \"_version\": \"0.1\" }");
+
+                var appender = new TestAppender();
+                Log.Instance.AddAppender(appender);
+                Log.Instance.Severity = LogSeverity.Debug;
+                Log.Instance.Enabled = true;
+
+                var p = new Project { FilePath = tempFile };
+
+                // Act - open in peek mode (suppress migration logging)
+                p.OpenFile(suppressMigrationLogging: true);
+
+                // Assert - no migration-related entries
+                bool anyMigration = appender.Entries.Any(e =>
+                    e.Message.IndexOf("Migrating document", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    e.Message.IndexOf("Applying V0.9 migrations", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    e.Message.IndexOf("Migration complete", System.StringComparison.OrdinalIgnoreCase) >= 0
+                );
+
+                Assert.IsFalse(anyMigration, "Migration messages should be suppressed when suppressMigrationLogging == true");
+            }
+            finally
+            {
+                try { if (File.Exists(tempFile)) File.Delete(tempFile); } catch { }
+            }
+        }
+
+        [TestMethod()]
+        public void OpenFile_LogSuppression_WhenNotSuppressed_EmitsMigrationLogs()
+        {
+            var tempFile = Path.Combine(Path.GetTempPath(), $"project_test_{System.Guid.NewGuid()}.mfproj");
+            try
+            {
+                // old schema version triggers migration path
+                File.WriteAllText(tempFile, "{ \"Name\": \"TestProject\", \"ConfigFiles\": [], \"_version\": \"0.1\" }");
+
+                var appender = new TestAppender();
+                Log.Instance.AddAppender(appender);
+                Log.Instance.Severity = LogSeverity.Debug;
+                Log.Instance.Enabled = true;
+
+                var p = new Project { FilePath = tempFile };
+
+                // Act - open normally (should emit migration logs)
+                p.OpenFile();
+
+                // Assert - migration-related entries present
+                bool anyMigration = appender.Entries.Any(e =>
+                    e.Message.IndexOf("Migrating document", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    e.Message.IndexOf("Applying V0.9 migrations", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    e.Message.IndexOf("Migration complete", System.StringComparison.OrdinalIgnoreCase) >= 0
+                );
+
+                Assert.IsTrue(anyMigration, "Migration messages should be emitted when suppressMigrationLogging == false");
+            }
+            finally
+            {
+                try { if (File.Exists(tempFile)) File.Delete(tempFile); } catch { }
+            }
+        }
+
+        #endregion
+
+
     }
 }
