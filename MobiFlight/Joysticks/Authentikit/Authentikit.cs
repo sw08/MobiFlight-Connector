@@ -44,7 +44,7 @@ namespace MobiFlight.Joysticks
 
         /// <summary>
         /// Provides Serial including prefix.
-        /// Serial information is provided through HidSharp
+        /// Serial information is provided through DirectInput GUID.
         /// </summary>
         public override string Serial
         {
@@ -54,14 +54,16 @@ namespace MobiFlight.Joysticks
         /// <summary>
         /// The constructor.
         /// </summary>
-        /// <param name="definition">joystick definition file.</param>
+        /// <param name="joystick">The DirectInput joystick instance.</param>
+        /// <param name="definition">Joystick definition file.</param>
         public AuthentiKit(SharpDX.DirectInput.Joystick joystick, JoystickDefinition definition) : base(joystick, definition)
         {
         }
 
         /// <summary>
-        /// This creates a connection to the HID device using HidSharp.
+        /// This creates a connection to the HID device using the Device.Net library.
         /// </summary>
+        /// <returns>True if connection was successful, false otherwise.</returns>
         protected async Task<bool> Connect()
         {
             var VendorId = Definition.VendorId;
@@ -101,7 +103,8 @@ namespace MobiFlight.Joysticks
         }
 
         /// <summary>
-        /// Method called by read thread
+        /// Continuously reads HID reports from the device in a background thread.
+        /// Processes incoming reports and handles disconnection gracefully.
         /// </summary>
         private void ReadHidReportsLoop()
         {
@@ -150,18 +153,7 @@ namespace MobiFlight.Joysticks
         }
 
         /// <summary>
-        /// Enumerates and categorizes joystick devices based on their type.
-        /// </summary>
-        /// <remarks>This method processes the joystick device definitions and categorizes them into 
-        /// analog inputs, buttons, or POV controls. Devices are added to their respective collections based on their
-        /// type.</remarks>
-        protected override void EnumerateDevices()
-        {
-            base.EnumerateDevices();
-        }
-
-        /// <summary>
-        /// Cleans up any specific resources.
+        /// Cleans up HID device resources and stops the background reading thread.
         /// </summary>
         public override void Shutdown()
         {
@@ -172,6 +164,10 @@ namespace MobiFlight.Joysticks
             base.Shutdown();
         }
 
+        /// <summary>
+        /// We are applying some hysteresis to avoid noise triggering events.
+        /// </summary>
+        /// <param name="newState">The new joystick state to compare against.</param>
         protected override void UpdateAxis(JoystickState newState)
         {
             for (int CurrentAxis = 0; CurrentAxis != Axes.Count; CurrentAxis++)
@@ -185,7 +181,7 @@ namespace MobiFlight.Joysticks
 
                 int newValue = GetValueForAxisFromState(CurrentAxis, newState);
 
-                if (StateExists() && Math.Abs(oldValue - newValue) < 2 << 4) continue;
+                if (StateExists() && !ExceedsThreshold(oldValue, newValue)) continue;
 
                 TriggerButtonPressed(this, new InputEventArgs()
                 {
@@ -197,6 +193,17 @@ namespace MobiFlight.Joysticks
                     Value = newValue
                 });
             }
+        }
+
+        /// <summary>
+        /// Tests if the change in axis value exceeds the defined threshold.
+        /// </summary>
+        /// <param name="oldValue">The old joystick value</param>
+        /// <param name="newValue">The new joystick value to compare.</param>
+        /// <returns>True if the change exceeds the threshold; otherwise, false.</returns>
+        private static bool ExceedsThreshold(int oldValue, int newValue)
+        {
+            return Math.Abs(oldValue - newValue) >= 2 << 4;
         }
     }
 }
