@@ -466,8 +466,15 @@ namespace MobiFlight.UI
             Refresh();
 
             PublishSettings();
+            try
+            {
+                await CleanRecentFilesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.log($"Exception in CleanRecentFilesAsync: {ex.Message}", LogSeverity.Error);
+            }
 
-            await CleanRecentFilesAsync().ConfigureAwait(false);
             PublishRecentProjectList();
         }
 
@@ -529,13 +536,11 @@ namespace MobiFlight.UI
             var changed = false;
             foreach (var f in missingFiles)
             {
-                if (string.IsNullOrWhiteSpace(f)) continue;
-                if (Properties.Settings.Default.RecentFiles.Contains(f))
-                {
-                    Properties.Settings.Default.RecentFiles.Remove(f);
-                    Log.Instance.log($"Recent Project List - File doesn't exist: '{f}' removed.", LogSeverity.Info);
-                    changed = true;
-                }
+                if (!Properties.Settings.Default.RecentFiles.Contains(f)) continue;
+
+                Properties.Settings.Default.RecentFiles.Remove(f);
+                Log.Instance.log($"Recent Project List - File doesn't exist: '{f}' removed.", LogSeverity.Info);
+                changed = true;
             }
 
             if (changed)
