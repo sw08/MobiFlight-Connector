@@ -502,24 +502,24 @@ namespace MobiFlight.UI
 
         internal static List<string> CheckForMissingFiles(IEnumerable<string> recentFiles)
         {
-            var missing = new List<string>();
-            if (recentFiles == null) return missing;
+            var missingFiles = new List<string>();
+            if (recentFiles == null) return missingFiles;
 
             foreach (var f in recentFiles)
             {
                 try
                 {
                     if (string.IsNullOrWhiteSpace(f) || !File.Exists(f))
-                        missing.Add(f);
+                        missingFiles.Add(f);
                 }
                 catch
                 {
                     // Treat IO errors as missing; keep scanning
-                    missing.Add(f);
+                    missingFiles.Add(f);
                 }
             }
 
-            return missing;
+            return missingFiles;
         }
 
         internal void RemoveMissingFilesFromSettings(IEnumerable<string> missingFiles)
