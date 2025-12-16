@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MobiFlight.Joysticks
 {
-    internal class AuthentiKitReport
+    public class AuthentiKitReport
     {
         private byte[] LastInputBufferState = new byte[5];
 
@@ -80,6 +80,10 @@ namespace MobiFlight.Joysticks
             {
                 int byteIndex = buttonByteOffset + (i / 8);
                 int bitIndex = i % 8;
+
+                if (byteIndex >= LastInputBufferState.Length)
+                    break;
+
                 bool isPressed = (LastInputBufferState[byteIndex] & (1 << bitIndex)) != 0;
                 state.Buttons[i] = isPressed;
             }
