@@ -1337,9 +1337,7 @@ namespace MobiFlight
 
         public void Stop()
         {
-            // Always clear the cache 
-            // also in case maybe later something goes wrong
-            // we will simply resend the value in that case
+            // Always clear the cache
             lastValue.Clear();
 
             // we have to make sure to not send messages
