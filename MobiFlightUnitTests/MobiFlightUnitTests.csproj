@@ -248,6 +248,7 @@
     <Compile Include="MobiFlight\Joysticks\WingFlex\FcuCubeReportTests.cs" />
     <Compile Include="MobiFlight\JsonDefinitionFilesTests.cs" />
     <Compile Include="MobiFlight\MidiBoard\MidiBoardDefinitionTests.cs" />
+    <Compile Include="MobiFlight\MobiFlightCacheTests.cs" />
     <Compile Include="MobiFlight\MobiFlightCustomDeviceTests.cs" />
     <Compile Include="MobiFlight\MobiFlightLedModuleTests.cs" />
     <Compile Include="MobiFlight\MobiFlightModuleInfoTests.cs" />
