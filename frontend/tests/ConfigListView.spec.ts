@@ -180,7 +180,7 @@ test("Confirm status icons working", async ({ configListPage, page }) => {
 })
 
 test("Confirm status icons are initialized correctly when status is not present", async ({
-  configListPage
+  configListPage,
 }) => {
   await configListPage.gotoPage()
   await configListPage.mobiFlightPage.initWithTestData()
@@ -884,10 +884,7 @@ test("Confirm Raw and Final Value update correctly", async ({
   await configListPage.mobiFlightPage.initWithTestData()
 
   const rawValue = page.getByRole("row").nth(1).getByTestId("raw-value")
-  const finalValue = page
-    .getByRole("row")
-    .nth(1)
-    .getByTestId("final-value")
+  const finalValue = page.getByRole("row").nth(1).getByTestId("final-value")
 
   await configListPage.updateConfigItemRawAndFinalValue(0, "1234", "5678")
   await expect(rawValue).toHaveText("1234")
@@ -906,27 +903,29 @@ test.describe("Responsiveness: Full Screen", () => {
   }) => {
     await configListPage.gotoPage()
     await configListPage.mobiFlightPage.initWithTestData()
-    const activeColumn = page.getByRole("columnheader", { name: "Active" }).first()
-    const nameColumn = page.getByRole("columnheader", { name: "Name" }).first()
-    const controllerColumn = page
-      .getByRole("columnheader", { name: "Controller" })
-      .first()
-    const deviceColumn = page.getByRole("columnheader", { name: "Device" }).first()
-    const statusColumn = page.getByRole("columnheader", { name: "Status" }).first()
-    const rawValueColumn = page.getByRole("columnheader", { name: "Raw Value" }).first()
-    const finalValueColumn = page
-      .getByRole("columnheader", { name: "Final Value" })
-      .first()
-    const actionsColumn = page.getByRole("columnheader", { name: "Actions" }).first()
 
-    await expect(activeColumn).toBeVisible()
-    await expect(nameColumn).toBeVisible()
-    await expect(controllerColumn).toBeVisible()
-    await expect(deviceColumn).toBeVisible()
-    await expect(statusColumn).toBeVisible()
-    await expect(rawValueColumn).toBeVisible()
-    await expect(finalValueColumn).toBeVisible()
-    await expect(actionsColumn).toBeVisible()
+    const visibleHeaders = [
+      { name: "Active", visible: true },
+      { name: "Name", visible: true },
+      { name: "Controller", visible: true },
+      { name: "Device", visible: true },
+      { name: "Status", visible: true },
+      { name: "Raw Value", visible: true },
+      { name: "Final Value", visible: true },
+      { name: "Actions", visible: true },
+    ]
+
+    for (const header of visibleHeaders) {
+      const column = page
+        .getByRole("columnheader", { name: header.name })
+        .first()
+
+      if (!header.visible) {
+        await expect(column).not.toBeVisible()
+        continue
+      }
+      await expect(column).toBeVisible()
+    }
   })
 })
 
@@ -938,27 +937,29 @@ test.describe("Responsiveness: Medium Screen", () => {
   }) => {
     await configListPage.gotoPage()
     await configListPage.mobiFlightPage.initWithTestData()
-    const activeColumn = page.getByRole("columnheader", { name: "Active" }).first()
-    const nameColumn = page.getByRole("columnheader", { name: "Name" }).first()
-    const controllerColumn = page
-      .getByRole("columnheader", { name: "Controller" })
-      .first()
-    const deviceColumn = page.getByRole("columnheader", { name: "Device" }).first()
-    const statusColumn = page.getByRole("columnheader", { name: "Status" }).first()
-    const rawValueColumn = page.getByRole("columnheader", { name: "Raw Value" }).first()
-    const finalValueColumn = page
-      .getByRole("columnheader", { name: "Final Value" })
-      .first()
-    const actionsColumn = page.getByRole("columnheader", { name: "Actions" }).first()
 
-    await expect(activeColumn).toBeVisible()
-    await expect(nameColumn).toBeVisible()
-    await expect(controllerColumn).not.toBeVisible()
-    await expect(deviceColumn).toBeVisible()
-    await expect(statusColumn).toBeVisible()
-    await expect(rawValueColumn).toBeVisible()
-    await expect(finalValueColumn).toBeVisible()
-    await expect(actionsColumn).toBeVisible()
+    const visibleHeaders = [
+      { name: "Active", visible: true },
+      { name: "Name", visible: true },
+      { name: "Controller", visible: false },
+      { name: "Device", visible: true },
+      { name: "Status", visible: true },
+      { name: "Raw Value", visible: true },
+      { name: "Final Value", visible: true },
+      { name: "Actions", visible: true },
+    ]
+
+    for (const header of visibleHeaders) {
+      const column = page
+        .getByRole("columnheader", { name: header.name })
+        .first()
+
+      if (!header.visible) {
+        await expect(column).not.toBeVisible()
+        continue
+      }
+      await expect(column).toBeVisible()
+    }
   })
 })
 
@@ -970,27 +971,29 @@ test.describe("Responsiveness: Small Screen", () => {
   }) => {
     await configListPage.gotoPage()
     await configListPage.mobiFlightPage.initWithTestData()
-    const activeColumn = page.getByRole("columnheader", { name: "Active" }).first()
-    const nameColumn = page.getByRole("columnheader", { name: "Name" }).first()
-    const controllerColumn = page
-      .getByRole("columnheader", { name: "Controller" })
-      .first()
-    const deviceColumn = page.getByRole("columnheader", { name: "Device" }).first()
-    const statusColumn = page.getByRole("columnheader", { name: "Status" }).first()
-    const rawValueColumn = page.getByRole("columnheader", { name: "Raw Value" }).first()
-    const finalValueColumn = page
-      .getByRole("columnheader", { name: "Final Value" })
-      .first()
-    const actionsColumn = page.getByRole("columnheader", { name: "Actions" }).first()
 
-    await expect(activeColumn).toBeVisible()
-    await expect(nameColumn).toBeVisible()
-    await expect(controllerColumn).not.toBeVisible()
-    await expect(deviceColumn).toBeVisible()
-    await expect(statusColumn).toBeVisible()
-    await expect(rawValueColumn).toBeVisible()
-    await expect(finalValueColumn).toBeVisible()
-    await expect(actionsColumn).toBeVisible()
+    const visibleHeaders = [
+      { name: "Active", visible: true },
+      { name: "Name", visible: true },
+      { name: "Controller", visible: false },
+      { name: "Device", visible: true },
+      { name: "Status", visible: true },
+      { name: "Raw Value", visible: true },
+      { name: "Final Value", visible: true },
+      { name: "Actions", visible: true },
+    ]
+
+    for (const header of visibleHeaders) {
+      const column = page
+        .getByRole("columnheader", { name: header.name })
+        .first()
+
+      if (!header.visible) {
+        await expect(column).not.toBeVisible()
+        continue
+      }
+      await expect(column).toBeVisible()
+    }
   })
 })
 
