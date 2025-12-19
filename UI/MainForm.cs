@@ -347,7 +347,8 @@ namespace MobiFlight.UI
                                 execManager.getModuleCache().GetArcazeModuleSettings(),
 #endif
                                 execManager.ConfigItems.Where(item => item is OutputConfigItem).Cast<OutputConfigItem>().ToList(),
-                                execManager.GetAvailableVariables()
+                                execManager.GetAvailableVariables(),
+                                execManager.Project.ToProjectInfo()
                                 )
             {
                 StartPosition = FormStartPosition.CenterParent

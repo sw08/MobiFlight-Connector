@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MobiFlight.InputConfig;
+using MobiFlight.Base;
 
 namespace MobiFlight.UI.Panels.Config
 {
@@ -18,16 +19,44 @@ namespace MobiFlight.UI.Panels.Config
         public event EventHandler CopyButtonPressed;
         public event EventHandler PasteButtonPressed;
 
+        private ProjectInfo _projectInfo;
+        public ProjectInfo ProjectInfo
+        {
+            get { return _projectInfo; }
+            set
+            {
+                if (_projectInfo == value) return;
+                _projectInfo = value; 
+                InitActionTypeComboBox(_projectInfo);
+            }
+        }
+
         public ActionTypePanel()
         {
             InitializeComponent();
+            InitActionTypeComboBox();
+        }
+
+        private void InitActionTypeComboBox(ProjectInfo projectInfo = null)
+        {
+
             ActionTypeComboBox.Items.Clear();
             ActionTypeComboBox.Items.Add(i18n._tr("none"));
-            // --MSFS 2020 
-            ActionTypeComboBox.Items.Add(InputConfig.MSFS2020CustomInputAction.Label);
 
-            // -- Xplane
-            ActionTypeComboBox.Items.Add(InputConfig.XplaneInputAction.Label);
+            var sim = projectInfo?.Sim.Trim().ToLower();
+            var showAllOptions = projectInfo == null;
+
+            if (showAllOptions || sim == "msfs")
+            {
+                // --MSFS 2020 
+                ActionTypeComboBox.Items.Add(InputConfig.MSFS2020CustomInputAction.Label);
+            }
+
+            if (showAllOptions || sim == "xplane")
+            {
+                // -- Xplane
+                ActionTypeComboBox.Items.Add(InputConfig.XplaneInputAction.Label);
+            }
 
             // --MobiFlight
             ActionTypeComboBox.Items.Add(InputConfig.VariableInputAction.Label);
@@ -35,14 +64,20 @@ namespace MobiFlight.UI.Panels.Config
             ActionTypeComboBox.Items.Add(InputConfig.KeyInputAction.Label);
             ActionTypeComboBox.Items.Add(InputConfig.VJoyInputAction.Label);
 
-            // --FSUIPC
-            ActionTypeComboBox.Items.Add(InputConfig.FsuipcOffsetInputAction.Label);
-            ActionTypeComboBox.Items.Add(InputConfig.EventIdInputAction.Label);
-            ActionTypeComboBox.Items.Add(InputConfig.PmdgEventIdInputAction.Label);
-            ActionTypeComboBox.Items.Add(InputConfig.JeehellInputAction.Label);
-            ActionTypeComboBox.Items.Add(InputConfig.LuaMacroInputAction.Label);
+            if (showAllOptions || projectInfo.UseFsuipc || sim == "fsx" || sim == "p3d")
+            {
+                // --FSUIPC
+                ActionTypeComboBox.Items.Add(InputConfig.FsuipcOffsetInputAction.Label);
+                ActionTypeComboBox.Items.Add(InputConfig.EventIdInputAction.Label);
+                ActionTypeComboBox.Items.Add(InputConfig.PmdgEventIdInputAction.Label);
+                ActionTypeComboBox.Items.Add(InputConfig.JeehellInputAction.Label);
+                ActionTypeComboBox.Items.Add(InputConfig.LuaMacroInputAction.Label);
+            }
 
-            ActionTypeComboBox.Items.Add(InputConfig.ProSimInputAction.Label);
+            if (showAllOptions || sim == "msfs")
+            {
+                ActionTypeComboBox.Items.Add(InputConfig.ProSimInputAction.Label);
+            }
 
             ActionTypeComboBox.SelectedIndex = 0;
             ActionTypeComboBox.SelectedIndexChanged += new EventHandler(ActionTypeComboBox_SelectedIndexChanged);
@@ -130,7 +165,7 @@ namespace MobiFlight.UI.Panels.Config
 
         public void OnClipBoardChanged(InputAction value)
         {
-            PasteButton.Enabled = value!=null;
+            PasteButton.Enabled = value != null;
         }
     }
 }

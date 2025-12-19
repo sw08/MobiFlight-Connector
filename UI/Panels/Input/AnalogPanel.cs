@@ -1,13 +1,14 @@
-﻿using System;
+﻿using MobiFlight;
+using MobiFlight.Base;
+using MobiFlight.InputConfig;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using MobiFlight;
-using MobiFlight.InputConfig;
 
 namespace MobiFlight.UI.Panels.Input
 {
@@ -28,11 +29,29 @@ namespace MobiFlight.UI.Panels.Input
             }
         }
 
+        private ProjectInfo _projectInfo;
+        public ProjectInfo ProjectInfo
+        {
+            get { return _projectInfo; }
+            set
+            {
+                if (_projectInfo == value) return;
+                _projectInfo = value;
+                UpdateActionPanelCallbacks(_projectInfo);
+            }
+        }
+
+        private void UpdateActionPanelCallbacks(ProjectInfo projectInfo)
+        {
+            onChangeActionTypePanel.ProjectInfo = projectInfo;
+            onChangeActionTypePanel.ActionTypeChanged -= onChangeActionTypePanel_ActionTypeChanged;
+            onChangeActionTypePanel.ActionTypeChanged += onChangeActionTypePanel_ActionTypeChanged;
+        }
+
         public AnalogPanel()
         {
             InitializeComponent();
-
-            onChangeActionTypePanel.ActionTypeChanged += new MobiFlight.UI.Panels.Config.ActionTypePanel.ActionTypePanelSelectHandler(onChangeActionTypePanel_ActionTypeChanged);
+            UpdateActionPanelCallbacks(null);
             onChangeActionTypePanel.CopyPasteFeatureActive(false);
         }
 
