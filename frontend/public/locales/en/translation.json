@@ -75,6 +75,7 @@
       "xplane": "X-Plane",
       "p3d": "Prepar3D",
       "fsx": "FSX / FS2004",
+      "prosim": "ProSim",
       "none": "No simulator"
     },
     "Card": {

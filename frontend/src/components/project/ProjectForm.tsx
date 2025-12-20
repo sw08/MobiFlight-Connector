@@ -148,6 +148,12 @@ const ProjectForm = ({
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
+                <RadioGroupItem value="prosim" id="prosim" />
+                <Label htmlFor="prosim" className="font-normal">
+                  {t("Project.Simulator.prosim")}
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
                 <RadioGroupItem value="p3d" id="p3d" />
                 <Label htmlFor="p3d" className="font-normal">
                   {t("Project.Simulator.p3d")}

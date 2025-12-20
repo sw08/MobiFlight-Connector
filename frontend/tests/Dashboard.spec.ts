@@ -137,6 +137,7 @@ test.describe("Project settings modal features", () => {
       { name: "MSFS with FSUIPC", value: "msfs", useFsuipc: true },
       { name: "X-Plane", value: "xplane", useFsuipc: false },
       { name: "Prepar3D", value: "p3d", useFsuipc: false },
+      { name: "ProSim", value: "prosim", useFsuipc: false },
     ]
 
     for (const option of projectOptions) {
