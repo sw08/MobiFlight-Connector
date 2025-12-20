@@ -8,7 +8,7 @@ namespace MobiFlight.Tests
     public class JoystickTests
     {
         [TestMethod()]
-        public void GetAxisNameForUsage_ShouldOnlyContainMaxNumberOfEntries()
+        public void GetAxisNameForUsage_ShouldReturnNamesForValidIds()
         {
             // Arrange - Valid axis usage IDs that map to JoystickState properties
             var validUsageIds = new List<int>
@@ -23,6 +23,18 @@ namespace MobiFlight.Tests
                 55  // Slider2
             };
 
+            // Act & Assert - Valid IDs should return axis names
+            validUsageIds.ForEach(id =>
+            {
+                var axisName = Joystick.GetAxisNameForUsage(id);
+                Assert.IsFalse(string.IsNullOrEmpty(axisName),
+                    $"UsageMap should contain valid usage ID {id} and return a non-empty axis name.");
+            });
+        }
+
+        [TestMethod()]
+        public void GetAxisNameForUsage_ShouldThrowExceptionForInvalidIds()
+        {
             // Arrange - Invalid usage IDs that don't map to any JoystickState property
             var invalidUsageIds = new List<int>
             {
@@ -31,14 +43,6 @@ namespace MobiFlight.Tests
                 56, // Wheel - not supported by JoystickState
                 57  // HatSwitch - not supported by JoystickState (should be POV)
             };
-
-            // Act & Assert - Valid IDs should return axis names
-            validUsageIds.ForEach(id =>
-            {
-                var axisName = Joystick.GetAxisNameForUsage(id);
-                Assert.IsFalse(string.IsNullOrEmpty(axisName),
-                    $"UsageMap should contain valid usage ID {id} and return a non-empty axis name.");
-            });
 
             invalidUsageIds.ForEach(id =>
             {
