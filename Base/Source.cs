@@ -136,8 +136,8 @@ namespace MobiFlight.Base
             }
 
             Log.Instance.log($"SourceFactory: Unknown sim '{sim}', returning null", LogSeverity.Error);
-            // use this as a default fallback
-            return new SimConnectSource();
+            // return null for unknown sim names
+            return null;
         }
     }
 }
