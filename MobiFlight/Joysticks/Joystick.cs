@@ -45,9 +45,7 @@ namespace MobiFlight
             [52] = "RotationY",
             [53] = "RotationZ",
             [54] = "Slider1",
-            [55] = "Slider2",
-            [56] = "Wheel",
-            [57] = "HatSwitch"
+            [55] = "Slider2"
         };
 
         /// <summary>
