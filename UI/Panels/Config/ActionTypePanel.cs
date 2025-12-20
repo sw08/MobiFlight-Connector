@@ -64,7 +64,7 @@ namespace MobiFlight.UI.Panels.Config
             ActionTypeComboBox.Items.Add(InputConfig.KeyInputAction.Label);
             ActionTypeComboBox.Items.Add(InputConfig.VJoyInputAction.Label);
 
-            if (showAllOptions || projectInfo.UseFsuipc || sim == "fsx" || sim == "p3d")
+            if (showAllOptions || (projectInfo?.UseFsuipc ?? false) || sim == "fsx" || sim == "p3d")
             {
                 // --FSUIPC
                 ActionTypeComboBox.Items.Add(InputConfig.FsuipcOffsetInputAction.Label);

@@ -110,7 +110,7 @@ namespace MobiFlight.UI.Dialogs
                 tabControlFsuipc.SelectedTab = preconditionTabPage;
             };
 
-            
+
 
             testValuePanel1.FromConfig(config);
             testValuePanel1.TestModeStart += TestValuePanel_TestModeStart;
@@ -124,13 +124,14 @@ namespace MobiFlight.UI.Dialogs
         private void ShowSourceOptionsBasedOnProjectInfo(ProjectInfo projectInfo)
         {
             var sim = projectInfo.Sim.Trim().ToLower();
+            var useFsuipc = (projectInfo?.UseFsuipc ?? false) || sim == "p3d" || sim == "fsx";
 
             // VARIABLE PANEL
             variablePanel1.SetVariableReferences(_execManager.GetAvailableVariables());
             variablePanel1.ModifyTabLink += ConfigPanel_ModifyTabLink;
 
             // FSUIPC PANEL
-            OffsetTypeFsuipRadioButton.Visible = projectInfo.UseFsuipc;
+            OffsetTypeFsuipRadioButton.Visible = useFsuipc;
             fsuipcConfigPanel.setMode(true);
             fsuipcConfigPanel.ModifyTabLink += ConfigPanel_ModifyTabLink;
             fsuipcConfigPanel.PresetChanged += FsuipcConfigPanel_PresetChanged;
