@@ -127,7 +127,7 @@ namespace MobiFlight.Base
                 case "prosim":
                     return new ProSimSource();
                 case "p3d":
-                case "fsuipc":
+                case "fsx":
                     return new FsuipcSource();
             }
 
