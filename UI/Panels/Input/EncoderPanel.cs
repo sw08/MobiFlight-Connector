@@ -1,15 +1,10 @@
-﻿using MobiFlight;
-using MobiFlight.Base;
+﻿using MobiFlight.Base;
 using MobiFlight.InputConfig;
 using MobiFlight.UI.Panels.Action;
 using MobiFlight.UI.Panels.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MobiFlight.UI.Panels.Input
@@ -44,6 +39,17 @@ namespace MobiFlight.UI.Panels.Input
                 onLeftFastActionConfigPanel.Enabled = value;
                 onRightActionConfigPanel.Enabled = value;
                 onRightFastActionConfigPanel.Enabled = value;
+            }
+        }
+
+        private InputConfigItem _currentConfig;
+        public InputConfigItem CurrentConfig
+        {
+            get { return _currentConfig; }
+            set
+            {
+                _currentConfig = value;
+                UpdateActionPanelCallbacks(ProjectInfo);
             }
         }
 
@@ -94,6 +100,7 @@ namespace MobiFlight.UI.Panels.Input
             panels.ForEach(action =>
             {
                 action.ProjectInfo = projectInfo;
+                action.CurrentConfig = CurrentConfig;
                 action.CopyButtonPressed -= Action_CopyButtonPressed;
                 action.CopyButtonPressed += Action_CopyButtonPressed;
                 action.PasteButtonPressed -= Action_PasteButtonPressed;

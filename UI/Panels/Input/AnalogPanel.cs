@@ -1,13 +1,7 @@
-﻿using MobiFlight;
-using MobiFlight.Base;
+﻿using MobiFlight.Base;
 using MobiFlight.InputConfig;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MobiFlight.UI.Panels.Input
@@ -41,9 +35,21 @@ namespace MobiFlight.UI.Panels.Input
             }
         }
 
+        private InputConfigItem _currentConfig;
+        public InputConfigItem CurrentConfig
+        {
+            get { return _currentConfig; }
+            set
+            {
+                _currentConfig = value;
+                UpdateActionPanelCallbacks(ProjectInfo);
+            }
+        }
+
         private void UpdateActionPanelCallbacks(ProjectInfo projectInfo)
         {
             onChangeActionTypePanel.ProjectInfo = projectInfo;
+            onChangeActionTypePanel.CurrentConfig = CurrentConfig;
             onChangeActionTypePanel.ActionTypeChanged -= onChangeActionTypePanel_ActionTypeChanged;
             onChangeActionTypePanel.ActionTypeChanged += onChangeActionTypePanel_ActionTypeChanged;
         }

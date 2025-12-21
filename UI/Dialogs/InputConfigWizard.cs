@@ -565,7 +565,8 @@ namespace MobiFlight.UI.Dialogs
                         panel = new Panels.Input.ButtonPanel()
                         {
                             Enabled = (serial != ""),
-                            ProjectInfo = this.ProjectInfo
+                            ProjectInfo = this.ProjectInfo,
+                            CurrentConfig = Config
                         };
                         (panel as Panels.Input.ButtonPanel).syncFromConfig(config.button);
                         break;
@@ -574,7 +575,8 @@ namespace MobiFlight.UI.Dialogs
                         panel = new Panels.Input.EncoderPanel()
                         {
                             Enabled = (serial != ""),
-                            ProjectInfo = this.ProjectInfo
+                            ProjectInfo = this.ProjectInfo,
+                            CurrentConfig = Config,
                         };
                         (panel as Panels.Input.EncoderPanel).syncFromConfig(config.encoder);
                         break;
@@ -584,7 +586,8 @@ namespace MobiFlight.UI.Dialogs
                         panel = new Panels.Input.ButtonPanel()
                         {
                             Enabled = (serial != ""),
-                            ProjectInfo = this.ProjectInfo
+                            ProjectInfo = this.ProjectInfo,
+                            CurrentConfig = Config
                         };
                         (panel as Panels.Input.ButtonPanel).syncFromConfig(config.inputShiftRegister);
                         PopulateInputPinDropdown(Convert.ToInt32(selectedInputShifter.NumModules), config.inputShiftRegister?.ExtPin);
@@ -596,7 +599,8 @@ namespace MobiFlight.UI.Dialogs
                         panel = new Panels.Input.ButtonPanel()
                         {
                             Enabled = (serial != ""),
-                            ProjectInfo = this.ProjectInfo
+                            ProjectInfo = this.ProjectInfo,
+                            CurrentConfig = Config
                         };
                         (panel as Panels.Input.ButtonPanel).syncFromConfig(config.inputMultiplexer);
                         PopulateInputPinDropdown(Convert.ToInt32(selectedInputMultiplexer.NumBytes), config.inputMultiplexer?.DataPin);
@@ -607,7 +611,8 @@ namespace MobiFlight.UI.Dialogs
                         panel = new Panels.Input.AnalogPanel()
                         {
                             Enabled = (serial != ""),
-                            ProjectInfo = this.ProjectInfo
+                            ProjectInfo = this.ProjectInfo,
+                            CurrentConfig = Config
                         };
                         (panel as Panels.Input.AnalogPanel).syncFromConfig(config.analog);
                         break;

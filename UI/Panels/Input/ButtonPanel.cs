@@ -5,7 +5,6 @@ using MobiFlight.UI.Panels.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace MobiFlight.UI.Panels.Input
@@ -55,6 +54,17 @@ namespace MobiFlight.UI.Panels.Input
             }
         }
 
+        private InputConfigItem _currentConfig;
+        public InputConfigItem CurrentConfig
+        {
+            get { return _currentConfig; }
+            set
+            {
+                _currentConfig = value;
+                UpdateActionPanelCallbacks(ProjectInfo);
+            }
+        }
+
         public ButtonPanel()
         {
             InitializeComponent();
@@ -95,6 +105,7 @@ namespace MobiFlight.UI.Panels.Input
             foreach (ActionTypePanel panel in ActionTypePanelsToActionNames.Keys)
             {
                 panel.ProjectInfo = projectInfo;
+                panel.CurrentConfig = CurrentConfig;
                 panel.ActionTypeChanged -= onPressActionTypePanel_ActionTypeChanged;
                 panel.ActionTypeChanged += onPressActionTypePanel_ActionTypeChanged;
                 panel.CopyButtonPressed -= Action_CopyButtonPressed;

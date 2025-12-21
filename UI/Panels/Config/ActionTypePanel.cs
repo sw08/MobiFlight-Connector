@@ -1,13 +1,9 @@
-﻿using System;
+﻿using MobiFlight.Base;
+using MobiFlight.InputConfig;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using MobiFlight.InputConfig;
-using MobiFlight.Base;
 
 namespace MobiFlight.UI.Panels.Config
 {
@@ -26,9 +22,14 @@ namespace MobiFlight.UI.Panels.Config
             set
             {
                 if (_projectInfo == value) return;
-                _projectInfo = value; 
+                _projectInfo = value;
                 InitActionTypeComboBox(_projectInfo);
             }
+        }
+
+        public InputConfigItem CurrentConfig { 
+            get; 
+            set; 
         }
 
         public ActionTypePanel()
@@ -46,13 +47,21 @@ namespace MobiFlight.UI.Panels.Config
             var sim = projectInfo?.Sim.Trim().ToLower();
             var showAllOptions = projectInfo == null;
 
-            if (showAllOptions || sim == "msfs")
+            var currentConfigUsesFsuipc = ConfigFile.ContainsConfigOfSourceType(new List<IConfigItem>() { CurrentConfig }, new FsuipcSource());
+            var currentConfigUsesMsfs = ConfigFile.ContainsConfigOfSourceType(new List<IConfigItem>() { CurrentConfig }, new SimConnectSource());
+            var currentConfigUsesXplane = ConfigFile.ContainsConfigOfSourceType(new List<IConfigItem>() { CurrentConfig }, new XplaneSource());
+            var currentConfigUsesProsim = ConfigFile.ContainsConfigOfSourceType(new List<IConfigItem>() { CurrentConfig }, new ProSimSource());
+
+            var showFsuipcOptions = (projectInfo?.Features?.FSUIPC ?? false) || sim == "fsx" || sim == "p3d" || currentConfigUsesFsuipc;
+
+
+            if (showAllOptions || sim == "msfs" || currentConfigUsesMsfs)
             {
                 // --MSFS 2020 
                 ActionTypeComboBox.Items.Add(InputConfig.MSFS2020CustomInputAction.Label);
             }
 
-            if (showAllOptions || sim == "xplane")
+            if (showAllOptions || sim == "xplane" || currentConfigUsesXplane)
             {
                 // -- Xplane
                 ActionTypeComboBox.Items.Add(InputConfig.XplaneInputAction.Label);
@@ -64,7 +73,7 @@ namespace MobiFlight.UI.Panels.Config
             ActionTypeComboBox.Items.Add(InputConfig.KeyInputAction.Label);
             ActionTypeComboBox.Items.Add(InputConfig.VJoyInputAction.Label);
 
-            if (showAllOptions || (projectInfo?.Features?.FSUIPC ?? false) || sim == "fsx" || sim == "p3d")
+            if (showAllOptions || showFsuipcOptions)
             {
                 // --FSUIPC
                 ActionTypeComboBox.Items.Add(InputConfig.FsuipcOffsetInputAction.Label);
@@ -74,11 +83,11 @@ namespace MobiFlight.UI.Panels.Config
                 ActionTypeComboBox.Items.Add(InputConfig.LuaMacroInputAction.Label);
             }
 
-            if (showAllOptions || (projectInfo?.Features?.ProSim ?? false))
+            if (showAllOptions || (projectInfo?.Features?.ProSim ?? false) || currentConfigUsesProsim)
             {
                 ActionTypeComboBox.Items.Add(InputConfig.ProSimInputAction.Label);
             }
-             
+
             ActionTypeComboBox.SelectedIndex = 0;
             ActionTypeComboBox.SelectedIndexChanged += new EventHandler(ActionTypeComboBox_SelectedIndexChanged);
         }
