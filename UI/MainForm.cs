@@ -2235,7 +2235,6 @@ namespace MobiFlight.UI
             // errors during save and show it in a dialog instead of crashing.
             try
             {
-                execManager.Project.DetermineProjectInfos();
                 execManager.Project.SaveFile();
             }
             catch (Exception ex)
@@ -2999,7 +2998,7 @@ namespace MobiFlight.UI
             execManager.Project.Sim = project.Sim;
             execManager.Project.Features = project.Features;
             execManager.Project.Aircraft = project.Aircraft;
-            saveToolStripButton_Click(null, null);
+            MessageExchange.Instance.Publish(execManager.Project);
         }
 
         internal void RecentFilesRemove(int index)
