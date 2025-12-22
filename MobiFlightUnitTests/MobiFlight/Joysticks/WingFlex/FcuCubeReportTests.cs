@@ -179,6 +179,7 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
             // Arrange
             var lcdDisplay = new JoystickOutputDisplay
             {
+                Name = "SPD.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 15,
                 Text = "1234"
@@ -200,7 +201,7 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
             // Arrange
             var lcdDisplay = new JoystickOutputDisplay
             {
-                Name = "ALT.value",
+                Name = "HDG.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 17,
                 Text = UInt16.MaxValue.ToString() // Max UInt16 (since code uses UInt16.TryParse)
@@ -240,12 +241,12 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
         }
 
         [TestMethod]
-        public void FromOutputDeviceState_LcdDisplay_HandlesNegativeValue()
+        public void FromOutputDeviceState_LcdDisplay_VS_HandlesNegativeValue()
         {
             // Arrange
             var lcdDisplay = new JoystickOutputDisplay
             {
-                Name = "VS.value",  // FIXED: Must be VS.value to use Int16.TryParse which supports negative values
+                Name = "VS.value",  // Must be VS.value to use Int16.TryParse which supports negative values
                 Type = DeviceType.LcdDisplay,
                 Byte = 21,  // CHANGED: Use VS byte range (21-22)
                 Text = "-1"
@@ -285,11 +286,12 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
         }
 
         [TestMethod]
-        public void FromOutputDeviceState_LcdDisplay_HandlesZeroValue()
+        public void FromOutputDeviceState_LcdDisplay_NonVS_HandlesZeroValue()
         {
             // Arrange
             var lcdDisplay = new JoystickOutputDisplay
             {
+                Name = "ALT.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 19,
                 Text = "0"
@@ -302,6 +304,27 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
             // Assert
             Assert.AreEqual(0x00, result[19], "High byte should be 0x00");
             Assert.AreEqual(0x00, result[20], "Low byte should be 0x00");
+        }
+
+        [TestMethod]
+        public void FromOutputDeviceState_LcdDisplay_VS_HandlesZeroValue()
+        {
+            // Arrange
+            var lcdDisplay = new JoystickOutputDisplay
+            {
+                Name = "VS.value",
+                Type = DeviceType.LcdDisplay,
+                Byte = 21,
+                Text = "0"
+            };
+            var devices = new List<JoystickOutputDevice> { lcdDisplay };
+
+            // Act
+            var result = _report.FromOutputDeviceState(devices);
+
+            // Assert
+            Assert.AreEqual(0x00, result[21], "High byte should be 0x00");
+            Assert.AreEqual(0x00, result[22], "Low byte should be 0x00");
         }
 
         [TestMethod]
@@ -323,6 +346,28 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
             // Should remain at initialized values (0x00)
             Assert.AreEqual(0x00, result[15], "High byte should remain 0x00 for invalid text");
             Assert.AreEqual(0x00, result[16], "Low byte should remain 0x00 for invalid text");
+        }
+
+        [TestMethod]
+        public void FromOutputDeviceState_LcdDisplay_EmptyString_BecomesZeroValue()
+        {
+            // Arrange
+            var lcdDisplay = new JoystickOutputDisplay
+            {
+                Name = "VS.value",
+                Type = DeviceType.LcdDisplay,
+                Byte = 21,
+                Text = "" // Non-numeric
+            };
+            var devices = new List<JoystickOutputDevice> { lcdDisplay };
+
+            // Act
+            var result = _report.FromOutputDeviceState(devices);
+
+            // Assert
+            // Should remain at initialized values (0x00)
+            Assert.AreEqual(0x00, result[21], "High byte should remain 0x00 for invalid text");
+            Assert.AreEqual(0x00, result[22], "Low byte should remain 0x00 for invalid text");
         }
 
         #endregion
