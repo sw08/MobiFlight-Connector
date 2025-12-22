@@ -151,7 +151,7 @@ namespace MobiFlight.Joysticks.WingFlex
                     }
 
                     // Skip invalid text
-                    if (!parsed) return;
+                    if (!parsed && lcdDisplay.Text.Trim()!="") return;
 
                     // Copy High 8 bit from value
                     LastOutputBufferState[byteIndex] = (byte)(value >> 8);

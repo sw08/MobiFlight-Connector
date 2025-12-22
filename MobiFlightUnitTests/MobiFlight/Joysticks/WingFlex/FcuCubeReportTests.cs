@@ -294,9 +294,11 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
                 Name = "ALT.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 19,
-                Text = "0"
+                Text = "1234"
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
+            _report.FromOutputDeviceState(devices);
+            lcdDisplay.Text = "0"; // Non-numeric
 
             // Act
             var result = _report.FromOutputDeviceState(devices);
@@ -315,9 +317,11 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
                 Name = "VS.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 21,
-                Text = "0"
+                Text = "1234"
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
+            _report.FromOutputDeviceState(devices);
+            lcdDisplay.Text = "0"; // Non-numeric
 
             // Act
             var result = _report.FromOutputDeviceState(devices);
@@ -336,17 +340,19 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
                 Name = "SPD.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 15,
-                Text = "ABC" // Non-numeric
+                Text = "1234" // Non-numeric
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
+            _report.FromOutputDeviceState(devices);
+            lcdDisplay.Text = "ABC"; // Non-numeric
 
             // Act
             var result = _report.FromOutputDeviceState(devices);
 
             // Assert
             // Should remain at initialized values (0x00)
-            Assert.AreEqual(0x00, result[15], "High byte should remain 0x00 for invalid text");
-            Assert.AreEqual(0x00, result[16], "Low byte should remain 0x00 for invalid text");
+            Assert.AreEqual(0x04, result[15], "High byte should remain 0x04 for invalid text");
+            Assert.AreEqual(0xD2, result[16], "Low byte should remain 0xD2 for invalid text");
         }
 
         [TestMethod]
@@ -358,17 +364,18 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
                 Name = "VS.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 21,
-                Text = "" // Non-numeric
+                Text = "12345" // Non-numeric
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
+            _report.FromOutputDeviceState(devices);
+            lcdDisplay.Text = ""; // Non-numeric
 
             // Act
             var result = _report.FromOutputDeviceState(devices);
-
             // Assert
             // Should remain at initialized values (0x00)
-            Assert.AreEqual(0x00, result[21], "High byte should remain 0x00 for invalid text");
-            Assert.AreEqual(0x00, result[22], "Low byte should remain 0x00 for invalid text");
+            Assert.AreEqual(0x00, result[21], "High byte should remain 0x00 for empty string input");
+            Assert.AreEqual(0x00, result[22], "Low byte should remain 0x00 for empty string input");
         }
 
         #endregion
