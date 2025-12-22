@@ -88,10 +88,11 @@ export const ProjectCardImage = ({
   className,
 }: HtmlHTMLAttributes<HTMLDivElement> & { summary: ProjectInfo }) => {
   const imageUrl = summary.Thumbnail || `/sim/${summary.Sim?.toLowerCase()}.jpg`
+  console.log("ProjectCardImage imageUrl:", imageUrl, import.meta.url)
   return summary.Sim ? (
     <div className={cn("bg-accent rounded-lg", className)}>
       <img
-        src={new URL(imageUrl, import.meta.url).href}
+        src={imageUrl}
         alt={summary.Name}
         className="h-full w-full rounded-lg object-cover"
       />

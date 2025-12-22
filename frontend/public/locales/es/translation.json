@@ -110,8 +110,9 @@
       "Simulator": {
         "Label": "Simulador de vuelo",
         "HelpText": "Selecciona el simulador principal para este proyecto.",
-        "UseFsuipc": "Usar FSUIPC",
-        "UseProSim": "Usar ProSim"
+        "UseFsuipc": "FSUIPC - interfaz heredada alterna - a veces utilizada por \"addons\", ej., PMDG",
+        "UseProSim": "ProSim - interfaz para aviones ProSim",
+        "Feature": "Funciones adicionales"
       },
       "Aircraft": {
         "Label": "Avión",

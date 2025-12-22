@@ -10,18 +10,22 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from "react"
 import { ProjectFeatures, ProjectInfo } from "@/types/project"
 import { useLocation } from "react-router"
 import { useTranslation } from "react-i18next"
+import { cn } from "@/lib/utils"
 
 type ProjectFormProps = {
   project: ProjectInfo
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  onSave: (values: { Name: string; Sim: string; Features: ProjectFeatures }) => void
+  onSave: (values: {
+    Name: string
+    Sim: string
+    Features: ProjectFeatures
+  }) => void
 }
 
 const ProjectForm = ({
@@ -45,7 +49,7 @@ const ProjectForm = ({
     return simulator === "fsx" || simulator === "p3d"
   }
 
-  const ProSimFeatureIsSupportedBySimulator =(simulator: string) => {
+  const ProSimFeatureIsSupportedBySimulator = (simulator: string) => {
     return simulator === "msfs" || simulator === "p3d"
   }
 
@@ -76,12 +80,14 @@ const ProjectForm = ({
     }
   }
 
-  
   const showErrorMessage = hasError && name.length === 0
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]" onKeyDown={handleFormKeyDown}>
+      <DialogContent
+        className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]"
+        onKeyDown={handleFormKeyDown}
+      >
         <DialogHeader>
           <DialogTitle className="text-2xl">
             {isEdit
@@ -110,53 +116,69 @@ const ProjectForm = ({
               required
             />
             {showErrorMessage && (
-              <p className="text-sm text-red-500" data-testid="form-project-name-error">
+              <p
+                className="text-sm text-red-500"
+                data-testid="form-project-name-error"
+              >
                 {t("Project.Form.Name.Error.Required")}
               </p>
             )}{" "}
             {/* Show error */}
           </div>
-
-          {/* Flight Simulator Selection */}
-          <div className="grid gap-3">
+          <div>
             <Label className="text-base font-semibold">
               {t("Project.Form.Simulator.Label")}
             </Label>
             <p className="text-muted-foreground text-sm">
               {t("Project.Form.Simulator.HelpText")}
             </p>
-            <RadioGroup
-              value={simulator}
-              onValueChange={(value) => {
-                setSimulator(value)
-                setUseFsuipc(false) // Reset FSUIPC when changing simulator
-                setUseProsim(false) // Reset ProSim when changing simulator
-              }}
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="msfs" id="msfs" />
-                <Label htmlFor="msfs" className="font-normal">
-                  {t("Project.Simulator.msfs")}
-                </Label>
+          </div>
+          {/* Flight Simulator Selection */}
+
+          <div className="flex flex-row gap-4">
+            {["msfs", "xplane", "p3d", "fsx"].map((sim) => (
+              <div
+                key={sim}
+                className={cn(
+                  "inline-block h-48 flex-1 cursor-pointer rounded-lg transition-all duration-200 hover:scale-110",
+                  simulator === sim
+                    ? "drop-shadow-primary/50 ring-primary ring-3 drop-shadow-lg"
+                    : "opacity-50 hover:opacity-100",
+                )}
+                onClick={() => setSimulator(sim)}
+              >
+                <img
+                  src={`/sim/${sim.toLowerCase()}.jpg`}
+                  alt={sim}
+                  className="h-full w-full rounded-lg object-cover"
+                />
               </div>
-              {/* FSUIPC Option (only for MSFS) */}
-              {simulator === "msfs" && (
-                <div className="flex items-center space-x-2 pl-6">
-                  <Checkbox
-                    id="fsuipc"
-                    checked={useFsuipc}
-                    onCheckedChange={(checked) =>
-                      setUseFsuipc(Boolean(checked))
-                    }
-                  />
-                  <Label htmlFor="fsuipc" className="font-normal">
-                    {t("Project.Form.Simulator.UseFsuipc")}
-                  </Label>
-                </div>
-              )}
-              {/* ProSim Option (MSFS & P3D) */}
-              {simulator === "msfs" && (
-                <div className="flex items-center space-x-2 pl-6">
+            ))}
+          </div>
+          <div className="flex h-24 flex-col gap-2">
+            {(simulator === "msfs" || simulator === "p3d") && (
+              <div className="flex h-24 flex-col gap-2">
+                <p className="text-muted-foreground text-sm">
+                  {t("Project.Form.Simulator.Feature")}
+                </p>
+                {/* FSUIPC Option (only for MSFS) */}
+                {simulator === "msfs" && (
+                  <div className="flex items-center space-x-2 pl-2">
+                    <Checkbox
+                      id="fsuipc"
+                      checked={useFsuipc}
+                      onCheckedChange={(checked) =>
+                        setUseFsuipc(Boolean(checked))
+                      }
+                    />
+                    <Label htmlFor="fsuipc" className="font-normal">
+                      {t("Project.Form.Simulator.UseFsuipc")}
+                    </Label>
+                  </div>
+                )}
+
+                {/* ProSim Option (MSFS & P3D) */}
+                <div className="flex items-center space-x-2 pl-2">
                   <Checkbox
                     id="prosim"
                     checked={useProsim}
@@ -168,52 +190,21 @@ const ProjectForm = ({
                     {t("Project.Form.Simulator.UseProSim")}
                   </Label>
                 </div>
-              )}
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="xplane" id="xplane" />
-                <Label htmlFor="xplane" className="font-normal">
-                  {t("Project.Simulator.xplane")}
-                </Label>
               </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="p3d" id="p3d" />
-                <Label htmlFor="p3d" className="font-normal">
-                  {t("Project.Simulator.p3d")}
-                </Label>
-              </div>
-               {/* ProSim Option (MSFS & P3D) */}
-              {simulator === "p3d" && (
-                <div className="flex items-center space-x-2 pl-6">
-                  <Checkbox
-                    id="prosim"
-                    checked={useProsim}
-                    onCheckedChange={(checked) =>
-                      setUseProsim(Boolean(checked))
-                    }
-                  />
-                  <Label htmlFor="prosim" className="font-normal">
-                    {t("Project.Simulator.prosim")}
-                  </Label>
-                </div>
-              )}
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="fsx" id="fsx" />
-                <Label htmlFor="fsx" className="font-normal">
-                  {t("Project.Simulator.fsx")}
-                </Label>
-              </div>
-            </RadioGroup>
+            )}
           </div>
         </div>
 
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" type="button">
-              { t("Project.Form.Buttons.Cancel") }
+              {t("Project.Form.Buttons.Cancel")}
             </Button>
           </DialogClose>
           <Button onClick={handleSubmit}>
-            {isEdit ? t("Project.Form.Buttons.Update") : t("Project.Form.Buttons.Create")}
+            {isEdit
+              ? t("Project.Form.Buttons.Update")
+              : t("Project.Form.Buttons.Create")}
           </Button>
         </DialogFooter>
       </DialogContent>
