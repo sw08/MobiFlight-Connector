@@ -248,7 +248,7 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
             {
                 Name = "VS.value",  // Must be VS.value to use Int16.TryParse which supports negative values
                 Type = DeviceType.LcdDisplay,
-                Byte = 21,  // CHANGED: Use VS byte range (21-22)
+                Byte = 21,
                 Text = "-1"
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
@@ -271,7 +271,7 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
                 Name = "VS.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 21,
-                Text = Int16.MinValue.ToString() // -32768 - Min for Int16 (VS display uses Int16.TryParse)
+                Text = Int16.MinValue.ToString()
             };
 
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
@@ -298,7 +298,7 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
             _report.FromOutputDeviceState(devices);
-            lcdDisplay.Text = "0"; // Non-numeric
+            lcdDisplay.Text = "0";
 
             // Act
             var result = _report.FromOutputDeviceState(devices);
@@ -321,7 +321,7 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
             _report.FromOutputDeviceState(devices);
-            lcdDisplay.Text = "0"; // Non-numeric
+            lcdDisplay.Text = "0";
 
             // Act
             var result = _report.FromOutputDeviceState(devices);
@@ -340,17 +340,16 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
                 Name = "SPD.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 15,
-                Text = "1234" // Non-numeric
+                Text = "1234"
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
             _report.FromOutputDeviceState(devices);
-            lcdDisplay.Text = "ABC"; // Non-numeric
+            lcdDisplay.Text = "ABC";
 
             // Act
             var result = _report.FromOutputDeviceState(devices);
 
             // Assert
-            // Should remain at initialized values (0x00)
             Assert.AreEqual(0x04, result[15], "High byte should remain 0x04 for invalid text");
             Assert.AreEqual(0xD2, result[16], "Low byte should remain 0xD2 for invalid text");
         }
@@ -364,16 +363,15 @@ namespace MobiFlight.Joysticks.WingFlex.Tests
                 Name = "VS.value",
                 Type = DeviceType.LcdDisplay,
                 Byte = 21,
-                Text = "12345" // Non-numeric
+                Text = "12345"
             };
             var devices = new List<JoystickOutputDevice> { lcdDisplay };
             _report.FromOutputDeviceState(devices);
-            lcdDisplay.Text = ""; // Non-numeric
+            lcdDisplay.Text = ""; 
 
             // Act
             var result = _report.FromOutputDeviceState(devices);
             // Assert
-            // Should remain at initialized values (0x00)
             Assert.AreEqual(0x00, result[21], "High byte should remain 0x00 for empty string input");
             Assert.AreEqual(0x00, result[22], "Low byte should remain 0x00 for empty string input");
         }
