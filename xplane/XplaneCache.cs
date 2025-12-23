@@ -114,7 +114,6 @@ namespace MobiFlight.xplane
         public void Stop()
         {
             Connector?.Stop();
-            CheckForAircraftName();
         }
 
         public void Clear()
